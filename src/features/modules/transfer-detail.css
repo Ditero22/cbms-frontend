@@ -1,0 +1,91 @@
+.transfer-detail-section {
+  margin-top: 22px;
+}
+
+.transfer-detail-section h3 {
+  margin: 0 0 12px;
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.transfer-detail-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px 24px;
+  margin: 0;
+}
+
+.transfer-detail-fields > div,
+.transfer-detail-items li {
+  min-width: 0;
+  padding: 12px;
+  border-radius: 8px;
+  background: var(--surface-soft);
+}
+
+.transfer-detail-fields dt,
+.transfer-detail-items span {
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+
+.transfer-detail-fields dd {
+  margin: 4px 0 0;
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.transfer-detail-items {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.transfer-detail-items li,
+.transfer-detail-items li > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.transfer-detail-items li > div {
+  align-items: flex-start;
+  flex-direction: column;
+  min-width: 0;
+  gap: 4px;
+}
+
+.transfer-detail-items strong {
+  color: var(--text);
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+
+.transfer-detail-items li > strong {
+  flex: 0 0 auto;
+  text-align: right;
+}
+
+.transfer-detail-note {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 13px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 640px) {
+  .transfer-detail-fields {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .transfer-detail-items li {
+    align-items: flex-start;
+  }
+}

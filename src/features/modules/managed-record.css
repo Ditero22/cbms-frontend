@@ -1,0 +1,38 @@
+.record-archive-policy dl > div {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  padding: 8px 0;
+  min-width: 0;
+}
+
+.record-archive-policy dt {
+  color: var(--text-secondary);
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+
+.record-archive-policy dd {
+  margin: 0;
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.record-archive-policy summary {
+  padding: 8px 0;
+  color: var(--link);
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.record-archive-policy summary:hover {
+  text-decoration: underline;
+}
+
+.record-archive-policy summary:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 3px;
+  border-radius: 3px;
+}

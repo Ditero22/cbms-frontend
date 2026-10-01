@@ -1,0 +1,223 @@
+{
+  "version": 1,
+  "project": {
+    "name": "cbms-frontend",
+    "productType": "Construction business management / admin system",
+    "stack": [
+      "react",
+      "tailwind-v3",
+      "vite"
+    ]
+  },
+  "sources": {
+    "tokens": [
+      "src/index.css"
+    ],
+    "components": [
+      "src/components/common",
+      "src/components/layout",
+      "src/features"
+    ],
+    "assets": [],
+    "instructions": [
+      "FRONTEND_ARCHITECTURE.md",
+      "../UI_UX_AUDIT.md"
+    ]
+  },
+  "design": {
+    "colorMode": "light-and-dark",
+    "colors": {
+      "--canvas": {
+        "value": "#f4f6fa",
+        "source": "src/index.css :root; dark overrides in :root[data-theme=dark]"
+      },
+      "--surface": {
+        "value": "#fff",
+        "source": "src/index.css :root; dark overrides in :root[data-theme=dark]"
+      },
+      "--surface-soft": {
+        "value": "#f8f9fc",
+        "source": "src/index.css :root; dark overrides in :root[data-theme=dark]"
+      },
+      "--surface-hover": {
+        "value": "#f4f6fa",
+        "source": "src/index.css :root; dark overrides in :root[data-theme=dark]"
+      },
+      "--border": {
+        "value": "#e8ebf1",
+        "source": "src/index.css :root; dark overrides in :root[data-theme=dark]"
+      },
+      "--border-strong": {
+        "value": "#dce1e9",
+        "source": "src/index.css :root; dark overrides in :root[data-theme=dark]"
+      },
+      "--text": {
+        "value": "#18243a",
+        "source": "src/index.css :root; dark overrides in :root[data-theme=dark]"
+      },
+      "--text-secondary": {
+        "value": "#606d83",
+        "source": "src/index.css :root; dark overrides in :root[data-theme=dark]"
+      },
+      "--text-subtle": {
+        "value": "var(--text-secondary)",
+        "source": "src/index.css :root; dark overrides in :root[data-theme=dark]"
+      },
+      "--brand": {
+        "value": "#253c6d",
+        "source": "src/index.css :root; dark overrides in :root[data-theme=dark]"
+      },
+      "--brand-hover": {
+        "value": "#1d315c",
+        "source": "src/index.css :root; dark overrides in :root[data-theme=dark]"
+      },
+      "--brand-light": {
+        "value": "#edf2fa",
+        "source": "src/index.css :root; dark overrides in :root[data-theme=dark]"
+      },
+      "--orange": {
+        "value": "#f2842f",
+        "source": "src/index.css :root; dark overrides in :root[data-theme=dark]"
+      },
+      "--orange-light": {
+        "value": "#fff4e9",
+        "source": "src/index.css :root; dark overrides in :root[data-theme=dark]"
+      },
+      "--chart-grid": {
+        "value": "#edf0f5",
+        "source": "src/index.css :root; dark overrides in :root[data-theme=dark]"
+      },
+      "--status-good": {
+        "value": "#287d5a",
+        "source": "src/index.css :root; dark overrides in :root[data-theme=dark]"
+      },
+      "--status-good-surface": {
+        "value": "#ebf7f0",
+        "source": "src/index.css :root; dark overrides in :root[data-theme=dark]"
+      },
+      "--status-warning": {
+        "value": "#996112",
+        "source": "src/index.css :root; dark overrides in :root[data-theme=dark]"
+      },
+      "--status-warning-surface": {
+        "value": "#fff5e4",
+        "source": "src/index.css :root; dark overrides in :root[data-theme=dark]"
+      },
+      "--status-danger": {
+        "value": "#b7483f",
+        "source": "src/index.css :root; dark overrides in :root[data-theme=dark]"
+      },
+      "--status-danger-surface": {
+        "value": "#fff0ef",
+        "source": "src/index.css :root; dark overrides in :root[data-theme=dark]"
+      },
+      "--status-neutral": {
+        "value": "#606d83",
+        "source": "src/index.css :root; dark overrides in :root[data-theme=dark]"
+      },
+      "--status-neutral-surface": {
+        "value": "#f0f2f5",
+        "source": "src/index.css :root; dark overrides in :root[data-theme=dark]"
+      },
+      "--danger": {
+        "value": "#c3473d",
+        "source": "src/index.css :root; dark overrides in :root[data-theme=dark]"
+      },
+      "--danger-surface": {
+        "value": "#fff7f6",
+        "source": "src/index.css :root; dark overrides in :root[data-theme=dark]"
+      },
+      "--danger-border": {
+        "value": "#f1d1ce",
+        "source": "src/index.css :root; dark overrides in :root[data-theme=dark]"
+      },
+      "--danger-hover": {
+        "value": "#ffecea",
+        "source": "src/index.css :root; dark overrides in :root[data-theme=dark]"
+      },
+      "--link": {
+        "value": "var(--brand)",
+        "source": "src/index.css :root; dark overrides in :root[data-theme=dark]"
+      }
+    },
+    "typography": {
+      "font-family": {
+        "value": "DM Sans, sans-serif",
+        "source": "src/index.css"
+      }
+    },
+    "spacing": {
+      "--sidebar-inline-gutter": {
+        "value": "15px",
+        "source": "src/index.css"
+      }
+    },
+    "radius": {},
+    "shadows": {
+      "--shadow": {
+        "value": "0 12px 36px rgba(0, 0, 0, 0.24)",
+        "source": "src/index.css"
+      }
+    },
+    "motion": {},
+    "density": "compact readable business records"
+  },
+  "components": {
+    "installed": [],
+    "preferredPrimitives": [
+      "radix-ui"
+    ],
+    "patterns": [
+      "AppShell with dedicated desktop sidebar and Radix mobile drawer",
+      "PageHeading and Breadcrumbs",
+      "DataTable with per-module mobile record cards",
+      "AppDialog with bounded scrolling and action footer",
+      "FormField explicit labels/associated errors",
+      "FormOptionsState loading/error/retry",
+      "StatusBadge and RecordHistoryPanel",
+      "Private AttachmentList and ProofUploader"
+    ]
+  },
+  "constraints": {
+    "must": [
+      "Preserve BuildCore identity, current light/dark tokens and compact business-system density",
+      "Use actual API data and server grants; retain existing business behavior",
+      "Reuse shared components and exact decimal utilities",
+      "Verify desktop/tablet/mobile, keyboard and error/retry states"
+    ],
+    "avoid": [
+      "New branding or palette",
+      "Decorative or duplicate page-level actions",
+      "Invented business policy or fake feature controls",
+      "New component libraries where current primitives suffice"
+    ]
+  },
+  "decisions": [],
+  "evidence": [
+    {
+      "fact": "design.colorMode:light-and-dark",
+      "source": "src/index.css"
+    },
+    {
+      "fact": "design.tokens",
+      "source": "src/index.css"
+    },
+    {
+      "fact": "project.stack:react",
+      "source": "package.json"
+    },
+    {
+      "fact": "project.stack:tailwind-v3",
+      "source": "package.json"
+    },
+    {
+      "fact": "project.stack:vite",
+      "source": "package.json"
+    },
+    {
+      "fact": "manual context correction: CLI detector missed custom components and misclassified text colors as typography",
+      "source": "src/components/common, src/index.css, ../UI_UX_AUDIT.md"
+    }
+  ],
+  "generatedAt": "2026-10-01T04:55:20.337Z"
+}

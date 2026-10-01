@@ -1,0 +1,87 @@
+.expense-overview {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-block: 16px 24px;
+}
+.expense-overview > div {
+  min-width: 0;
+}
+.expense-overview span {
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+.expense-overview strong {
+  display: block;
+  margin-top: 6px;
+  color: var(--text);
+  font-size: 24px;
+  overflow-wrap: anywhere;
+}
+.expense-details {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px 24px;
+  margin: 16px 0;
+}
+.expense-details div {
+  min-width: 0;
+}
+.expense-details dt {
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+.expense-details dd {
+  margin: 6px 0 0;
+  font-size: 13px;
+  color: var(--text);
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+.expense-detail-wide {
+  grid-column: 1 / -1;
+}
+.expense-review,
+.expense-source {
+  margin-top: 24px;
+}
+.expense-section-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.expense-section-heading h3 {
+  margin: 0;
+  font-size: 14px;
+}
+.expense-source > strong {
+  color: var(--text);
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+.expense-source > p {
+  color: var(--text-secondary);
+  font-size: 13px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+.expense-form-error {
+  display: grid;
+  justify-items: start;
+  gap: 10px;
+  color: var(--danger);
+  font-size: 12px;
+}
+@media (max-width: 700px) {
+  .expense-details {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+  }
+  .expense-overview strong {
+    font-size: 22px;
+  }
+}

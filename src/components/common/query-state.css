@@ -1,0 +1,14 @@
+.query-state {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 24px;
+  color: var(--text-secondary);
+}
+.query-state strong {
+  color: var(--text);
+}
+.query-state > span {
+  overflow-wrap: anywhere;
+}

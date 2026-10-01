@@ -1,0 +1,208 @@
+.inventory-overview,
+.inventory-section-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+.inventory-overview {
+  margin-block: 16px;
+}
+.inventory-summary {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 20px;
+  margin: 20px 0 12px;
+}
+.inventory-summary div {
+  min-width: 0;
+}
+.inventory-summary dt {
+  color: var(--text-secondary);
+  font-size: 12px;
+  margin-bottom: 6px;
+}
+.inventory-summary dd {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 650;
+  overflow-wrap: anywhere;
+}
+.inventory-summary small {
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-weight: 400;
+}
+.inventory-detail-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-block: 20px;
+}
+.inventory-ledger {
+  margin-top: 24px;
+  min-width: 0;
+}
+.inventory-section-heading h3 {
+  font-size: 14px;
+  margin: 0;
+}
+.inventory-section-heading > span {
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+.inventory-ledger-filters {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) repeat(2, minmax(0, 1fr)) auto;
+  gap: 10px;
+  align-items: end;
+  margin-block: 16px;
+}
+.inventory-ledger-filters .field-label {
+  min-width: 0;
+}
+.inventory-ledger-filters .form-input {
+  min-width: 0;
+  width: 100%;
+}
+.inventory-ledger-table {
+  overflow-x: auto;
+  max-width: 100%;
+}
+.inventory-ledger-table table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 12px;
+}
+.inventory-ledger-table th {
+  color: var(--text-secondary);
+  font-weight: 500;
+  padding: 10px 8px;
+  border-bottom: 1px solid var(--border);
+}
+.inventory-ledger-table td {
+  padding: 14px 8px;
+  vertical-align: top;
+  border-bottom: 1px solid var(--border);
+  overflow-wrap: anywhere;
+}
+.inventory-ledger-table td small {
+  display: block;
+  color: var(--text-secondary);
+  margin-top: 5px;
+  line-height: 1.5;
+}
+.inventory-ledger-table td:nth-child(2),
+.inventory-ledger-table td:nth-child(3) {
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.inventory-movement-cards {
+  display: none;
+}
+.inventory-ledger-empty {
+  padding-block: 20px;
+  color: var(--text-secondary);
+}
+.inventory-form-error {
+  display: grid;
+  justify-items: start;
+  gap: 10px;
+  color: var(--danger);
+  font-size: 12px;
+}
+.inventory-adjustment-type {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+}
+.inventory-adjustment-type legend {
+  padding: 0;
+  margin-bottom: 10px;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+.inventory-adjustment-type label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  cursor: pointer;
+}
+.inventory-adjustment-type input {
+  accent-color: var(--brand);
+}
+.inventory-quantity-field {
+  max-width: 300px;
+}
+@media (max-width: 800px) {
+  .inventory-summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+  }
+  .inventory-summary dd {
+    font-size: 20px;
+  }
+  .inventory-ledger-filters {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .inventory-ledger-filters > :first-child {
+    grid-column: 1 / -1;
+  }
+  .inventory-ledger-filters > button {
+    grid-column: 1 / -1;
+    justify-self: start;
+  }
+  .inventory-section-heading {
+    align-items: start;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .inventory-ledger-table {
+    display: none;
+  }
+  .inventory-movement-cards {
+    display: grid;
+    gap: 0;
+  }
+  .inventory-movement-card {
+    padding-block: 16px;
+    border-bottom: 1px solid var(--border);
+    min-width: 0;
+  }
+  .inventory-movement-card header {
+    display: grid;
+    gap: 6px;
+    font-size: 12px;
+    overflow-wrap: anywhere;
+  }
+  .inventory-movement-card time {
+    color: var(--text-secondary);
+  }
+  .inventory-movement-card dl {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    margin-bottom: 0;
+  }
+  .inventory-movement-card dt {
+    color: var(--text-secondary);
+    font-size: 11px;
+  }
+  .inventory-movement-card dd {
+    margin: 4px 0 0;
+    font-size: 12px;
+    overflow-wrap: anywhere;
+  }
+  .inventory-movement-card p {
+    color: var(--text-secondary);
+    font-size: 12px;
+    line-height: 1.6;
+    margin-bottom: 0;
+    overflow-wrap: anywhere;
+  }
+}

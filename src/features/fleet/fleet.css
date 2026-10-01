@@ -1,0 +1,165 @@
+.fleet-form-section {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.fleet-form-section legend {
+  margin: 0 0 12px;
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 650;
+}
+.fleet-state {
+  padding: 24px 0;
+}
+.fleet-overview {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.fleet-overview strong {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--text);
+}
+.fleet-overview small {
+  color: var(--text-secondary);
+}
+.fleet-summary {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin: 16px 0;
+}
+.fleet-summary dt {
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+.fleet-summary dd {
+  margin: 5px 0 0;
+  color: var(--text);
+  font-size: 16px;
+  font-weight: 650;
+  overflow-wrap: anywhere;
+}
+.fleet-section {
+  margin-top: 24px;
+}
+.fleet-section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.fleet-section-heading h3 {
+  margin: 0;
+  font-size: 14px;
+  color: var(--text);
+}
+.fleet-record-list {
+  display: grid;
+  gap: 8px;
+}
+.fleet-record {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  padding: 12px 0;
+  color: var(--text);
+  border: 0;
+  border-bottom: 1px solid var(--border);
+  background: transparent;
+  text-align: left;
+}
+button.fleet-record {
+  cursor: pointer;
+}
+button.fleet-record:hover {
+  background: var(--surface-hover);
+}
+.fleet-record strong,
+.fleet-record span,
+.fleet-record small {
+  display: block;
+}
+.fleet-record span,
+.fleet-record small {
+  margin-top: 5px;
+  color: var(--text-secondary);
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+.fleet-record-end {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  flex-shrink: 0;
+}
+.fleet-current {
+  padding: 15px;
+  background: var(--surface-hover);
+  border-radius: 10px;
+}
+.fleet-form-section > .fleet-form-section {
+  margin-bottom: 18px;
+}
+.fleet-current p {
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin: 8px 0;
+}
+.fleet-detail-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px 22px;
+  margin: 0;
+}
+.fleet-detail-fields dt {
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+.fleet-detail-fields dd {
+  margin: 5px 0 0;
+  overflow-wrap: anywhere;
+  color: var(--text);
+  font-size: 13px;
+}
+.fleet-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+.fleet-form-total {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding-block: 10px;
+  color: var(--text-secondary);
+}
+.fleet-form-total strong {
+  color: var(--text);
+}
+@media (max-width: 700px) {
+  .fleet-detail-fields {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .fleet-record {
+    gap: 8px;
+  }
+  .fleet-record-end {
+    max-width: 45%;
+  }
+  .fleet-actions .button {
+    min-height: 42px;
+  }
+}

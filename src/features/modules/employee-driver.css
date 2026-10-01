@@ -1,0 +1,18 @@
+.employee-form-section {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.employee-form-section legend {
+  margin-bottom: 12px;
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 650;
+}
+.employee-form-section .user-cross-branch-toggle {
+  margin-bottom: 14px;
+}
+.employee-driver-details {
+  margin-top: 22px;
+}

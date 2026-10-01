@@ -1,0 +1,71 @@
+.user-detail-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 18px;
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+.user-detail-sections {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+}
+.user-detail-sections section {
+  min-width: 0;
+}
+.user-detail-sections h3 {
+  font-size: 14px;
+  margin: 0 0 12px;
+}
+.user-detail-sections dl {
+  margin: 0;
+}
+.user-detail-sections dl > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 0;
+  font-size: 12px;
+}
+.user-detail-sections dt {
+  color: var(--text-subtle);
+}
+.user-detail-sections dd {
+  margin: 0;
+  text-align: right;
+  overflow-wrap: anywhere;
+  min-width: 0;
+}
+.user-permissions {
+  margin-top: 14px;
+  font-size: 12px;
+}
+.user-permissions summary {
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 6px 0;
+}
+.user-permissions ul {
+  margin: 10px 0;
+  padding-left: 16px;
+  color: var(--text-subtle);
+  display: grid;
+  gap: 8px;
+}
+.dialog-options-error {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+@media (max-width: 700px) {
+  .user-detail-sections {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 20px;
+  }
+}
