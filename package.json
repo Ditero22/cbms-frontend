@@ -9,8 +9,9 @@
     "typecheck": "tsc -b --pretty false",
     "preview": "vite preview",
     "lint": "eslint .",
-    "format": "prettier --write \"src/**/*.{ts,tsx}\" \"tests/**/*.ts\" vite.config.ts playwright.config.ts \"tsconfig*.json\" package.json",
-    "format:check": "prettier --check \"src/**/*.{ts,tsx}\" \"tests/**/*.ts\" vite.config.ts playwright.config.ts \"tsconfig*.json\" package.json",
+    "format": "prettier --write \"src/**/*.{ts,tsx}\" \"tests/**/*.{ts,mjs}\" \"functions/**/*.js\" vite.config.ts playwright.config.ts eslint.config.js \"tsconfig*.json\" package.json",
+    "format:check": "prettier --check \"src/**/*.{ts,tsx}\" \"tests/**/*.{ts,mjs}\" \"functions/**/*.js\" vite.config.ts playwright.config.ts eslint.config.js \"tsconfig*.json\" package.json",
+    "test:pages-proxy": "node --test tests/pages-proxy.test.mjs",
     "test:e2e": "node --env-file-if-exists=../cbms-backend/.env ../cbms-backend/scripts/run-browser-tests.mjs"
   },
   "dependencies": {
