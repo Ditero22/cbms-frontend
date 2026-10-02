@@ -3,6 +3,9 @@
   "name": "cbms",
   "main": "worker.js",
   "compatibility_date": "2026-10-02",
+  "vars": {
+    "CBMS_API_ORIGIN": "https://cbms-backend-staging.onrender.com",
+  },
   "assets": {
     "directory": "./dist",
     "binding": "ASSETS",

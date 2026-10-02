@@ -86,6 +86,12 @@ jobs:
         run: npm run test:e2e
         working-directory: cbms-frontend
 
+      - name: Verify JWT startup, refresh, logout, and connection failures
+        run: npm run test:e2e -- tests/e2e/jwt-refresh.spec.ts tests/e2e/api-connection.spec.ts
+        working-directory: cbms-frontend
+        env:
+          AUTH_MODE: jwt
+
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         if: always()
         with:

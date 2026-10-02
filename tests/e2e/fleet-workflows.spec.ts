@@ -1,6 +1,13 @@
 import { expect, test, type APIRequestContext, type Locator, type Page } from '@playwright/test'
 import { tableRecordControl } from './helpers/table-records'
 
+// Direct fixture API mutations follow the same allowed-origin policy as browser requests.
+test.use({
+  extraHTTPHeaders: {
+    Origin: new URL(process.env.CBMS_E2E_BASE_URL ?? 'http://127.0.0.1:5180').origin,
+  },
+})
+
 const apiUrl = process.env.CBMS_E2E_API_URL ?? 'http://127.0.0.1:3002/api/v1'
 const fixtures = JSON.parse(process.env.CBMS_E2E_FIXTURES ?? '{}') as {
   branchId: string
@@ -284,6 +291,23 @@ test('driver, delivery, maintenance expense, receipt, and allowance lifecycle re
     await dialog.getByRole('button', { name: 'Save status', exact: true }).click()
     await expect(dialog).not.toBeVisible()
   }
+  await page.goto('/deliveries')
+  await page.getByLabel('Search Deliveries', { exact: true }).fill(deliveryReference)
+  await tableRecordControl(page, deliveryReference).click()
+  dialog = page.getByRole('dialog', { name: deliveryReference, exact: true })
+  await uploadReceipt(dialog)
+  await bounds(page, dialog)
+  const deliveryProofs = await api<{ items: { id: string }[] }>(
+    page.request,
+    `/attachments?entityType=delivery&entityId=${delivery.id}`,
+  )
+  expect(deliveryProofs.items).toHaveLength(1)
+  const deliveryProof = await page.request.get(
+    `${apiUrl}/attachments/${deliveryProofs.items[0].id}/content`,
+  )
+  expect(deliveryProof.status()).toBe(200)
+  expect(await deliveryProof.body()).toEqual(receipt.buffer)
+  await dialog.getByRole('button', { name: 'Close', exact: true }).click()
   let fleet = await api<Vehicle>(page.request, `/vehicles/${vehicle.id}`)
   expect(fleet.vehicle.status).toBe('Available')
   expect(fleet.assignments[0].status).toBe('Completed')

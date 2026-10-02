@@ -2,6 +2,7 @@ import { useState } from 'react'
 import type { ReactNode } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { AppDialog } from '@/components/common/AppDialog'
+import { AttachmentList } from '@/components/common/AttachmentList'
 import { StatusBadge } from '@/components/common/DataTable'
 import { RecordHistoryPanel } from '@/components/common/RecordHistoryPanel'
 import { formatQuantity } from './order-decimals'
@@ -145,6 +146,9 @@ export function DeliveryDetailDialog({
               </p>
             )}
           </DetailSection>
+
+          <p className="form-helper">Delivery proof is optional for this release.</p>
+          <AttachmentList entityType="delivery" entityId={delivery.id} canUpload={canUpdate} />
 
           {canReadAudit && (
             <RecordHistoryPanel

@@ -11,7 +11,7 @@
     "lint": "eslint .",
     "format": "prettier --write \"src/**/*.{ts,tsx}\" \"tests/**/*.{ts,mjs}\" \"functions/**/*.js\" vite.config.ts playwright.config.ts eslint.config.js \"tsconfig*.json\" package.json",
     "format:check": "prettier --check \"src/**/*.{ts,tsx}\" \"tests/**/*.{ts,mjs}\" \"functions/**/*.js\" vite.config.ts playwright.config.ts eslint.config.js \"tsconfig*.json\" package.json",
-    "test:pages-proxy": "node --test tests/pages-proxy.test.mjs",
+    "test:pages-proxy": "node --test tests/pages-proxy.test.mjs tests/worker-routing.test.mjs",
     "test:e2e": "node --env-file-if-exists=../cbms-backend/.env ../cbms-backend/scripts/run-browser-tests.mjs"
   },
   "dependencies": {

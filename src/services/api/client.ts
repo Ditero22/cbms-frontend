@@ -4,6 +4,30 @@ export { ApiError } from './errors'
 
 const baseUrl = (import.meta.env.VITE_API_URL?.trim() || '/api/v1').replace(/\/+$/, '')
 export const sessionExpiredEvent = 'cbms:session-expired'
+let refreshInFlight: Promise<boolean> | undefined
+
+function refreshSession() {
+  if (!refreshInFlight) {
+    refreshInFlight = (async () => {
+      for (let attempt = 0; attempt < 2; attempt += 1) {
+        const response = await fetch(`${baseUrl}/auth/refresh`, {
+          method: 'POST',
+          credentials: 'include',
+        })
+        if (response.status !== 409) {
+          if (response.ok || response.status === 401 || response.status === 403) return response.ok
+          const payload: unknown = await response.json().catch(() => undefined)
+          throw requestFailure(response.status, '/auth/refresh', payload)
+        }
+        await new Promise((resolve) => window.setTimeout(resolve, 150))
+      }
+      throw new ApiError('Authentication is being refreshed. Try again.', 409, 'REFRESH_CONCURRENT')
+    })().finally(() => {
+      refreshInFlight = undefined
+    })
+  }
+  return refreshInFlight
+}
 
 function notifyExpiredSession(path: string, status: number) {
   if (status === 401 && path !== '/auth/login' && path !== '/auth/logout') {
@@ -24,7 +48,7 @@ function reportFailure(error: ApiError, method: string) {
   return error
 }
 
-async function request(path: string, init?: RequestInit) {
+async function request(path: string, init?: RequestInit, refreshed = false): Promise<Response> {
   const method = init?.method ?? 'GET'
   let response: Response
   try {
@@ -44,6 +68,27 @@ async function request(path: string, init?: RequestInit) {
     )
   }
   if (!response.ok) {
+    if (
+      response.status === 401 &&
+      !refreshed &&
+      !['/auth/login', '/auth/logout', '/auth/refresh'].includes(path)
+    ) {
+      let refreshedSuccessfully: boolean
+      try {
+        refreshedSuccessfully = await refreshSession()
+      } catch (error) {
+        if (error instanceof ApiError) throw reportFailure(error, method)
+        throw reportFailure(
+          new ApiError(
+            'Authentication could not be refreshed. Try again.',
+            0,
+            'BACKEND_UNREACHABLE',
+          ),
+          method,
+        )
+      }
+      if (refreshedSuccessfully) return request(path, init, true)
+    }
     notifyExpiredSession(path, response.status)
     const payload: unknown = await response.json().catch(() => undefined)
     throw reportFailure(requestFailure(response.status, path, payload), method)

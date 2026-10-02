@@ -1,7 +1,7 @@
 import { apiDownload, apiRequest } from '@/services/api/client'
 
 export type ProofEntityType =
-  'vehicle-maintenance' | 'driver-allowance' | 'payment' | 'payroll-entry'
+  'vehicle-maintenance' | 'driver-allowance' | 'payment' | 'payroll-entry' | 'delivery'
 export type ProofProps = { entityType: ProofEntityType; entityId: string; onUploaded?: () => void }
 export type ProofAttachment = {
   id: string
