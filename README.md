@@ -9,7 +9,9 @@ npm ci
 npm run dev
 ```
 
-The frontend uses the live CBMS API and cookie-based sessions. Set `VITE_API_URL` in `.env.local` to `http://localhost:3000/api/v1`. Start the backend and apply its migrations before using the application. The complete local setup is documented in [`DEPLOYMENT.md`](../DEPLOYMENT.md), and the latest verified work and remaining release items are in [`progressreport.md`](../progressreport.md).
+The frontend uses the live CBMS API and cookie-based authentication. Keep `VITE_API_URL=/api/v1` in `.env.local`; Vite proxies `/api` to the local backend. Set `CBMS_API_PROXY_TARGET` if the local backend uses a different port. Start the backend and apply its migrations before using the application. The complete local setup is documented in [`DEPLOYMENT.md`](../DEPLOYMENT.md), and the latest verified work and remaining release items are in [`progressreport.md`](../progressreport.md).
+
+Production builds require `VITE_API_URL=/api/v1` (or leave it unset). For Cloudflare Workers, set the build variable to that path and the runtime `CBMS_API_ORIGIN` to the HTTPS Render origin. Local `.env.local` also participates in production builds, so keep its API path relative. Never build a hosted site with a localhost API URL; the browser would request the visitor's computer. Absolute API URLs are supported only during development. Production traffic uses the configured server-side proxy and the existing same-origin security policy.
 
 ## Available scripts
 
@@ -18,6 +20,7 @@ The frontend uses the live CBMS API and cookie-based sessions. Set `VITE_API_URL
 - `npm run preview` — serve the production bundle locally.
 - `npm run lint` — run ESLint.
 - `npm run typecheck` — check TypeScript, including browser tests/configuration.
+- `npm run test:deployment-config` — verify production API configuration guards.
 - `npm run format:check` — check source and test formatting.
 - `npm run test:e2e` — run isolated API/database/browser acceptance.
 

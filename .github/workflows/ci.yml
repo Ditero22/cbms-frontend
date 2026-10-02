@@ -33,6 +33,7 @@ jobs:
       - run: npm run lint
       - run: npm run typecheck
       - run: npm run test:pages-proxy
+      - run: npm run test:deployment-config
       - run: npm run build
 
   browser-acceptance:

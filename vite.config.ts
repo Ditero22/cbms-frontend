@@ -13,21 +13,8 @@ function parseConfigurationUrl(value: string, name: string, base?: string) {
   }
 }
 
-export default defineConfig(({ mode }) => {
-  const configuration = loadEnv(mode, sourceDirectory, ['CBMS_', 'VITE_API_URL'])
-  const apiProxyTarget = configuration.CBMS_API_PROXY_TARGET || 'http://127.0.0.1:3000'
-  const target = parseConfigurationUrl(apiProxyTarget, 'CBMS_API_PROXY_TARGET')
-  if (
-    !['http:', 'https:'].includes(target.protocol) ||
-    target.username ||
-    target.password ||
-    target.pathname !== '/' ||
-    target.search ||
-    target.hash
-  ) {
-    throw new Error('CBMS_API_PROXY_TARGET must be an HTTP(S) origin without credentials.')
-  }
-  const apiBase = configuration.VITE_API_URL?.trim() || '/api/v1'
+export function resolveApiBase(value: string | undefined, production: boolean) {
+  const apiBase = value?.trim() || '/api/v1'
   const apiUrl = parseConfigurationUrl(apiBase, 'VITE_API_URL', 'http://localhost')
   if (
     (!apiBase.startsWith('/') && !/^https?:\/\//.test(apiBase)) ||
@@ -41,6 +28,29 @@ export default defineConfig(({ mode }) => {
   ) {
     throw new Error('VITE_API_URL must be /api/v1 or an HTTP(S) API URL ending in /api/v1.')
   }
+  if (production && apiBase.replace(/\/+$/, '') !== '/api/v1') {
+    throw new Error(
+      'Production VITE_API_URL must be /api/v1. Configure the server-side proxy with CBMS_API_ORIGIN.',
+    )
+  }
+  return apiBase
+}
+
+export default defineConfig(({ mode, command }) => {
+  const configuration = loadEnv(mode, sourceDirectory, ['CBMS_', 'VITE_API_URL'])
+  const apiProxyTarget = configuration.CBMS_API_PROXY_TARGET || 'http://127.0.0.1:3000'
+  const target = parseConfigurationUrl(apiProxyTarget, 'CBMS_API_PROXY_TARGET')
+  if (
+    !['http:', 'https:'].includes(target.protocol) ||
+    target.username ||
+    target.password ||
+    target.pathname !== '/' ||
+    target.search ||
+    target.hash
+  ) {
+    throw new Error('CBMS_API_PROXY_TARGET must be an HTTP(S) origin without credentials.')
+  }
+  resolveApiBase(configuration.VITE_API_URL, command === 'build')
 
   return {
     plugins: [react()],
