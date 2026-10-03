@@ -261,13 +261,13 @@ test('shared data tables keep subtle striping and orange edges in both themes', 
   const payrollTable = page.locator('.payroll-ledger-table')
   await expect(payrollTable.locator('tbody tr').nth(1)).toBeVisible()
   await page.mouse.move(8, 8)
-  await assertTablePaint('dark', '.payroll-ledger-table-wrap', '.payroll-ledger-table')
+  await assertTablePaint('dark', '.payroll-ledger', '.payroll-ledger-table')
   await page.screenshot({ path: testInfo.outputPath('payroll-table-dark-desktop.png') })
 
   await page.getByRole('button', { name: 'Switch to light mode', exact: true }).click()
   await expect.poll(() => page.evaluate(() => document.documentElement.dataset.theme)).toBe('light')
   await page.waitForTimeout(200)
-  await assertTablePaint('light', '.payroll-ledger-table-wrap', '.payroll-ledger-table')
+  await assertTablePaint('light', '.payroll-ledger', '.payroll-ledger-table')
   await page.goto('/customers')
 
   await page.setViewportSize({ width: 390, height: 844 })
@@ -1227,7 +1227,7 @@ test('mobile drawer shows actual branch scope, permission-filtered navigation, i
   await navigation.evaluate((element) => {
     element.scrollTop = element.scrollHeight
   })
-  await expect(drawer.getByRole('link', { name: 'Design system', exact: true })).toBeVisible()
+  await expect(drawer.getByRole('link', { name: 'Settings', exact: true })).toBeVisible()
   const after = await drawer
     .getByRole('button', { name: 'Close navigation', exact: true })
     .boundingBox()

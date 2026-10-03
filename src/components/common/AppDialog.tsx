@@ -96,6 +96,7 @@ export function AppDialog({
   }
 
   function requestClose() {
+    if (contentRef.current?.querySelector('[aria-busy="true"]')) return
     if (hasUnsavedChanges || formHasChangesRef.current || formHasChanges) {
       setDiscardPromptOpen(true)
       return
@@ -109,6 +110,7 @@ export function AppDialog({
         open={open}
         onOpenChange={(nextOpen) => {
           if (nextOpen) onOpenChange(true)
+          else if (contentRef.current?.querySelector('[aria-busy="true"]')) return
           else if (discardPromptOpen) setDiscardPromptOpen(false)
           else requestClose()
         }}
