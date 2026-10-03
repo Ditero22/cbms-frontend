@@ -1392,8 +1392,10 @@ async function assertPendingCloseGuard(page: Page, dialog: Locator, savingText: 
   await expect(dialog.getByRole('button', { name: 'Add product', exact: true })).toBeDisabled()
   await page.keyboard.press('Escape')
   await expect(dialog).toBeVisible()
+  await expect(page.getByRole('alertdialog', { name: 'Discard changes?' })).toHaveCount(0)
   await dialog.getByRole('button', { name: 'Close dialog', exact: true }).click()
   await expect(dialog).toBeVisible()
+  await expect(page.getByRole('alertdialog', { name: 'Discard changes?' })).toHaveCount(0)
   await dialogBounds(page, dialog)
 }
 
