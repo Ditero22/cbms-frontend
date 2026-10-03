@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { toast } from 'sonner'
-import { AppDialog } from '@/components/common/AppDialog'
+import { AppDialog, DialogCancelButton } from '@/components/common/AppDialog'
 import { FieldHeading } from '@/components/common/FieldHeading'
 import { getProofs, proofQueryKey } from '@/components/common/proofs.api'
 import { confirmPayrollEntryReceived } from './payroll.api'
@@ -121,9 +121,7 @@ export function PayrollReceiptDialog({
           </p>
         )}
         <div className="dialog-actions">
-          <button type="button" className="button button-outline" disabled={busy} onClick={onClose}>
-            Cancel
-          </button>
+          <DialogCancelButton disabled={busy} />
           <button type="submit" className="button button-primary" disabled={busy}>
             {busy ? 'Saving…' : 'Confirm receipt'}
           </button>

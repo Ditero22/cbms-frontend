@@ -2,7 +2,7 @@ import { FieldHeading } from '@/components/common/FieldHeading'
 import { useEffect, useRef } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
 import { Plus } from 'lucide-react'
-import { AppDialog } from '@/components/common/AppDialog'
+import { AppDialog, DialogCancelButton } from '@/components/common/AppDialog'
 import type { CreateDeliveryValues, DeliveryOptions } from './types'
 import type { FleetOptions } from '@/features/fleet/types'
 
@@ -47,7 +47,7 @@ export function CreateDeliveryDialog({
     setValue,
     reset,
     setError,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isDirty },
   } = useForm<DeliveryFormValues>({
     defaultValues: {
       orderId: '',
@@ -127,6 +127,7 @@ export function CreateDeliveryDialog({
       onOpenChange={handleOpenChange}
       title="Schedule delivery"
       description="Choose the order lines and quantities to include in this delivery."
+      hasUnsavedChanges={isDirty}
     >
       <form className="dialog-form" onSubmit={submit}>
         <label className="field-label">
@@ -311,14 +312,7 @@ export function CreateDeliveryDialog({
         ) : null}
 
         <div className="dialog-actions">
-          <button
-            type="button"
-            className="button button-outline"
-            onClick={() => handleOpenChange(false)}
-            disabled={isSubmitting}
-          >
-            Cancel
-          </button>
+          <DialogCancelButton disabled={isSubmitting} />
           <button
             type="submit"
             className="button button-primary"

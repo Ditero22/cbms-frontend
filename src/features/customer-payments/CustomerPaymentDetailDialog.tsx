@@ -152,9 +152,6 @@ export function CustomerPaymentDetailDialog({
               </section>
             )}
             <div className="dialog-actions">
-              <button type="button" className="button button-outline" onClick={onClose}>
-                Close
-              </button>
               {canCreate && (
                 <button
                   type="button"

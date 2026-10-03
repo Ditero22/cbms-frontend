@@ -256,9 +256,6 @@ export function VehicleDetailDialog({
               />
             )}
             <div className="dialog-actions">
-              <button className="button button-outline" type="button" onClick={onClose}>
-                Close
-              </button>
               {canUpdate && (
                 <>
                   <button

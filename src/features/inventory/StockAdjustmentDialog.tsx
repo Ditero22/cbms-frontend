@@ -1,7 +1,7 @@
 import { useEffect, useId, useRef, useState } from 'react'
 import type { FormEvent } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { AppDialog } from '@/components/common/AppDialog'
+import { AppDialog, DialogCancelButton } from '@/components/common/AppDialog'
 import { FieldHeading } from '@/components/common/FieldHeading'
 import { getInventoryOptions } from '@/features/modules/modules.api'
 import { fromMinorUnits, toMinorUnits } from '@/features/modules/order-decimals'
@@ -231,9 +231,7 @@ export function StockAdjustmentDialog({
           </p>
         )}
         <div className="dialog-actions">
-          <button type="button" className="button button-outline" disabled={busy} onClick={onClose}>
-            Cancel
-          </button>
+          <DialogCancelButton disabled={busy} />
           <button
             type="submit"
             className="button button-primary"

@@ -122,12 +122,6 @@ export function TransferDetailDialog({
               busy={detail.isFetching}
             />
           )}
-
-          <div className="dialog-actions">
-            <button type="button" className="button button-outline" onClick={onClose}>
-              Close
-            </button>
-          </div>
         </>
       ) : null}
     </AppDialog>

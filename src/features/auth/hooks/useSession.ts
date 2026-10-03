@@ -18,6 +18,11 @@ export function useSession() {
   })
 
   useEffect(() => {
+    const userId = sessionQuery.data?.user?.id
+    if (userId) window.localStorage.setItem('cbms-last-user-id', userId)
+  }, [sessionQuery.data?.user?.id])
+
+  useEffect(() => {
     function clearExpiredSession() {
       if (queryClient.getQueryData<SessionResponse | null>(sessionQueryKey)?.user) {
         toast.info('Your session has expired. Sign in again.')
@@ -32,6 +37,7 @@ export function useSession() {
 
   async function login(email: string, password: string) {
     const response = await signIn(email, password)
+    window.localStorage.setItem('cbms-last-user-id', response.user.id)
     queryClient.setQueryData(sessionQueryKey, response)
   }
 

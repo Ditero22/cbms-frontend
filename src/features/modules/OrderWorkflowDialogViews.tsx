@@ -1,7 +1,7 @@
 import { FieldHeading } from '@/components/common/FieldHeading'
 import { customerPaymentMethods as paymentMethods } from '@/features/customer-payments/payment-methods'
 import type { Dispatch, FormEventHandler, SetStateAction } from 'react'
-import { AppDialog } from '@/components/common/AppDialog'
+import { AppDialog, DialogCancelButton } from '@/components/common/AppDialog'
 import { completeOrder, rejectRefund, rejectReturn } from './modules.api'
 import type { OrderDetailResponse, ReturnReceiptClassification } from './types'
 import {
@@ -190,9 +190,7 @@ export function OrderWorkflowDialogViews({
             its history.
           </p>
           <div className="dialog-actions">
-            <button className="button button-outline" disabled={busy} onClick={closeDialog}>
-              Keep open
-            </button>
+            <DialogCancelButton disabled={busy}>Keep open</DialogCancelButton>
             <button
               className="button button-primary"
               disabled={busy}
@@ -269,14 +267,7 @@ export function OrderWorkflowDialogViews({
             />
           </label>
           <div className="dialog-actions">
-            <button
-              type="button"
-              className="button button-outline"
-              disabled={busy}
-              onClick={closeDialog}
-            >
-              Cancel
-            </button>
+            <DialogCancelButton disabled={busy} />
             <button type="submit" className="button button-primary" disabled={busy}>
               {busy ? 'Saving…' : 'Cancel selected quantities'}
             </button>
@@ -377,14 +368,7 @@ export function OrderWorkflowDialogViews({
             />
           </label>
           <div className="dialog-actions">
-            <button
-              type="button"
-              className="button button-outline"
-              disabled={busy}
-              onClick={closeDialog}
-            >
-              Cancel
-            </button>
+            <DialogCancelButton disabled={busy} />
             <button type="submit" className="button button-primary" disabled={busy}>
               {busy ? 'Submitting…' : 'Submit refund request'}
             </button>
@@ -480,14 +464,7 @@ export function OrderWorkflowDialogViews({
             />
           </label>
           <div className="dialog-actions">
-            <button
-              type="button"
-              className="button button-outline"
-              disabled={busy}
-              onClick={closeDialog}
-            >
-              Cancel
-            </button>
+            <DialogCancelButton disabled={busy} />
             <button
               type="submit"
               className="button button-primary"
@@ -529,14 +506,7 @@ export function OrderWorkflowDialogViews({
             />
           </label>
           <div className="dialog-actions">
-            <button
-              type="button"
-              className="button button-outline"
-              disabled={busy}
-              onClick={closeDialog}
-            >
-              Cancel
-            </button>
+            <DialogCancelButton disabled={busy} />
             <button type="submit" className="button button-primary" disabled={busy}>
               {busy ? 'Saving…' : 'Reject request'}
             </button>
@@ -654,14 +624,7 @@ export function OrderWorkflowDialogViews({
               )
             })}
           <div className="dialog-actions">
-            <button
-              type="button"
-              className="button button-outline"
-              disabled={busy}
-              onClick={closeDialog}
-            >
-              Cancel
-            </button>
+            <DialogCancelButton disabled={busy} />
             <button type="submit" className="button button-primary" disabled={busy}>
               {busy ? 'Receiving…' : 'Receive return'}
             </button>

@@ -1,5 +1,6 @@
 import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
+import { readFileSync } from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -51,8 +52,12 @@ export default defineConfig(({ mode, command }) => {
     throw new Error('CBMS_API_PROXY_TARGET must be an HTTP(S) origin without credentials.')
   }
   resolveApiBase(configuration.VITE_API_URL, command === 'build')
+  const packageVersion = JSON.parse(
+    readFileSync(new URL('./package.json', import.meta.url), 'utf8'),
+  ).version as string
 
   return {
+    define: { __CBMS_VERSION__: JSON.stringify(packageVersion) },
     plugins: [react()],
     server: {
       port: 5173,

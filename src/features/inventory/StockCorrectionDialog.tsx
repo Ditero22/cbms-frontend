@@ -1,5 +1,5 @@
 import { useId, useRef, useState, type FormEvent } from 'react'
-import { AppDialog } from '@/components/common/AppDialog'
+import { AppDialog, DialogCancelButton } from '@/components/common/AppDialog'
 import { FieldHeading } from '@/components/common/FieldHeading'
 import { formatQuantity, fromMinorUnits, toMinorUnits } from '@/features/modules/order-decimals'
 import type { InventoryRecord, StockCorrectionValues } from './types'
@@ -108,9 +108,7 @@ export function StockCorrectionDialog({
           </p>
         )}
         <div className="dialog-actions">
-          <button type="button" className="button button-outline" disabled={busy} onClick={onClose}>
-            Cancel
-          </button>
+          <DialogCancelButton disabled={busy} />
           <button className="button button-primary" type="submit" disabled={busy}>
             {busy ? 'Saving…' : 'Save correction'}
           </button>

@@ -10,7 +10,7 @@
   gap: 6px 18px;
   margin: 0;
   color: var(--text-secondary);
-  font-size: 12px;
+  font-size: var(--font-size-12);
   line-height: 1.5;
 }
 .role-metadata > div {
@@ -35,13 +35,13 @@
 .role-section-heading h3 {
   margin: 0;
   color: var(--text);
-  font-size: 14px;
+  font-size: var(--font-size-14);
   font-weight: 650;
 }
 .role-section-heading > span,
 .role-section-description {
   color: var(--text-secondary);
-  font-size: 12px;
+  font-size: var(--font-size-12);
   line-height: 1.5;
 }
 .role-section-description {
@@ -77,7 +77,7 @@
   margin-bottom: 10px;
   padding: 0;
   color: var(--text);
-  font-size: 13px;
+  font-size: var(--font-size-13);
   font-weight: 650;
 }
 .role-permission-choice {
@@ -95,7 +95,7 @@
 .role-permission-choice label {
   display: block;
   color: var(--text);
-  font-size: 13px;
+  font-size: var(--font-size-13);
   font-weight: 550;
   line-height: 1.5;
   cursor: pointer;
@@ -106,13 +106,13 @@
 .role-permission-choice p {
   margin: 3px 0;
   color: var(--text-secondary);
-  font-size: 12px;
+  font-size: var(--font-size-12);
   line-height: 1.5;
 }
 .role-permission-choice code {
   display: block;
   color: var(--text-subtle);
-  font-size: 10px;
+  font-size: var(--font-size-10);
   overflow-wrap: anywhere;
 }
 .role-empty-state {
@@ -120,14 +120,14 @@
   margin: 0;
   padding: 12px 0;
   color: var(--text-secondary);
-  font-size: 13px;
+  font-size: var(--font-size-13);
   line-height: 1.5;
 }
 .role-loading-state {
   margin: 0;
   padding: 16px 0;
   color: var(--text-secondary);
-  font-size: 13px;
+  font-size: var(--font-size-13);
 }
 @media (max-width: 700px) {
   .role-permission-groups {

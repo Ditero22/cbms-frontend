@@ -1,7 +1,7 @@
 import { useState, type FormEvent } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
-import { AppDialog } from '@/components/common/AppDialog'
+import { AppDialog, DialogCancelButton } from '@/components/common/AppDialog'
 import { FieldHeading } from '@/components/common/FieldHeading'
 import { getLegacyDeliveryReconciliation, reconcileLegacyDelivery } from './modules.api'
 
@@ -169,14 +169,7 @@ export function LegacyDeliveryReconciliationPanel({
               />
             </label>
             <div className="dialog-actions">
-              <button
-                type="button"
-                className="button button-outline"
-                disabled={saving}
-                onClick={() => changeOpen(false)}
-              >
-                Close
-              </button>
+              <DialogCancelButton disabled={saving} />
               <button
                 type="submit"
                 className="button button-primary"

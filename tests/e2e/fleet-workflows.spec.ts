@@ -307,7 +307,7 @@ test('driver, delivery, maintenance expense, receipt, and allowance lifecycle re
   )
   expect(deliveryProof.status()).toBe(200)
   expect(await deliveryProof.body()).toEqual(receipt.buffer)
-  await dialog.getByRole('button', { name: 'Close', exact: true }).click()
+  await dialog.getByRole('button', { name: 'Close dialog', exact: true }).click()
   let fleet = await api<Vehicle>(page.request, `/vehicles/${vehicle.id}`)
   expect(fleet.vehicle.status).toBe('Available')
   expect(fleet.assignments[0].status).toBe('Completed')
@@ -362,7 +362,7 @@ test('driver, delivery, maintenance expense, receipt, and allowance lifecycle re
     },
   })
   expect(conflict.status()).toBe(409)
-  await dialog.getByRole('button', { name: 'Close', exact: true }).click()
+  await dialog.getByRole('button', { name: 'Close dialog', exact: true }).click()
   dialog = page.getByRole('dialog', { name: vehicleName, exact: true })
   await expect(dialog.getByRole('button', { name: 'New assignment', exact: true })).toBeDisabled()
   await expect(dialog.getByText('Current maintenance', { exact: true })).toBeVisible()

@@ -1,6 +1,6 @@
 import { useEffect, useId, useState } from 'react'
 import type { FormEvent } from 'react'
-import { AppDialog } from '@/components/common/AppDialog'
+import { AppDialog, DialogCancelButton } from '@/components/common/AppDialog'
 import { FieldHeading } from '@/components/common/FieldHeading'
 import { formatQuantity, fromMinorUnits, toMinorUnits } from '@/features/modules/order-decimals'
 import type { InventoryRecord } from './types'
@@ -80,9 +80,7 @@ export function ReorderPointDialog({
           </p>
         )}
         <div className="dialog-actions">
-          <button type="button" className="button button-outline" disabled={busy} onClick={onClose}>
-            Cancel
-          </button>
+          <DialogCancelButton disabled={busy} />
           <button type="submit" className="button button-primary" disabled={busy}>
             {busy ? 'Saving…' : 'Save reorder point'}
           </button>

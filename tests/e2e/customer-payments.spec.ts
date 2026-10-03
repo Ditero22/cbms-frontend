@@ -141,6 +141,9 @@ for (const width of [375, 390, 430, 768, 1024, 1280, 1440]) {
     await bounds(page, form)
     await page.screenshot({ path: testInfo.outputPath(`payment-form-${width}.png`) })
     await page.keyboard.press('Escape')
+    const discard = page.getByRole('alertdialog', { name: 'Discard changes?' })
+    await expect(discard).toBeVisible()
+    await discard.getByRole('button', { name: 'Discard', exact: true }).click()
     await expect(form).toBeHidden()
     await expect(page.getByRole('button', { name: 'Record payment', exact: true })).toBeFocused()
     const detail = await openOrder(page, order)
@@ -180,7 +183,7 @@ for (const width of [390, 1280]) {
     await expect(
       detail.getByText('Initial construction delivery installment', { exact: true }),
     ).toBeVisible()
-    await detail.getByRole('button', { name: 'Close', exact: true }).click()
+    await detail.getByRole('button', { name: 'Close dialog', exact: true }).click()
     const row = recordElement(page, order, width)
     await expect(row.getByText('₱70.00', { exact: true })).toBeVisible()
     await expect(row.getByText('Partially Paid', { exact: true })).toBeVisible()
@@ -217,7 +220,7 @@ for (const width of [390, 1280]) {
         }),
       ]),
     )
-    await detail.getByRole('button', { name: 'Close', exact: true }).click()
+    await detail.getByRole('button', { name: 'Close dialog', exact: true }).click()
     await expect(row.getByText('₱0.00', { exact: true })).toBeVisible()
     await expect(row.getByText('Paid', { exact: true })).toBeVisible()
   })
@@ -307,7 +310,7 @@ test('read-only payment users see balances and history without financial actions
   await expect(
     preview.getByRole('img', { name: `Payment proof: ${paymentProof.name}` }),
   ).toBeVisible()
-  await preview.getByRole('button', { name: 'Close', exact: true }).click()
+  await preview.getByRole('button', { name: 'Close dialog', exact: true }).click()
   const denied = await page.request.post(`${apiUrl}/payments`, {
     data: { orderId: order.id, amount: '1.00', method: 'Cash' },
   })
@@ -342,6 +345,9 @@ test('payment options retry preserves input and list errors/empty filters recove
   await expect(form.getByLabel(/^Notes/)).toHaveValue('Keep this draft after retry')
   await form.getByLabel(/^Order/).selectOption(order.id)
   await form.getByRole('button', { name: 'Cancel', exact: true }).click()
+  const discard = page.getByRole('alertdialog', { name: 'Discard changes?' })
+  await expect(discard).toBeVisible()
+  await discard.getByRole('button', { name: 'Discard', exact: true }).click()
   await page.getByLabel('Search Payments', { exact: true }).fill('no-matching-payment-order')
   await expect(page.getByText('No matching records', { exact: true })).toBeVisible()
   await page.getByLabel('Search Payments', { exact: true }).fill(order.orderNumber)

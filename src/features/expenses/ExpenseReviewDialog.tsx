@@ -1,6 +1,6 @@
 import { useId, useState } from 'react'
 import type { FormEvent } from 'react'
-import { AppDialog } from '@/components/common/AppDialog'
+import { AppDialog, DialogCancelButton } from '@/components/common/AppDialog'
 import { FieldHeading } from '@/components/common/FieldHeading'
 import { formatPeso } from '@/features/modules/order-decimals'
 import type { ExpenseRecord } from './types'
@@ -88,9 +88,13 @@ export function ExpenseReviewDialog({
           </p>
         )}
         <div className="dialog-actions">
-          <button type="button" className="button button-outline" disabled={busy} onClick={onClose}>
-            {alreadyReviewed ? 'View latest expense' : 'Cancel'}
-          </button>
+          {alreadyReviewed ? (
+            <button type="button" className="button button-outline" onClick={onClose}>
+              Discard draft and view latest
+            </button>
+          ) : (
+            <DialogCancelButton disabled={busy} />
+          )}
           <button
             type="submit"
             className={rejecting ? 'button button-danger' : 'button button-primary'}

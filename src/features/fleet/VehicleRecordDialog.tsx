@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
-import { AppDialog } from '@/components/common/AppDialog'
+import { AppDialog, DialogCancelButton } from '@/components/common/AppDialog'
 import { FleetField, FleetSection, type FleetForm } from './FleetFields'
 import { optionalText, dateInput } from './fleet.utils'
 import type { FleetOptions, VehicleRecord, VehicleValues } from './types'
@@ -32,7 +32,7 @@ export function VehicleRecordDialog({
     control,
     setValue,
     getValues,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isDirty },
   } = useForm<FleetForm>()
   useEffect(() => {
     if (!open) return
@@ -115,6 +115,7 @@ export function VehicleRecordDialog({
       title={record ? 'Edit vehicle' : 'Add vehicle'}
       description="Keep fleet specifications and the default driver up to date."
       size="wide"
+      hasUnsavedChanges={isDirty}
     >
       <form className="dialog-form" onSubmit={submit}>
         <fieldset className="fleet-form-section" disabled={isSubmitting}>
@@ -247,14 +248,7 @@ export function VehicleRecordDialog({
           </p>
         )}
         <div className="dialog-actions">
-          <button
-            type="button"
-            className="button button-outline"
-            disabled={isSubmitting}
-            onClick={onClose}
-          >
-            Cancel
-          </button>
+          <DialogCancelButton disabled={isSubmitting} />
           <button
             type="submit"
             className="button button-primary"

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { AppDialog } from './AppDialog'
+import { AppDialog, DialogCancelButton } from './AppDialog'
 
 export function ArchiveRecordDialog({
   open,
@@ -47,9 +47,7 @@ export function ArchiveRecordDialog({
         </p>
       )}
       <div className="dialog-actions" aria-busy={pending}>
-        <button className="button button-outline" disabled={pending} onClick={onClose}>
-          Cancel
-        </button>
+        <DialogCancelButton disabled={pending} />
         <button className="button button-danger" disabled={pending} onClick={() => void confirm()}>
           {pending ? 'Archiving…' : actionLabel}
         </button>

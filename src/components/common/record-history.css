@@ -4,7 +4,7 @@
 }
 .record-history h3 {
   color: var(--text);
-  font-size: 14px;
+  font-size: var(--font-size-14);
   margin: 0 0 12px;
 }
 .record-history-list {
@@ -23,14 +23,14 @@
 }
 .record-history-list strong {
   color: var(--text);
-  font-size: 12px;
+  font-size: var(--font-size-12);
   font-weight: 600;
   overflow-wrap: anywhere;
 }
 .record-history-list span,
 .record-history-pagination {
   color: var(--text-secondary);
-  font-size: 12px;
+  font-size: var(--font-size-12);
 }
 .record-history-pagination {
   display: flex;

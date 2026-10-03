@@ -226,6 +226,15 @@ for (const width of [375, 390, 430, 768, 1024, 1280, 1440]) {
     await bounds(page, form)
     await page.screenshot({ path: testInfo.outputPath(`expense-create-${width}.png`) })
     await page.keyboard.press('Escape')
+    const discard = page.getByRole('alertdialog', { name: 'Discard changes?' })
+    await expect(discard).toBeVisible()
+    await expect(discard.getByRole('button', { name: 'Keep editing' })).toBeFocused()
+    await page.keyboard.press('Escape')
+    await expect(discard).toBeHidden()
+    await expect(form).toBeVisible()
+    await form.getByRole('button', { name: 'Cancel', exact: true }).click()
+    await expect(discard).toBeVisible()
+    await discard.getByRole('button', { name: 'Discard', exact: true }).click()
     await expect(form).toBeHidden()
     await expect(create).toBeFocused()
     const detail = await openExpense(page, expense)
@@ -288,7 +297,7 @@ for (const width of [390, 1280]) {
         })
       ).status(),
     ).toBe(409)
-    await detail.getByRole('button', { name: 'Close', exact: true }).click()
+    await detail.getByRole('button', { name: 'Close dialog', exact: true }).click()
     const rejected = await newExpense(page, `Rejected duplicate expense ${suffix}`, '10.01')
     detail = await openExpense(page, rejected)
     form = await openReview(page, detail, 'Rejected')
@@ -378,7 +387,7 @@ test('concurrent rendered reviews commit one decision and retain the losing draf
         exact: true,
       }),
     ).toBeDisabled()
-    await lost.getByRole('button', { name: 'View latest expense', exact: true }).click()
+    await lost.getByRole('button', { name: 'Discard draft and view latest', exact: true }).click()
     const losingPage = approvalResponse.status() === 409 ? page : peer
     const latest = losingPage.getByRole('dialog', { name: expense.description, exact: true })
     await expect(latest.locator('.status-badge')).toHaveText(final.expense.status)
@@ -600,7 +609,7 @@ test('linked expense proofs retain real parent permissions and readonly receipt 
     expect(
       (await page.request.get(`${apiUrl}/attachments/${source.proofId}/content`)).status(),
     ).toBe(403)
-    await detail.getByRole('button', { name: 'Close', exact: true }).click()
+    await detail.getByRole('button', { name: 'Close dialog', exact: true }).click()
   }
   await api(page.request, '/auth/logout', 'POST')
   await login(page, sourceReader.email)
@@ -624,7 +633,7 @@ test('linked expense proofs retain real parent permissions and readonly receipt 
     expect(privateContent.status()).toBe(200)
     expect(privateContent.headers()['cache-control']).toBe('private, no-store')
     expect(await privateContent.body()).toEqual(proof)
-    await detail.getByRole('button', { name: 'Close', exact: true }).click()
+    await detail.getByRole('button', { name: 'Close dialog', exact: true }).click()
   }
 })
 
@@ -669,6 +678,9 @@ test('expense loading, option retries and list/detail failures preserve draft fo
   await expect(form.getByLabel('Description', { exact: true })).toBeFocused()
   await expect(form.getByLabel('Amount', { exact: true })).toHaveValue('0.30')
   await form.getByRole('button', { name: 'Cancel', exact: true }).click()
+  const discard = page.getByRole('alertdialog', { name: 'Discard changes?' })
+  await expect(discard).toBeVisible()
+  await discard.getByRole('button', { name: 'Discard', exact: true }).click()
   await page.getByLabel('Search Expenses', { exact: true }).fill('no-matching-expense-fixture')
   await expect(page.getByText('No matching records', { exact: true })).toBeVisible()
   let failDetail = true,
@@ -701,7 +713,7 @@ test('expense loading, option retries and list/detail failures preserve draft fo
   failDetail = false
   await detail.getByRole('button', { name: 'Try again', exact: true }).click()
   await expect(detail.getByText('Submitted by', { exact: true })).toBeVisible()
-  await detail.getByRole('button', { name: 'Close', exact: true }).click()
+  await detail.getByRole('button', { name: 'Close dialog', exact: true }).click()
   let failList = true
   await page.route('**/api/v1/expenses?*', (route) =>
     failList

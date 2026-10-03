@@ -153,9 +153,6 @@ export function DriverAllowanceDetailDialog({
                 />
               )}
               <div className="dialog-actions">
-                <button type="button" className="button button-outline" onClick={onClose}>
-                  Close
-                </button>
                 {['Pending', 'Approved'].includes(record.status) && allowed('cancel') && (
                   <button
                     type="button"

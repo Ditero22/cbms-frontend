@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { Plus } from 'lucide-react'
-import { AppDialog } from '@/components/common/AppDialog'
+import { AppDialog, DialogCancelButton } from '@/components/common/AppDialog'
 import { RolePermissionPicker } from './RolePermissionPicker'
 import { RoleHistoryPanel } from './RoleHistoryPanel'
 import { RoleEditorFields } from './RoleEditorFields'
@@ -153,9 +153,10 @@ export function RoleManagementDialog({
         title="Manage roles"
         description="Manage role access within the permissions and branch scope of your account."
         size="wide"
+        hasUnsavedChanges={isDirty}
       >
         <form className="dialog-form role-form" onSubmit={submit} aria-busy={busy}>
-          <div className="role-chooser">
+          <div className="role-chooser" data-dialog-ignore-dirty>
             <label className="field-label">
               Existing role
               <select
@@ -267,14 +268,7 @@ export function RoleManagementDialog({
                 Delete role
               </button>
             )}
-            <button
-              type="button"
-              className="button button-outline"
-              disabled={isSubmitting || isDeleting}
-              onClick={() => handleOpenChange(false)}
-            >
-              Close
-            </button>
+            <DialogCancelButton disabled={isSubmitting || isDeleting} />
             {canEdit && (
               <button
                 type="submit"
@@ -304,14 +298,7 @@ export function RoleManagementDialog({
           </p>
         )}
         <div className="dialog-actions">
-          <button
-            type="button"
-            className="button button-outline"
-            disabled={isDeleting}
-            onClick={() => setDeleteConfirmOpen(false)}
-          >
-            Cancel
-          </button>
+          <DialogCancelButton disabled={isDeleting} />
           <button
             type="button"
             className="button button-danger"

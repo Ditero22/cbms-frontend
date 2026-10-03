@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { keepPreviousData, useQuery } from '@tanstack/react-query'
 import { Plus, ShieldCheck } from 'lucide-react'
-import { AppDialog } from '@/components/common/AppDialog'
+import { AppDialog, DialogCancelButton } from '@/components/common/AppDialog'
 import { Breadcrumbs } from '@/components/common/Breadcrumbs'
 import { DataTable } from '@/components/common/DataTable'
 import { PageHeading } from '@/components/common/PageHeading'
@@ -248,13 +248,7 @@ export function UsersPage() {
           </p>
         )}
         <div className="dialog-actions">
-          <button
-            className="button button-outline"
-            disabled={actions.busy}
-            onClick={() => setStatusUser(null)}
-          >
-            Cancel
-          </button>
+          <DialogCancelButton disabled={actions.busy} />
           <button
             className={
               statusUser?.status === 'Active' ? 'button button-danger' : 'button button-primary'
@@ -280,13 +274,7 @@ export function UsersPage() {
           </p>
         )}
         <div className="dialog-actions">
-          <button
-            className="button button-outline"
-            disabled={actions.busy}
-            onClick={() => setDeleteUser(null)}
-          >
-            Cancel
-          </button>
+          <DialogCancelButton disabled={actions.busy} />
           <button
             className="button button-danger"
             disabled={actions.busy}

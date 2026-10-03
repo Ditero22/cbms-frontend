@@ -20,7 +20,7 @@
 .payroll-section-heading h3 {
   margin: 0;
   color: var(--text);
-  font-size: 14px;
+  font-size: var(--font-size-14);
   font-weight: 650;
 }
 
@@ -41,7 +41,7 @@
 .payroll-inline-state {
   margin: 0;
   color: var(--text-secondary);
-  font-size: 12px;
+  font-size: var(--font-size-12);
   line-height: 1.5;
 }
 
@@ -63,17 +63,16 @@
 .payroll-adjustment-section h4 {
   margin: 0;
   color: var(--text);
-  font-size: 13px;
+  font-size: var(--font-size-13);
   font-weight: 650;
 }
 
 .payroll-adjustment-row {
   display: grid;
   min-width: 0;
-  grid-template-columns: minmax(110px, 0.8fr) minmax(150px, 1fr) minmax(130px, 0.9fr) minmax(
-      140px,
-      1.1fr
-    ) auto;
+  grid-template-columns:
+    minmax(110px, 0.8fr) minmax(150px, 1fr) minmax(130px, 0.9fr) minmax(140px, 1.1fr)
+    auto;
   align-items: end;
   gap: 10px;
   padding: 10px;
@@ -110,7 +109,7 @@
   gap: 12px;
   margin-bottom: 12px;
   color: var(--text);
-  font-size: 13px;
+  font-size: var(--font-size-13);
 }
 
 .payroll-detail-card-heading > div {
@@ -122,12 +121,12 @@
 .payroll-detail-card-heading h4 {
   margin: 0;
   color: var(--text);
-  font-size: 14px;
+  font-size: var(--font-size-14);
 }
 
 .payroll-detail-card-heading span {
   color: var(--text-secondary);
-  font-size: 12px;
+  font-size: var(--font-size-12);
 }
 
 .payroll-entry-heading .icon-button {
@@ -147,7 +146,7 @@
   gap: 8px 16px;
   margin-top: 12px;
   color: var(--text-secondary);
-  font-size: 12px;
+  font-size: var(--font-size-12);
 }
 
 .payroll-preview strong,
@@ -187,12 +186,12 @@
 
 .payroll-run-summary > div > span:first-child {
   color: var(--text-secondary);
-  font-size: 11px;
+  font-size: var(--font-size-11);
 }
 
 .payroll-run-summary strong {
   color: var(--text);
-  font-size: 13px;
+  font-size: var(--font-size-13);
   overflow-wrap: anywhere;
 }
 
@@ -212,13 +211,13 @@
 .payroll-amount-grid dt,
 .payroll-amount-grid small {
   color: var(--text-secondary);
-  font-size: 11px;
+  font-size: var(--font-size-11);
 }
 
 .payroll-amount-grid dd {
   margin: 0;
   color: var(--text);
-  font-size: 13px;
+  font-size: var(--font-size-13);
   font-weight: 650;
   font-variant-numeric: tabular-nums;
 }
@@ -239,7 +238,7 @@
   justify-content: space-between;
   gap: 6px 14px;
   color: var(--text-secondary);
-  font-size: 11px;
+  font-size: var(--font-size-11);
 }
 
 .payroll-adjustments strong {
@@ -279,6 +278,590 @@
 }
 .payroll-period-filters .button {
   margin-bottom: 0;
+}
+
+.payroll-ledger {
+  display: grid;
+  min-width: 0;
+  gap: 0;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-top: 2px solid var(--table-edge-accent);
+  border-radius: 12px;
+  background: var(--surface);
+}
+
+.payroll-ledger-filters {
+  display: grid;
+  min-width: 0;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  align-items: end;
+  gap: 8px;
+  padding: 11px 13px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.payroll-ledger-search {
+  grid-column: span 2;
+}
+
+.payroll-ledger-filters:not(.has-branch-filter) .payroll-ledger-search {
+  grid-column: span 3;
+}
+
+.payroll-ledger-search,
+.payroll-ledger-select,
+.payroll-ledger-date {
+  display: grid;
+  min-width: 0;
+  gap: 6px;
+  color: var(--text-secondary);
+  font-size: var(--font-size-12);
+  font-weight: 600;
+}
+
+.payroll-ledger-search {
+  position: relative;
+  display: flex;
+  min-height: 42px;
+  align-items: center;
+  gap: 10px;
+  padding: 0 12px;
+  border: 1px solid var(--border-strong);
+  border-radius: 9px;
+  color: var(--text-secondary);
+  background: var(--surface);
+}
+
+.payroll-ledger-search:focus-within {
+  border-color: var(--orange);
+  outline: 2px solid color-mix(in srgb, var(--orange) 22%, transparent);
+  outline-offset: 1px;
+}
+
+.payroll-ledger-search input {
+  width: 100%;
+  min-width: 0;
+  min-height: 40px;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  color: var(--text);
+  background: transparent;
+  font: inherit;
+  font-size: var(--font-size-13);
+}
+
+.payroll-ledger-search input::placeholder {
+  color: var(--text-secondary);
+  opacity: 1;
+}
+
+.payroll-ledger-select select,
+.payroll-ledger-date input,
+.payroll-ledger-pagination select {
+  width: 100%;
+  min-width: 0;
+  min-height: 40px;
+  padding: 6px 9px;
+  border: 1px solid var(--border-strong);
+  border-radius: 9px;
+  color: var(--text);
+  background: var(--surface);
+  font: inherit;
+  font-size: var(--font-size-12);
+}
+
+.payroll-ledger-actions {
+  display: flex;
+  min-width: 0;
+  align-items: end;
+  flex-wrap: wrap;
+  gap: 8px;
+  grid-column: span 2;
+  justify-content: flex-end;
+}
+
+.payroll-ledger-export,
+.payroll-ledger-clear {
+  min-height: 40px;
+  justify-content: center;
+}
+
+.payroll-ledger-table-wrap {
+  min-width: 0;
+  overflow: hidden;
+  border: 0;
+  border-radius: 0;
+  background: var(--surface);
+}
+
+.payroll-ledger-table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+  color: var(--text);
+  font-size: var(--font-size-12);
+}
+
+.payroll-ledger-table th,
+.payroll-ledger-table td {
+  min-width: 0;
+  padding: 6px 12px;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+  vertical-align: middle;
+}
+
+.payroll-ledger-table th {
+  height: 42px;
+  color: var(--text-secondary);
+  background: var(--surface-soft);
+  font-size: var(--font-size-11);
+  font-weight: 700;
+  letter-spacing: 0.45px;
+  text-transform: uppercase;
+}
+
+.payroll-ledger-table th:nth-child(1) {
+  width: 22%;
+}
+.payroll-ledger-table th:nth-child(2) {
+  width: 14%;
+}
+.payroll-ledger-table th:nth-child(3) {
+  width: 17%;
+}
+.payroll-ledger-table th:nth-child(4),
+.payroll-ledger-table th:nth-child(5),
+.payroll-ledger-table th:nth-child(6) {
+  width: 12%;
+}
+.payroll-ledger-table th:nth-child(7) {
+  width: 11%;
+}
+
+.payroll-ledger-table th.is-amount,
+.payroll-ledger-table td.is-amount {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.payroll-ledger-th-sort {
+  display: inline-flex;
+  min-height: 40px;
+  align-items: center;
+  gap: 5px;
+  padding: 0;
+  border: 0;
+  color: inherit;
+  background: transparent;
+  font: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  cursor: pointer;
+}
+
+.payroll-ledger-table td:first-child {
+  overflow-wrap: anywhere;
+}
+
+.payroll-ledger-employee,
+.payroll-ledger-secondary,
+.payroll-ledger-branch,
+.payroll-ledger-period {
+  display: block;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.payroll-ledger-employee {
+  color: var(--text);
+  font-size: var(--font-size-12);
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.payroll-ledger-secondary {
+  margin-top: 4px;
+  color: var(--text-secondary);
+  font-size: var(--font-size-12);
+  line-height: 1.4;
+}
+
+.payroll-ledger-net {
+  color: var(--text);
+  font-size: var(--font-size-12);
+  font-weight: 700;
+}
+
+.payroll-ledger-table tbody tr {
+  min-height: 50px;
+  cursor: pointer;
+  transition: background-color 120ms ease;
+}
+
+.payroll-ledger-table tbody tr:nth-child(even) {
+  background: var(--table-stripe);
+}
+
+.payroll-ledger-table tbody tr:hover,
+.payroll-ledger-table tbody tr:focus-visible {
+  outline: none;
+  background: var(--surface-soft);
+}
+
+.payroll-ledger-table tbody tr:focus-visible {
+  box-shadow: inset 0 0 0 2px var(--orange);
+}
+
+.payroll-ledger-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.payroll-ledger-cards {
+  display: none;
+  min-width: 0;
+  gap: 12px;
+}
+
+.payroll-ledger-card {
+  display: grid;
+  width: 100%;
+  min-width: 0;
+  min-height: 44px;
+  gap: 14px;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  color: var(--text);
+  background: var(--surface);
+  text-align: left;
+  cursor: pointer;
+}
+
+.payroll-ledger-card:hover,
+.payroll-ledger-card:focus-visible {
+  border-color: var(--border-strong);
+  outline: 2px solid color-mix(in srgb, var(--orange) 30%, transparent);
+  outline-offset: 1px;
+}
+
+.payroll-ledger-card-top {
+  display: flex;
+  min-width: 0;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.payroll-ledger-card-person {
+  display: grid;
+  min-width: 0;
+  gap: 4px;
+}
+
+.payroll-ledger-card-person strong {
+  color: var(--text);
+  font-size: var(--font-size-14);
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.payroll-ledger-card-person > span {
+  color: var(--text-secondary);
+  font-size: var(--font-size-12);
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.payroll-ledger-card-net {
+  display: flex;
+  min-width: 0;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 9px;
+  color: var(--text-secondary);
+  background: var(--surface-soft);
+  font-size: var(--font-size-12);
+}
+
+.payroll-ledger-card-net strong {
+  color: var(--text);
+  font-size: var(--font-size-14);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+
+.payroll-ledger-card-details {
+  display: grid;
+  min-width: 0;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px 16px;
+}
+
+.payroll-ledger-card-details > span {
+  display: grid;
+  min-width: 0;
+  gap: 3px;
+}
+
+.payroll-ledger-card-details > span > span {
+  color: var(--text-secondary);
+  font-size: var(--font-size-12);
+  line-height: 1.35;
+}
+
+.payroll-ledger-card-details strong {
+  min-width: 0;
+  color: var(--text);
+  font-size: var(--font-size-12);
+  font-weight: 600;
+  line-height: 1.4;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+.payroll-ledger-footer,
+.payroll-ledger-pagination {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.payroll-ledger-footer {
+  flex-wrap: wrap;
+  padding: 10px 13px;
+  border-top: 1px solid var(--border);
+  color: var(--text-secondary);
+  font-size: var(--font-size-12);
+}
+
+.payroll-ledger-footer strong {
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+.payroll-ledger-pagination {
+  justify-content: flex-end;
+}
+
+.payroll-ledger-pagination select {
+  min-height: 44px;
+  padding: 7px 10px;
+  font-size: var(--font-size-12);
+}
+
+.payroll-ledger .status-badge {
+  min-height: 20px;
+  padding: 0 7px;
+  font-size: var(--font-size-11);
+  line-height: 1.25;
+}
+
+.payroll-ledger-pagination .icon-button {
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
+}
+
+.payroll-ledger-state {
+  display: grid;
+  justify-items: start;
+  gap: 8px;
+  padding: 22px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  color: var(--text-secondary);
+  background: var(--surface);
+  font-size: var(--font-size-16);
+  line-height: 1.5;
+}
+
+.payroll-ledger-state strong {
+  color: var(--text);
+  font-size: var(--font-size-18);
+}
+
+.payroll-ledger-refresh-error {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 12px 14px;
+  border: 1px solid var(--danger-border, var(--border-strong));
+  border-radius: 10px;
+  color: var(--text);
+  background: var(--surface);
+  font-size: var(--font-size-15);
+}
+
+.payroll-ledger-skeleton {
+  min-width: 0;
+}
+
+.payroll-ledger-skeleton-table {
+  display: grid;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+}
+
+.payroll-ledger-skeleton-head,
+.payroll-ledger-skeleton-row,
+.payroll-ledger-skeleton-card {
+  display: block;
+  background: linear-gradient(90deg, var(--surface-soft), var(--border), var(--surface-soft));
+  background-size: 200% 100%;
+  animation: payroll-ledger-shimmer 1.8s ease-in-out infinite;
+}
+
+.payroll-ledger-skeleton-head {
+  height: 48px;
+}
+
+.payroll-ledger-skeleton-row {
+  height: 68px;
+  border-top: 1px solid var(--border);
+}
+
+.payroll-ledger-skeleton-cards {
+  display: none;
+}
+
+@keyframes payroll-ledger-shimmer {
+  0%,
+  100% {
+    background-position: 100% 0;
+  }
+  50% {
+    background-position: 0 0;
+  }
+}
+
+@media (max-width: 1100px) {
+  .payroll-ledger-filters {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .payroll-ledger-search,
+  .payroll-ledger-filters:not(.has-branch-filter) .payroll-ledger-search {
+    grid-column: 1 / -1;
+  }
+
+  .payroll-ledger-actions {
+    align-self: end;
+  }
+
+  .payroll-ledger-search,
+  .payroll-ledger-select select,
+  .payroll-ledger-date input,
+  .payroll-ledger-export,
+  .payroll-ledger-clear {
+    min-height: 44px;
+  }
+
+  .payroll-ledger-table-wrap,
+  .payroll-ledger-skeleton-table {
+    display: none;
+  }
+
+  .payroll-ledger-cards,
+  .payroll-ledger-skeleton-cards {
+    display: grid;
+  }
+
+  .payroll-ledger-skeleton-cards {
+    gap: 12px;
+  }
+
+  .payroll-ledger-skeleton-card {
+    min-height: 292px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+  }
+}
+
+@media (max-width: 620px) {
+  .payroll-ledger-filters {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+    padding: 13px;
+  }
+
+  .payroll-ledger-search {
+    grid-column: auto;
+    min-height: 48px;
+  }
+
+  .payroll-ledger-search input {
+    min-height: 46px;
+  }
+
+  .payroll-ledger-search input,
+  .payroll-ledger-select select,
+  .payroll-ledger-date input {
+    font-size: max(16px, var(--font-size-16));
+  }
+
+  .payroll-ledger-select select,
+  .payroll-ledger-date input,
+  .payroll-ledger-export,
+  .payroll-ledger-clear {
+    min-height: 48px;
+  }
+
+  .payroll-ledger-actions {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-column: 1;
+  }
+
+  .payroll-ledger-export,
+  .payroll-ledger-clear {
+    width: 100%;
+  }
+
+  .payroll-ledger-card {
+    gap: 13px;
+    padding: 14px;
+  }
+
+  .payroll-ledger-card-top {
+    flex-wrap: wrap;
+  }
+
+  .payroll-ledger-card-details {
+    gap: 11px 12px;
+  }
+
+  .payroll-ledger-footer {
+    align-items: stretch;
+    flex-direction: column;
+    font-size: var(--font-size-14);
+  }
+
+  .payroll-ledger-pagination {
+    justify-content: space-between;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .payroll-ledger-skeleton-head,
+  .payroll-ledger-skeleton-row,
+  .payroll-ledger-skeleton-card {
+    animation: none;
+  }
 }
 
 @media (max-width: 760px) {

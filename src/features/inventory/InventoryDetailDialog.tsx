@@ -139,11 +139,6 @@ export function InventoryDetailDialog({
                 }
               />
             )}
-            <div className="dialog-actions">
-              <button type="button" className="button button-outline" onClick={onClose}>
-                Close
-              </button>
-            </div>
           </>
         )}
       </QueryState>

@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Plus, Trash2 } from 'lucide-react'
-import { AppDialog } from '@/components/common/AppDialog'
+import { AppDialog, DialogCancelButton } from '@/components/common/AppDialog'
 import { formatPeso, fromMinorUnits, toMinorUnits } from '@/features/modules/order-decimals'
 import type {
   PayrollAdjustmentInput,
@@ -620,14 +620,7 @@ export function PayrollRunDialog({
           be entered again.
         </p>
         <div className="dialog-actions">
-          <button
-            className="button button-outline"
-            type="button"
-            disabled={saving}
-            onClick={onClose}
-          >
-            Cancel
-          </button>
+          <DialogCancelButton disabled={saving} />
           <button
             className="button button-primary"
             type="submit"

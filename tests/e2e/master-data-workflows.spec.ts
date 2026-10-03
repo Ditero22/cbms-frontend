@@ -458,6 +458,6 @@ test('read-only master access hides writes and the API denies edits and archives
       record.name,
     )
     expect(stored.history).toEqual([])
-    await dialog.getByRole('button', { name: 'Close', exact: true }).click()
+    await dialog.getByRole('button', { name: 'Close dialog', exact: true }).click()
   }
 })

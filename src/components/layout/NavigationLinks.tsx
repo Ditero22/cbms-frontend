@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useId, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
-import { LayoutDashboard, Settings2 } from 'lucide-react'
+import { LayoutDashboard, Settings } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import { NavLink, useLocation } from 'react-router-dom'
 import type { AuthenticatedUser } from '@/features/auth/types'
@@ -132,13 +132,13 @@ export function NavigationLinks({ user, collapsed = false, onNavigate }: Navigat
         <div className="nav-group">
           <div className="nav-caption">PREFERENCES</div>
           <NavigationItem
-            to="/design-system"
-            label="Design system"
-            icon={Settings2}
+            to="/settings"
+            label="Settings"
+            icon={Settings}
             onNavigate={onNavigate}
             onTooltip={showTooltip}
             onTooltipClose={closeTooltip}
-            tooltipId={collapsed && tooltip?.label === 'Design system' ? tooltipId : undefined}
+            tooltipId={collapsed && tooltip?.label === 'Settings' ? tooltipId : undefined}
           />
         </div>
       </nav>

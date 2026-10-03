@@ -1,5 +1,8 @@
 # CBMS Frontend
 
+> Shared documentation: [index](../md-docs/README.md), [current production progress](../md-docs/project/progressreport.md), and [approved release scope](../md-docs/project/release-scope.md). This package guide retains product/architecture details and dated checkpoints. Older “current” counts, follow-up tasks and scope assertions yield to those canonical sources; a documented feature is not proof of completion.
+
+
 React, TypeScript, and Vite application for the Construction Business Management System.
 
 ## Run locally
@@ -9,7 +12,7 @@ npm ci
 npm run dev
 ```
 
-The frontend uses the live CBMS API and cookie-based authentication. Keep `VITE_API_URL=/api/v1` in `.env.local`; Vite proxies `/api` to the local backend. Set `CBMS_API_PROXY_TARGET` if the local backend uses a different port. Start the backend and apply its migrations before using the application. The complete local setup is documented in [`DEPLOYMENT.md`](../DEPLOYMENT.md), and the latest verified work and remaining release items are in [`progressreport.md`](../progressreport.md).
+The frontend uses the live CBMS API and cookie-based authentication. Keep `VITE_API_URL=/api/v1` in `.env.local`; Vite proxies `/api` to the local backend. Set `CBMS_API_PROXY_TARGET` if the local backend uses a different port. Start the backend and apply its migrations before using the application. The complete local setup is documented in [`md-docs/deployment/deployment.md`](../md-docs/deployment/deployment.md), and the latest verified work and remaining release items are in [`md-docs/project/progressreport.md`](../md-docs/project/progressreport.md).
 
 Production builds require `VITE_API_URL=/api/v1` (or leave it unset). For Cloudflare Workers, set the build variable to that path and the runtime `CBMS_API_ORIGIN` to the HTTPS Render origin. Local `.env.local` also participates in production builds, so keep its API path relative. Never build a hosted site with a localhost API URL; the browser would request the visitor's computer. Absolute API URLs are supported only during development. Production traffic uses the configured server-side proxy and the existing same-origin security policy.
 
@@ -26,7 +29,7 @@ Production builds require `VITE_API_URL=/api/v1` (or leave it unset). For Cloudf
 
 ## Browser acceptance
 
-Install dependencies in both `cbms-backend` and `cbms-frontend`. Configure the backend `.env` with a reachable `DATABASE_URL`, or provide `TEST_DATABASE_URL`. The account needs permission to create/drop a temporary test database. From this frontend directory, run:
+Install dependencies in both `cbms-backend` and `cbms-frontend`. Configure a local PostgreSQL source through the backend `DATABASE_URL` or the browser runner's `TEST_DATABASE_URL` override. The runner accepts only `localhost`, `127.0.0.1`, or `::1`, with source database `cbms_dev`, and rejects hosted or other targets before connecting. The account needs permission to create/drop its temporary test databases. From this frontend directory, run:
 
 ```bash
 npm run test:e2e
@@ -36,7 +39,7 @@ The runner migrates and seeds its own randomly named database, starts test-only 
 
 On Windows the configuration detects installed Chrome/Edge. If neither is present, or on other operating systems, install Playwright's browser with `npx playwright install chromium` (Linux CI uses `npx playwright install --with-deps chromium`). Reports and screenshots are written to ignored `playwright-report` and `test-results` directories.
 
-The historical administration checkpoint passed 35 checks. The expanded suite passes **79 checks: 76 rendered scenarios and 3 exact-arithmetic checks**. The 30 new fleet/finance scenarios also pass an explicit dark-theme repeat. Backend results are **73 unit tests and 106 PostgreSQL integration cases across 14 files**. The local database has **19 applied migrations**. [`progressreport.md`](../progressreport.md) records remaining release gates.
+The historical administration checkpoint passed 35 checks. A later checkpoint recorded **79 checks: 76 rendered scenarios and 3 exact-arithmetic checks**, plus a focused dark-theme fleet/finance repeat. Its backend results were **73 unit tests and 106 PostgreSQL integration cases across 14 files**, with **19 applied local migrations** at that time. These are historical figures; [the current report](../md-docs/project/progressreport.md) records the latest executed checks and remaining release gates.
 
 Coverage includes the shared shell, core order workflows, Users & Roles, branch/permission limits, seven viewport widths (375/390/430/768/1024/1280/1440), compact forms, detail/action states, search/sort/pagination, and recovery states. Added scenarios exercise linked delivery/fleet transitions, allowance acknowledgement/proofs, immutable partial/final receipts, authenticated proof download, and report access/filter/export behavior. Fourteen Inventory scenarios verify fractional/reservation-safe adjustments, reorder consistency with dashboard/report, actual-branch and read-only access, ledger pages/filters, loading/error/empty/draft retry, lost-response replay and filtered safe CSV. Shared page exports wait for pending search and record refresh. See the architecture guide and progress report for coverage limits; sampled browser checks are not a full-module/all-role/accessibility certification.
 
@@ -88,10 +91,10 @@ For local development, the backend stores private files under `LOCAL_UPLOAD_DIR`
 - `src/services/api/client.ts` — centralized REST client.
 - `src/features/modules/modules.ts` — module navigation and table metadata.
 
-See [FRONTEND_ARCHITECTURE.md](./FRONTEND_ARCHITECTURE.md) for the implemented architecture and [CBMS_FRONTEND.md](./CBMS_FRONTEND.md) for the product and design requirements.
+See [FRONTEND_ARCHITECTURE.md](FRONTEND_ARCHITECTURE.md) for the implemented architecture and [CBMS_FRONTEND.md](CBMS_FRONTEND.md) for the product and design requirements.
 
 ## Expenses and shared UI verification
 
-Expenses now has dedicated authoritative detail, exact submission/retry identity, persisted review metadata, source-authorized private proof lists, paginated history and compact create/review forms. Its fields and actions preserve the existing expense approval policy. Shared mobile cards now expose the practical per-module business values; older forms reuse explicit labels and option loading/retry states, preserve drafts and guard pending dismissal. See `../EXPENSE_AUDIT.md` and `../UI_UX_AUDIT.md` for evidence and remaining limits.
+Expenses now has dedicated authoritative detail, exact submission/retry identity, persisted review metadata, source-authorized private proof lists, paginated history and compact create/review forms. Its fields and actions preserve the existing expense approval policy. Shared mobile cards now expose the practical per-module business values; older forms reuse explicit labels and option loading/retry states, preserve drafts and guard pending dismissal. See `md-docs/archive/modules/expenses-2026-10-01.md` and `md-docs/archive/audits/ui-ux-2026-10-01.md` for evidence and remaining limits.
 
 Focused browser checks use `npm run test:e2e -- expense-workflows.spec.ts` or `npm run test:e2e -- ui-system.spec.ts`; the full isolated runner remains `npm run test:e2e`.

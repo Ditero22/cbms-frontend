@@ -109,9 +109,6 @@ export function ManagedRecordDetailDialog({
             Created {formatDateTime(record.createdAt)} · Updated {formatDateTime(record.updatedAt)}
           </div>
           <div className="dialog-actions">
-            <button className="button button-outline" onClick={onClose}>
-              Close
-            </button>
             {canUpdate && (
               <>
                 <button className="button button-outline" onClick={() => onArchive(record)}>

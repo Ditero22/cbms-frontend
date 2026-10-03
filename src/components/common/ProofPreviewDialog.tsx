@@ -65,11 +65,6 @@ export function ProofPreviewDialog({
           </figure>
         )}
       </QueryState>
-      <div className="dialog-actions">
-        <button type="button" className="button button-outline" onClick={onClose}>
-          Close
-        </button>
-      </div>
     </AppDialog>
   )
 }

@@ -29,7 +29,7 @@ export function RolePermissionPicker({
   )
 
   return (
-    <section className="role-permissions" aria-labelledby={`${id}-title`}>
+    <section className="role-permissions" aria-labelledby={`${id}-title`} data-dialog-ignore-dirty>
       <div className="role-section-heading">
         <h3 id={`${id}-title`}>Permissions</h3>
         <span aria-live="polite">{selected.length} selected</span>
@@ -40,6 +40,7 @@ export function RolePermissionPicker({
       <label className="role-permission-search">
         <Search size={16} aria-hidden="true" />
         <input
+          data-dialog-ignore-dirty
           className="form-input"
           type="search"
           aria-label="Search permissions"

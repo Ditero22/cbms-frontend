@@ -1,10 +1,13 @@
 # CBMS Frontend UI/UX and Architecture Audit
 
+> Shared documentation: [index](../md-docs/README.md), [current production progress](../md-docs/project/progressreport.md), and [approved release scope](../md-docs/project/release-scope.md). This package guide retains product/architecture details and dated checkpoints. Older “current” counts, follow-up tasks and scope assertions yield to those canonical sources; a documented feature is not proof of completion.
+
+
 **Audit date:** 2026-09-30; evidence updated 2026-10-01.  
 **Scope:** `cbms-frontend/src`, frontend configuration and architecture/design documentation, and the frontend API boundary.  
 **Status:** Shared shell/list/dialog cleanup and domain-owned Users & Roles administration are implemented. Orders and Users & Roles have seven-width and core workflow acceptance; comprehensive other-module and accessibility regression remains.
 
-> This file preserves the initial 2026-09-30 source findings as a historical baseline. Current implementation, 2026-10-01 UI UX Pro Max installation, later shared changes, full page sweeps, and verification limits are recorded in the [current project audit](../UI_UX_AUDIT.md) and [progress report](../progressreport.md). Read those before treating the findings below as open.
+> This file preserves the initial 2026-09-30 source findings as a historical baseline. Later 2026-10-01 shared changes and installation evidence are retained in the [historical project UI audit](../md-docs/archive/audits/ui-ux-2026-10-01.md). Read the [current progress report](../md-docs/project/progressreport.md) and [approved scope](../md-docs/project/release-scope.md) before treating earlier findings as open requirements.
 
 ## Executive assessment
 
@@ -210,4 +213,4 @@ The numbered findings below record the baseline audit and should be read with th
 - Root semantic theme tokens now apply to status badges and destructive controls inside Radix portals. The prior app-descendant dark selectors left dialog badges on light surfaces.
 - The combined suite contains 35 acceptance checks (32 rendered scenarios and 3 arithmetic checks), including seven widths, desktop/phone administration and order workflows, privilege/branch denials, session revocation, list controls, recovery states, modal focus/bounds, and theme consistency. Comprehensive screen-reader/contrast, export, all-role, and remaining-module acceptance are still required.
 
-The backend audit also fixed existing-account branch takeover and grant-ceiling bypasses, shared-role mutation scope, session revocation based on actual access changes, atomic lockout, and stale-password login races. These are functional security corrections; the frontend's hidden actions do not replace them. See `progressreport.md` for verified results and the next Inventory priority. Self-service account recovery, attachments, global delegation policy, and production operations remain separate work.
+The backend audit also fixed existing-account branch takeover and grant-ceiling bypasses, shared-role mutation scope, session revocation based on actual access changes, atomic lockout, and stale-password login races. These are functional security corrections; the frontend's hidden actions do not replace them. See `md-docs/project/progressreport.md` for verified results and the next Inventory priority. Self-service account recovery, attachments, global delegation policy, and production operations remain separate work.

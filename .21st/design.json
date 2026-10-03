@@ -21,7 +21,8 @@
     "assets": [],
     "instructions": [
       "FRONTEND_ARCHITECTURE.md",
-      "../UI_UX_AUDIT.md"
+      "../md-docs/project/progressreport.md",
+      "../md-docs/project/release-scope.md"
     ]
   },
   "design": {
@@ -216,7 +217,7 @@
     },
     {
       "fact": "manual context correction: CLI detector missed custom components and misclassified text colors as typography",
-      "source": "src/components/common, src/index.css, ../UI_UX_AUDIT.md"
+      "source": "src/components/common, src/index.css, ../md-docs/archive/audits/ui-ux-2026-10-01.md"
     }
   ],
   "generatedAt": "2026-10-01T04:55:20.337Z"

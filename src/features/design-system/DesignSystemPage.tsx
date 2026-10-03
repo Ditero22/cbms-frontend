@@ -1,6 +1,6 @@
 import { Check, Plus } from 'lucide-react'
 import { toast } from 'sonner'
-import { AppDialog } from '@/components/common/AppDialog'
+import { AppDialog, DialogCancelButton } from '@/components/common/AppDialog'
 import { PageHeading } from '@/components/common/PageHeading'
 export function DesignSystemPage() {
   const [open, setOpen] = useState(false)
@@ -157,9 +157,7 @@ export function DesignSystemPage() {
           </div>
         </div>
         <div className="dialog-actions">
-          <button className="button button-outline" onClick={() => setOpen(false)}>
-            Cancel
-          </button>
+          <DialogCancelButton />
           <button
             className="button button-primary"
             onClick={() => {

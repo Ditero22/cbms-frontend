@@ -1,5 +1,5 @@
 import { useEffect, useState, type FormEvent } from 'react'
-import { AppDialog } from '@/components/common/AppDialog'
+import { AppDialog, DialogCancelButton } from '@/components/common/AppDialog'
 import type { DeliveryStatus } from './types'
 
 const allowedNextStatuses: Record<string, DeliveryStatus[]> = {
@@ -116,14 +116,7 @@ export function UpdateDeliveryStatusDialog({
         )}
 
         <div className="dialog-actions">
-          <button
-            type="button"
-            className="button button-outline"
-            onClick={() => onOpenChange(false)}
-            disabled={isSaving}
-          >
-            Close
-          </button>
+          <DialogCancelButton disabled={isSaving} />
           {options.length > 0 && (
             <button type="submit" className="button button-primary" disabled={isSaving}>
               {isSaving ? 'Saving status…' : 'Save status'}

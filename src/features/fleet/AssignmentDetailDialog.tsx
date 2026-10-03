@@ -107,9 +107,6 @@ export function AssignmentDetailDialog({
                 />
               )}
               <div className="dialog-actions">
-                <button type="button" className="button button-outline" onClick={onClose}>
-                  Close
-                </button>
                 {canManage &&
                   !record.deliveryId &&
                   ['Scheduled', 'Active'].includes(record.status) && (

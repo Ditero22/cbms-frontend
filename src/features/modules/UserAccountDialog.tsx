@@ -1,7 +1,7 @@
 import { FieldHeading } from '@/components/common/FieldHeading'
 import { useEffect, useId } from 'react'
 import { Controller, useForm } from 'react-hook-form'
-import { AppDialog } from '@/components/common/AppDialog'
+import { AppDialog, DialogCancelButton } from '@/components/common/AppDialog'
 import type { UserAccountRecord, UserAccountValues, UserManagementOptions } from './types'
 import { PasswordRequirements } from '@/features/users/PasswordRequirements'
 import { isStrongPassword } from '@/features/users/password-policy'
@@ -328,14 +328,7 @@ export function UserAccountDialog({
           </p>
         )}
         <div className="dialog-actions">
-          <button
-            type="button"
-            className="button button-outline"
-            disabled={isSubmitting}
-            onClick={() => handleOpenChange(false)}
-          >
-            Cancel
-          </button>
+          <DialogCancelButton disabled={isSubmitting} />
           <button
             type="submit"
             className="button button-primary"

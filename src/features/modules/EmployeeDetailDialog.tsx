@@ -163,9 +163,6 @@ export function EmployeeDetailDialog({
             </section>
           )}
           <div className="dialog-actions">
-            <button className="button button-outline" onClick={onClose}>
-              Close
-            </button>
             {canUpdate && !employee.archivedAt && (
               <>
                 <button className="button button-outline" onClick={() => onArchive(employee)}>

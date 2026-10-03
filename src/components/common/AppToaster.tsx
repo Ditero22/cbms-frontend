@@ -1,5 +1,11 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, type CSSProperties } from 'react'
 import { Toaster } from 'sonner'
+
+const toastStyle = {
+  '--success-bg': 'var(--status-good-surface)',
+  '--success-border': 'var(--status-good)',
+  '--success-text': 'var(--status-good)',
+} as CSSProperties
 
 export function AppToaster() {
   const [compact, setCompact] = useState(() => window.matchMedia('(max-width: 700px)').matches)
@@ -32,6 +38,7 @@ export function AppToaster() {
       theme={theme}
       richColors
       closeButton
+      style={toastStyle}
     />
   )
 }

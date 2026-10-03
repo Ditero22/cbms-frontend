@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
-import { AppDialog } from '@/components/common/AppDialog'
+import { AppDialog, DialogCancelButton } from '@/components/common/AppDialog'
 import { QueryState } from '@/components/common/QueryState'
 import { RecordPagination } from '@/components/common/RecordPagination'
 import { StatusInline } from '@/components/common/StatusInline'
@@ -164,11 +164,6 @@ export function PayrollRunDetailDialog({
                 busy={detail.isFetching}
                 onPageChange={setPage}
               />
-              <div className="dialog-actions">
-                <button type="button" className="button button-outline" onClick={onClose}>
-                  Close
-                </button>
-              </div>
             </div>
           )}
         </QueryState>
@@ -185,14 +180,7 @@ export function PayrollRunDetailDialog({
           </p>
         )}
         <div className="dialog-actions">
-          <button
-            type="button"
-            className="button button-outline"
-            disabled={busy}
-            onClick={() => setConfirming(false)}
-          >
-            Cancel
-          </button>
+          <DialogCancelButton disabled={busy} />
           <button
             type="button"
             className="button button-primary"

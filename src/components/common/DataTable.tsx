@@ -50,6 +50,19 @@ export function DataTable({
   const pendingSearch = searchInput !== query.search
   const totalPages = Math.max(1, Math.ceil(total / query.limit))
   const hasActiveFilters = Boolean(query.search || query.status || query.branchId)
+  const emptyTitle =
+    module.id === 'deliveries'
+      ? hasActiveFilters
+        ? 'No matching deliveries'
+        : 'No deliveries found'
+      : hasActiveFilters
+        ? 'No matching records'
+        : 'No records yet'
+  const emptyDescription = hasActiveFilters
+    ? `Try adjusting the search or filters${module.id === 'deliveries' ? ' to find a delivery' : ''}.`
+    : module.id === 'deliveries'
+      ? 'Scheduled deliveries will appear here.'
+      : `Records for ${module.title.toLowerCase()} will appear here.`
   const sortableColumns = module.sortableColumns ?? module.columns
   const initialSortColumn = sortableColumns[0] ?? ''
   const mobileSortColumn = sortableColumns.includes(query.sort) ? query.sort : initialSortColumn
@@ -157,14 +170,6 @@ export function DataTable({
               </select>
             </label>
           )}
-          <button
-            type="button"
-            className="button button-quiet"
-            disabled={busy || pendingSearch}
-            onClick={exportCsv}
-          >
-            Export page
-          </button>
           <label className="mobile-sort-control">
             <span>Sort</span>
             <select
@@ -198,6 +203,14 @@ export function DataTable({
               )}
             </button>
           </label>
+          <button
+            type="button"
+            className="button button-quiet"
+            disabled={busy || pendingSearch}
+            onClick={exportCsv}
+          >
+            Export page
+          </button>
         </div>
       </div>
 
@@ -281,7 +294,7 @@ export function DataTable({
         {rows.map((row, index) => (
           <button
             type="button"
-            className="record-card"
+            className={`record-card${module.id === 'deliveries' ? ' record-card--delivery' : ''}`}
             key={row.id ?? `${row[primaryColumn]}-card-${index}`}
             onClick={() => onRowClick(row)}
             aria-label={`View details for ${row[primaryColumn]}`}
@@ -305,16 +318,12 @@ export function DataTable({
       </div>
 
       {rows.length === 0 && (
-        <div className="table-empty">
+        <div className="table-empty" role="status" aria-live="polite">
           <div className="empty-icon">
             <Search size={20} aria-hidden="true" />
           </div>
-          <strong>{hasActiveFilters ? 'No matching records' : 'No records yet'}</strong>
-          <span>
-            {hasActiveFilters
-              ? 'Try adjusting the search or filters.'
-              : `Records for ${module.title.toLowerCase()} will appear here.`}
-          </span>
+          <strong>{emptyTitle}</strong>
+          <span>{emptyDescription}</span>
         </div>
       )}
 
@@ -351,7 +360,7 @@ export function DataTable({
             disabled={busy || query.page <= 1}
             onClick={() => onQueryChange({ ...query, page: Math.max(1, query.page - 1) })}
           >
-            <ChevronLeft size={17} />
+            <ChevronLeft size={17} aria-hidden="true" />
           </button>
           <span>
             Page {query.page} of {totalPages}
@@ -363,7 +372,7 @@ export function DataTable({
             disabled={busy || query.page >= totalPages}
             onClick={() => onQueryChange({ ...query, page: Math.min(totalPages, query.page + 1) })}
           >
-            <ChevronRight size={17} />
+            <ChevronRight size={17} aria-hidden="true" />
           </button>
         </div>
       </footer>

@@ -5,7 +5,7 @@
 .transfer-detail-section h3 {
   margin: 0 0 12px;
   color: var(--text);
-  font-size: 14px;
+  font-size: var(--font-size-14);
   font-weight: 700;
 }
 
@@ -27,13 +27,13 @@
 .transfer-detail-fields dt,
 .transfer-detail-items span {
   color: var(--text-secondary);
-  font-size: 12px;
+  font-size: var(--font-size-12);
 }
 
 .transfer-detail-fields dd {
   margin: 4px 0 0;
   color: var(--text);
-  font-size: 13px;
+  font-size: var(--font-size-13);
   font-weight: 600;
   overflow-wrap: anywhere;
 }
@@ -63,7 +63,7 @@
 
 .transfer-detail-items strong {
   color: var(--text);
-  font-size: 13px;
+  font-size: var(--font-size-13);
   overflow-wrap: anywhere;
 }
 
@@ -75,7 +75,7 @@
 .transfer-detail-note {
   margin: 0;
   color: var(--text-secondary);
-  font-size: 13px;
+  font-size: var(--font-size-13);
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }

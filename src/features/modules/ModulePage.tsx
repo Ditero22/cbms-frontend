@@ -7,6 +7,8 @@ import { Breadcrumbs } from '@/components/common/Breadcrumbs'
 import { AppDialog } from '@/components/common/AppDialog'
 import { ArchiveRecordDialog } from '@/components/common/ArchiveRecordDialog'
 import { DataTable } from '@/components/common/DataTable'
+import { PageSkeleton } from '@/components/common/PageSkeleton'
+import { QueryState } from '@/components/common/QueryState'
 import { PageHeading } from '@/components/common/PageHeading'
 import { CreateRecordDialog } from './CreateRecordDialog'
 import { CreateOrderDialog } from './CreateOrderDialog'
@@ -298,27 +300,33 @@ export function ModulePage() {
           { label: activeModule.title },
         ]}
       />
-      <PageHeading title={activeModule.title} description={activeModule.description}>
-        {canCreate && (
-          <button className="button button-primary" onClick={openCreateDialog}>
-            <Plus size={17} />
-            {activeModule.addLabel}
-          </button>
-        )}
-      </PageHeading>
+      {!moduleQuery.isPending && (
+        <PageHeading
+          title={activeModule.title}
+          description={activeModule.description}
+          className={activeModule.id === 'deliveries' ? 'page-heading--deliveries' : undefined}
+        >
+          {canCreate && (
+            <button className="button button-primary" onClick={openCreateDialog}>
+              <Plus size={17} />
+              {activeModule.addLabel}
+            </button>
+          )}
+        </PageHeading>
+      )}
 
       {moduleQuery.isPending ? (
-        <div className="table-empty">
-          <strong>Loading {activeModule.title.toLowerCase()}…</strong>
-        </div>
+        <PageSkeleton
+          title={activeModule.title}
+          description={activeModule.description}
+          actionLabel={canCreate ? activeModule.addLabel : undefined}
+        />
       ) : moduleQuery.isError ? (
-        <div className="table-empty">
-          <strong>Could not load {activeModule.title.toLowerCase()}.</strong>
-          <span>{moduleQuery.error.message}</span>
-          <button className="button button-outline" onClick={() => void moduleQuery.refetch()}>
-            Try again
-          </button>
-        </div>
+        <QueryState
+          error={moduleQuery.error}
+          errorTitle={`Could not load ${activeModule.title.toLowerCase()}.`}
+          onRetry={() => void moduleQuery.refetch()}
+        />
       ) : (
         <DataTable
           module={activeModule}
@@ -500,11 +508,6 @@ export function ModulePage() {
                 ))}
               </div>
             )}
-            <div className="dialog-actions">
-              <button className="button button-outline" onClick={() => setSelectedRecord(null)}>
-                Close
-              </button>
-            </div>
           </AppDialog>
         )}
       {activeModule.id === 'deliveries' && deliveryBeingUpdated && (

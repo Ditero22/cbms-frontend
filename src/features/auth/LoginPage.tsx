@@ -60,6 +60,9 @@ export function LoginPage({ onLogin }: LoginPageProps) {
             <input
               className="form-input"
               type="email"
+              inputMode="email"
+              autoCapitalize="none"
+              spellCheck={false}
               autoComplete="username"
               {...register('email')}
             />

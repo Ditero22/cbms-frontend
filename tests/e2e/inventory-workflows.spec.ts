@@ -208,6 +208,15 @@ for (const width of [375, 390, 430, 768, 1024, 1280, 1440]) {
     await bounds(page, form)
     await page.screenshot({ path: testInfo.outputPath(`inventory-adjustment-${width}.png`) })
     await page.keyboard.press('Escape')
+    const discard = page.getByRole('alertdialog', { name: 'Discard changes?' })
+    await expect(discard).toBeVisible()
+    await expect(discard.getByRole('button', { name: 'Keep editing' })).toBeFocused()
+    await page.keyboard.press('Escape')
+    await expect(discard).toBeHidden()
+    await expect(form).toBeVisible()
+    await form.getByRole('button', { name: 'Cancel', exact: true }).click()
+    await expect(discard).toBeVisible()
+    await discard.getByRole('button', { name: 'Discard', exact: true }).click()
     await expect(form).toBeHidden()
     await expect(adjust).toBeFocused()
     const detail = await openStock(page, stock)
@@ -347,7 +356,7 @@ for (const width of [390, 1280]) {
       reportAfter.rows.find((row) => row.Branch === 'Acceptance branch')?.['Low stock'],
     )
     expect(lowAfter).toBe(lowBefore + 1)
-    await detail.getByRole('button', { name: 'Close', exact: true }).click()
+    await detail.getByRole('button', { name: 'Close dialog', exact: true }).click()
     await expect(stockRow(page, stock.name).getByText('Low stock', { exact: true })).toBeVisible()
     const list = await api<InventoryList>(
       page.request,
@@ -527,6 +536,9 @@ test('inventory option, list and detail failures retry without losing adjustment
   await form.getByLabel('Product', { exact: true }).selectOption(stock.productId)
   await form.getByLabel('Branch', { exact: true }).selectOption(fixtures.branchId)
   await form.getByRole('button', { name: 'Cancel', exact: true }).click()
+  const discard = page.getByRole('alertdialog', { name: 'Discard changes?' })
+  await expect(discard).toBeVisible()
+  await discard.getByRole('button', { name: 'Discard', exact: true }).click()
   await page.getByLabel('Search Inventory', { exact: true }).fill('no-matching-inventory-fixture')
   await expect(page.getByText('No matching records', { exact: true })).toBeVisible()
   let failDetail = true
@@ -563,7 +575,7 @@ test('inventory option, list and detail failures retry without losing adjustment
   const recoveredDetail = (await (await recovered).json()) as InventoryDetail
   expect(recoveredDetail.inventory).toMatchObject({ id: stock.id, branchId: fixtures.branchId })
   await expect(detail.getByRole('heading', { name: 'Stock movements', exact: true })).toBeVisible()
-  await detail.getByRole('button', { name: 'Close', exact: true }).click()
+  await detail.getByRole('button', { name: 'Close dialog', exact: true }).click()
   let failList = true
   await page.route('**/api/v1/inventory?*', (route) =>
     failList

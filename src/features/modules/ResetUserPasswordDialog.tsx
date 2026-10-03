@@ -1,7 +1,7 @@
 import { FieldHeading } from '@/components/common/FieldHeading'
 import { useId } from 'react'
 import { useForm } from 'react-hook-form'
-import { AppDialog } from '@/components/common/AppDialog'
+import { AppDialog, DialogCancelButton } from '@/components/common/AppDialog'
 import { PasswordRequirements } from '@/features/users/PasswordRequirements'
 import { isStrongPassword } from '@/features/users/password-policy'
 
@@ -106,14 +106,7 @@ export function ResetUserPasswordDialog({
           </p>
         )}
         <div className="dialog-actions">
-          <button
-            type="button"
-            className="button button-outline"
-            disabled={isSubmitting}
-            onClick={() => handleOpenChange(false)}
-          >
-            Cancel
-          </button>
+          <DialogCancelButton disabled={isSubmitting} />
           <button type="submit" className="button button-primary" disabled={isSubmitting}>
             {isSubmitting ? 'Resetting…' : 'Reset password'}
           </button>

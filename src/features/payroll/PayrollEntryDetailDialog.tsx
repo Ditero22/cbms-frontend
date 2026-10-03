@@ -54,9 +54,6 @@ export function PayrollEntryDetailDialog({
               onChanged={refresh}
             />
             <div className="dialog-actions">
-              <button type="button" className="button button-outline" onClick={onClose}>
-                Close
-              </button>
               <button
                 type="button"
                 className="button button-outline"

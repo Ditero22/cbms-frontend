@@ -119,9 +119,6 @@ export function UserDetailDialog({
             />
           )}
           <div className="dialog-actions">
-            <button className="button button-outline" onClick={onClose}>
-              Close
-            </button>
             {canManage && (
               <>
                 <button className="button button-outline" onClick={() => onResetPassword(user)}>

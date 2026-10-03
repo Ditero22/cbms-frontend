@@ -176,6 +176,14 @@ for (const width of [375, 390, 430, 768, 1024, 1280, 1440]) {
     await expect(globalAccessNotice).toHaveCount(0)
     await page.screenshot({ path: testInfo.outputPath(`account-form-${width}.png`) })
     await page.keyboard.press('Escape')
+    const discard = page.getByRole('alertdialog', { name: 'Discard changes?' })
+    await expect(discard).toBeVisible()
+    await page.keyboard.press('Escape')
+    await expect(discard).toBeHidden()
+    await expect(account).toBeVisible()
+    await account.getByRole('button', { name: 'Cancel', exact: true }).click()
+    await expect(discard).toBeVisible()
+    await discard.getByRole('button', { name: 'Discard', exact: true }).click()
     await expect(account).toBeHidden()
     await expect(create).toBeFocused()
     const role = await openRoles(page, fixtures.accountReaderRoleId)
@@ -185,7 +193,14 @@ for (const width of [375, 390, 430, 768, 1024, 1280, 1440]) {
     await expect(role.getByRole('checkbox', { name: 'Read users', exact: true })).toBeVisible()
     await expect(role.getByRole('checkbox', { name: 'Read inventory', exact: true })).toHaveCount(0)
     await page.screenshot({ path: testInfo.outputPath(`role-editor-${width}.png`) })
-    await page.keyboard.press('Escape')
+    const permissionSearch = role.getByLabel('Search permissions', { exact: true })
+    await permissionSearch.fill('')
+    await expect(permissionSearch).toHaveValue('')
+    await expect(role).toBeVisible()
+    await role.getByRole('button', { name: 'Cancel', exact: true }).click()
+    if (await discard.isVisible()) {
+      await discard.getByRole('button', { name: 'Discard', exact: true }).click()
+    }
     await expect(role).toBeHidden()
     await expect(page.getByRole('button', { name: 'Manage roles', exact: true })).toBeFocused()
   })
@@ -400,7 +415,7 @@ for (const width of [390, 1280]) {
       `${apiUrl}/roles/${fixtures.accountReaderRoleId}`,
     )
     expect(forbiddenDelete.status()).toBe(409)
-    await editor.getByRole('button', { name: 'Close', exact: true }).click()
+    await editor.getByRole('button', { name: 'Close dialog', exact: true }).click()
   })
 }
 

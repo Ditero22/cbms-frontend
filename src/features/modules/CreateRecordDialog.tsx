@@ -3,7 +3,7 @@ import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { useQuery } from '@tanstack/react-query'
 import { Plus } from 'lucide-react'
-import { AppDialog } from '@/components/common/AppDialog'
+import { AppDialog, DialogCancelButton } from '@/components/common/AppDialog'
 import { apiRequest } from '@/services/api/client'
 import type { ModuleDefinition } from './modules'
 import { createFieldsByModule, validateCreateField, type CreateField } from './create-fields'
@@ -57,7 +57,7 @@ export function CreateRecordDialog({
     register,
     handleSubmit,
     reset,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isDirty },
   } = useForm<CreateRecordValues>({ defaultValues: {} })
 
   useEffect(() => {
@@ -119,6 +119,7 @@ export function CreateRecordDialog({
         isEditing ? 'Update the stored record details.' : `Create a ${recordName} record in CBMS.`
       }
       size="wide"
+      hasUnsavedChanges={isDirty}
     >
       <form className="dialog-form" onSubmit={submit} aria-busy={isSubmitting}>
         {fields.length === 0 ? (
@@ -257,14 +258,7 @@ export function CreateRecordDialog({
           </p>
         )}
         <div className="dialog-actions">
-          <button
-            type="button"
-            className="button button-outline"
-            disabled={isSubmitting}
-            onClick={() => handleOpenChange(false)}
-          >
-            Cancel
-          </button>
+          <DialogCancelButton disabled={isSubmitting} />
           <button
             type="submit"
             className="button button-primary"

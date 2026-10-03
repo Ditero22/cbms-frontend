@@ -3,6 +3,7 @@ import * as Dialog from '@radix-ui/react-dialog'
 import { Outlet, useLocation } from 'react-router-dom'
 import type { AuthenticatedUser } from '@/features/auth/types'
 import { ModuleRuntimeProvider } from '@/features/modules/ModuleRuntimeProvider'
+import { useAppearancePreferences } from '@/features/settings/useAppearancePreferences'
 import { MobileDrawer } from './MobileDrawer'
 import { Sidebar } from './Sidebar'
 import { Topbar } from './Topbar'
@@ -19,11 +20,7 @@ export function AppShell({ user, onLogout }: AppShellProps) {
     () => window.localStorage.getItem('cbms-sidebar-collapsed') === 'true',
   )
   const [profileOpen, setProfileOpen] = useState(false)
-  const [dark, setDark] = useState(() => localStorage.getItem('cbms-theme') === 'dark')
-
-  useEffect(() => {
-    document.documentElement.dataset.theme = dark ? 'dark' : 'light'
-  }, [dark])
+  const { isDark, setTheme } = useAppearancePreferences()
 
   useEffect(() => {
     const desktopViewport = window.matchMedia('(min-width: 901px)')
@@ -44,11 +41,7 @@ export function AppShell({ user, onLogout }: AppShellProps) {
   }, [location.pathname])
 
   function toggleTheme() {
-    setDark((currentDark) => {
-      const nextDark = !currentDark
-      localStorage.setItem('cbms-theme', nextDark ? 'dark' : 'light')
-      return nextDark
-    })
+    setTheme(isDark ? 'light' : 'dark')
   }
 
   function toggleSidebar() {
@@ -66,7 +59,7 @@ export function AppShell({ user, onLogout }: AppShellProps) {
   return (
     <Dialog.Root open={mobileNavigationOpen} onOpenChange={setMobileNavigationOpen}>
       <ModuleRuntimeProvider user={user}>
-        <div className={`app-root${dark ? ' dark' : ''}`}>
+        <div className={`app-root${isDark ? ' dark' : ''}`}>
           <a className="skip-link" href="#main-content">
             Skip to main content
           </a>
@@ -74,7 +67,7 @@ export function AppShell({ user, onLogout }: AppShellProps) {
           <div className={`main-shell${sidebarCollapsed ? ' sidebar-collapsed' : ''}`}>
             <Topbar
               user={user}
-              dark={dark}
+              dark={isDark}
               sidebarCollapsed={sidebarCollapsed}
               mobileNavigationOpen={mobileNavigationOpen}
               profileOpen={profileOpen}

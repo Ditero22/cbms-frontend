@@ -12,3 +12,14 @@
 .query-state > span {
   overflow-wrap: anywhere;
 }
+@media (max-width: 800px) {
+  .query-state {
+    gap: 14px;
+    padding: 20px 14px;
+    font-size: var(--font-size-16);
+    line-height: 1.5;
+  }
+  .query-state .button {
+    min-height: 48px;
+  }
+}

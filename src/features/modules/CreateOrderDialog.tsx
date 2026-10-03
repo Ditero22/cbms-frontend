@@ -7,7 +7,7 @@ import { useFieldArray, useForm, useWatch } from 'react-hook-form'
 
 import { Minus, Plus } from 'lucide-react'
 
-import { AppDialog } from '@/components/common/AppDialog'
+import { AppDialog, DialogCancelButton } from '@/components/common/AppDialog'
 
 import type { CreateOrderValues, OrderOptions } from './types'
 
@@ -58,7 +58,7 @@ export function CreateOrderDialog({
 
     reset,
 
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isDirty },
   } = useForm<CreateOrderValues>({
     defaultValues: {
       customerId: '',
@@ -122,6 +122,7 @@ export function CreateOrderDialog({
       description="Add one or more products. Stock is reserved for every line in one transaction."
 
       size="wide"
+      hasUnsavedChanges={isDirty}
     >
       <form className="dialog-form" onSubmit={submit} aria-busy={isSubmitting}>
         <div className="transfer-branch-fields">
@@ -292,17 +293,7 @@ export function CreateOrderDialog({
         )}
 
         <div className="dialog-actions">
-          <button
-            type="button"
-
-            className="button button-outline"
-
-            disabled={isSubmitting}
-
-            onClick={() => handleOpenChange(false)}
-          >
-            Cancel
-          </button>
+          <DialogCancelButton disabled={isSubmitting} />
 
           <button
             type="submit"

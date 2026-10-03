@@ -1,4 +1,4 @@
-import { AppDialog } from '@/components/common/AppDialog'
+import { AppDialog, DialogCancelButton } from '@/components/common/AppDialog'
 import type { ReactNode } from 'react'
 
 export function FleetConfirmDialog({
@@ -36,9 +36,7 @@ export function FleetConfirmDialog({
         </p>
       )}
       <div className="dialog-actions">
-        <button type="button" className="button button-outline" disabled={busy} onClick={onCancel}>
-          Cancel
-        </button>
+        <DialogCancelButton disabled={busy} />
         <button
           type="button"
           className={`button ${danger ? 'button-danger' : 'button-primary'}`}

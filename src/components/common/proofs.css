@@ -3,12 +3,12 @@
   margin-top: 20px;
 }
 .proof-section h3 {
-  font-size: 14px;
+  font-size: var(--font-size-14);
   margin: 0 0 10px;
 }
 .proof-help {
   color: var(--text-secondary);
-  font-size: 12px;
+  font-size: var(--font-size-12);
   margin: 5px 0 10px;
 }
 .proof-upload-controls {
@@ -41,13 +41,13 @@
 }
 .proof-list strong {
   display: block;
-  font-size: 13px;
+  font-size: var(--font-size-13);
   overflow-wrap: anywhere;
 }
 .proof-list span {
   display: block;
   margin-top: 4px;
-  font-size: 11px;
+  font-size: var(--font-size-11);
   color: var(--text-secondary);
 }
 .proof-uploader {
@@ -72,7 +72,7 @@
 }
 .proof-image-preview figcaption {
   color: var(--text-secondary);
-  font-size: 12px;
+  font-size: var(--font-size-12);
   overflow-wrap: anywhere;
 }
 @media (max-width: 480px) {

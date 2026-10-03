@@ -5,7 +5,7 @@
   gap: 12px;
   padding-bottom: 18px;
   color: var(--text-secondary);
-  font-size: 13px;
+  font-size: var(--font-size-13);
 }
 .user-detail-sections {
   display: grid;
@@ -16,7 +16,7 @@
   min-width: 0;
 }
 .user-detail-sections h3 {
-  font-size: 14px;
+  font-size: var(--font-size-14);
   margin: 0 0 12px;
 }
 .user-detail-sections dl {
@@ -27,7 +27,7 @@
   justify-content: space-between;
   gap: 12px;
   padding: 8px 0;
-  font-size: 12px;
+  font-size: var(--font-size-12);
 }
 .user-detail-sections dt {
   color: var(--text-subtle);
@@ -40,7 +40,7 @@
 }
 .user-permissions {
   margin-top: 14px;
-  font-size: 12px;
+  font-size: var(--font-size-12);
 }
 .user-permissions summary {
   color: var(--text-secondary);
@@ -61,7 +61,7 @@
   align-items: flex-start;
   gap: 8px;
   color: var(--text-secondary);
-  font-size: 12px;
+  font-size: var(--font-size-12);
 }
 @media (max-width: 700px) {
   .user-detail-sections {

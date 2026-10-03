@@ -8,7 +8,7 @@ import { useFieldArray, useForm } from 'react-hook-form'
 
 import { Minus, Plus } from 'lucide-react'
 
-import { AppDialog } from '@/components/common/AppDialog'
+import { AppDialog, DialogCancelButton } from '@/components/common/AppDialog'
 
 import type { CreateTransferValues, TransferOptions } from './types'
 
@@ -57,7 +57,7 @@ export function InventoryTransferDialog({
 
     reset,
 
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isDirty },
   } = useForm<CreateTransferValues>({
     defaultValues: {
       fromBranchId: '',
@@ -114,6 +114,7 @@ export function InventoryTransferDialog({
       description="Move available stock between branches. The transfer posts immediately when saved."
 
       size="wide"
+      hasUnsavedChanges={isDirty}
     >
       <form className="dialog-form" onSubmit={submit} aria-busy={isSubmitting}>
         <div className="transfer-branch-fields">
@@ -310,17 +311,7 @@ export function InventoryTransferDialog({
         )}
 
         <div className="dialog-actions">
-          <button
-            type="button"
-
-            className="button button-outline"
-
-            disabled={isSubmitting}
-
-            onClick={() => handleOpenChange(false)}
-          >
-            Cancel
-          </button>
+          <DialogCancelButton disabled={isSubmitting} />
 
           <button
             type="submit"

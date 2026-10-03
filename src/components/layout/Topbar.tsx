@@ -37,7 +37,9 @@ export function Topbar({
       ? 'Overview'
       : currentRoute === 'design-system'
         ? 'Design system'
-        : (currentModule?.title ?? 'CBMS')
+        : currentRoute === 'settings'
+          ? 'Settings'
+          : (currentModule?.title ?? 'CBMS')
 
   return (
     <header className="topbar">

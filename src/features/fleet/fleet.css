@@ -7,7 +7,7 @@
 .fleet-form-section legend {
   margin: 0 0 12px;
   color: var(--text);
-  font-size: 14px;
+  font-size: var(--font-size-14);
   font-weight: 650;
 }
 .fleet-state {
@@ -37,12 +37,12 @@
 }
 .fleet-summary dt {
   color: var(--text-secondary);
-  font-size: 12px;
+  font-size: var(--font-size-12);
 }
 .fleet-summary dd {
   margin: 5px 0 0;
   color: var(--text);
-  font-size: 16px;
+  font-size: var(--font-size-16);
   font-weight: 650;
   overflow-wrap: anywhere;
 }
@@ -59,7 +59,7 @@
 }
 .fleet-section-heading h3 {
   margin: 0;
-  font-size: 14px;
+  font-size: var(--font-size-14);
   color: var(--text);
 }
 .fleet-record-list {
@@ -94,7 +94,7 @@ button.fleet-record:hover {
 .fleet-record small {
   margin-top: 5px;
   color: var(--text-secondary);
-  font-size: 12px;
+  font-size: var(--font-size-12);
   overflow-wrap: anywhere;
 }
 .fleet-record-end {
@@ -125,13 +125,13 @@ button.fleet-record:hover {
 }
 .fleet-detail-fields dt {
   color: var(--text-secondary);
-  font-size: 12px;
+  font-size: var(--font-size-12);
 }
 .fleet-detail-fields dd {
   margin: 5px 0 0;
   overflow-wrap: anywhere;
   color: var(--text);
-  font-size: 13px;
+  font-size: var(--font-size-13);
 }
 .fleet-actions {
   display: flex;

@@ -3,7 +3,7 @@ import { useEffect } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
 import type { UseFormRegister } from 'react-hook-form'
 import { Plus } from 'lucide-react'
-import { AppDialog } from '@/components/common/AppDialog'
+import { AppDialog, DialogCancelButton } from '@/components/common/AppDialog'
 import type { EmployeeOptions, EmployeeRecord, EmployeeValues } from './types'
 import { EmployeeDriverFields } from './EmployeeDriverFields'
 import './employee-driver.css'
@@ -38,7 +38,7 @@ export function EmployeeRecordDialog({
     control,
     getValues,
     setValue,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isDirty },
   } = useForm<EmployeeValues>()
   const isDriver = useWatch({ control, name: 'isDriver' })
 
@@ -122,6 +122,7 @@ export function EmployeeRecordDialog({
       title={employee ? 'Edit employee' : 'Add employee'}
       description="Keep the employee record and branch assignment up to date."
       size="wide"
+      hasUnsavedChanges={isDirty}
     >
       <form className="dialog-form" onSubmit={handleSubmit(submit)} aria-busy={isSubmitting}>
         <fieldset className="employee-form-section" disabled={isSubmitting}>
@@ -286,14 +287,7 @@ export function EmployeeRecordDialog({
           </p>
         )}
         <div className="dialog-actions">
-          <button
-            type="button"
-            className="button button-outline"
-            onClick={() => onOpenChange(false)}
-            disabled={isSubmitting}
-          >
-            Cancel
-          </button>
+          <DialogCancelButton disabled={isSubmitting} />
           <button
             type="submit"
             className="button button-primary"

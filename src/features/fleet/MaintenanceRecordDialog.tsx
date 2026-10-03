@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
-import { AppDialog } from '@/components/common/AppDialog'
+import { AppDialog, DialogCancelButton } from '@/components/common/AppDialog'
 import { formatPeso, fromMinorUnits, toMinorUnits } from '@/features/modules/order-decimals'
 import { FleetField, FleetSection, type FleetForm } from './FleetFields'
 import { optionalText } from './fleet.utils'
@@ -32,7 +32,7 @@ export function MaintenanceRecordDialog({
     control,
     getValues,
     setValue,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isDirty },
   } = useForm<FleetForm>()
   useEffect(() => {
     if (open)
@@ -86,6 +86,7 @@ export function MaintenanceRecordDialog({
       title={record ? 'Edit maintenance record' : 'Schedule maintenance'}
       description="Record the repair problem, provider, and itemized expenses."
       size="wide"
+      hasUnsavedChanges={isDirty}
     >
       <form className="dialog-form" onSubmit={submit}>
         <fieldset className="fleet-form-section" disabled={isSubmitting}>
@@ -180,14 +181,7 @@ export function MaintenanceRecordDialog({
           </div>
         )}
         <div className="dialog-actions">
-          <button
-            type="button"
-            className="button button-outline"
-            disabled={isSubmitting}
-            onClick={onClose}
-          >
-            Cancel
-          </button>
+          <DialogCancelButton disabled={isSubmitting} />
           <button
             type="submit"
             className="button button-primary"

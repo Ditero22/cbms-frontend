@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
 import { Link } from 'react-router-dom'
-import { AppDialog } from '@/components/common/AppDialog'
+import { AppDialog, DialogCancelButton } from '@/components/common/AppDialog'
 import { FleetField, type FleetForm } from './FleetFields'
 import { optionalText } from './fleet.utils'
 import type { AssignmentValues, FleetOptions } from './types'
@@ -32,7 +32,7 @@ export function FleetAssignmentDialog({
     control,
     setValue,
     getValues,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isDirty },
   } = useForm<FleetForm>()
   useEffect(() => {
     if (open) reset({ vehicleId, branchId: '', purpose: '' })
@@ -74,6 +74,7 @@ export function FleetAssignmentDialog({
       title="Assign driver and vehicle"
       description="Reserve eligible resources for a delivery, trip, or service."
       size="wide"
+      hasUnsavedChanges={isDirty}
     >
       <form className="dialog-form" onSubmit={submit}>
         <fieldset className="fleet-form-section" disabled={isSubmitting}>
@@ -158,14 +159,7 @@ export function FleetAssignmentDialog({
           </div>
         )}
         <div className="dialog-actions">
-          <button
-            className="button button-outline"
-            type="button"
-            disabled={isSubmitting}
-            onClick={onClose}
-          >
-            Cancel
-          </button>
+          <DialogCancelButton disabled={isSubmitting} />
           <button
             className="button button-primary"
             type="submit"

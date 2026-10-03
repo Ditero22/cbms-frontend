@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react'
 import { toast } from 'sonner'
-import { AppDialog } from '@/components/common/AppDialog'
+import { AppDialog, DialogCancelButton } from '@/components/common/AppDialog'
 import { FieldHeading } from '@/components/common/FieldHeading'
 import { ProofFileField } from '@/components/common/ProofFileField'
 import { validatePaymentProof } from '@/components/common/payment-proof'
@@ -149,9 +149,7 @@ export function PayrollPaymentDialog({
           </p>
         )}
         <div className="dialog-actions">
-          <button type="button" className="button button-outline" disabled={busy} onClick={onClose}>
-            Cancel
-          </button>
+          <DialogCancelButton disabled={busy} />
           <button type="submit" className="button button-primary" disabled={busy}>
             {busy ? 'Saving…' : 'Record payment'}
           </button>

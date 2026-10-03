@@ -1,0 +1,221 @@
+.app-loading-screen {
+  display: flex;
+  min-height: 100vh;
+  min-height: 100dvh;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 24px;
+  color: var(--text);
+  text-align: center;
+  background: var(--canvas);
+}
+.app-loading-spinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid var(--border-strong);
+  border-top-color: var(--orange);
+  border-radius: 50%;
+  animation: app-loading-spin 0.9s linear infinite;
+}
+.app-loading-screen h1 {
+  margin: 8px 0 0;
+  color: var(--text);
+  font-size: var(--font-size-20);
+  font-weight: 650;
+  line-height: 1.35;
+}
+.app-loading-screen p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: var(--font-size-16);
+  line-height: 1.5;
+}
+@keyframes app-loading-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.page-skeleton {
+  display: grid;
+  gap: 22px;
+  min-width: 0;
+  animation: skeleton-fade-in 0.12s ease-out;
+}
+.page-skeleton-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  min-height: 68px;
+}
+.page-skeleton-title-group {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+.skeleton-block {
+  display: block;
+  border-radius: 7px;
+  background: linear-gradient(90deg, var(--surface-soft), var(--border), var(--surface-soft));
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.8s ease-in-out infinite;
+}
+.skeleton-title {
+  width: min(280px, 65%);
+  height: 30px;
+}
+.skeleton-description {
+  width: min(420px, 84%);
+  height: 16px;
+}
+.skeleton-action {
+  width: 168px;
+  height: 46px;
+  border-radius: 8px;
+}
+.page-skeleton-tools {
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) minmax(140px, 190px) 120px 120px;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+}
+.skeleton-search,
+.skeleton-filter,
+.skeleton-sort,
+.skeleton-export {
+  height: 44px;
+}
+.page-skeleton-table {
+  display: grid;
+  gap: 1px;
+  overflow: hidden;
+  padding: 1px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--border);
+}
+.skeleton-table-heading {
+  height: 42px;
+  border-radius: 0;
+}
+.skeleton-table-row {
+  height: 58px;
+  border-radius: 0;
+  background-color: var(--surface);
+}
+.page-skeleton-cards {
+  display: none;
+}
+.page-skeleton-card {
+  display: grid;
+  gap: 14px;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+}
+.skeleton-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-width: 0;
+}
+.skeleton-card-heading {
+  width: 76%;
+  height: 22px;
+}
+.skeleton-card-status {
+  width: 82px;
+  height: 28px;
+  flex: 0 0 auto;
+  border-radius: 999px;
+}
+.skeleton-card-field {
+  width: 100%;
+  height: 42px;
+}
+@keyframes skeleton-shimmer {
+  0%,
+  100% {
+    background-position: 100% 0;
+  }
+  50% {
+    background-position: 0 0;
+  }
+}
+@keyframes skeleton-fade-in {
+  from {
+    opacity: 0.7;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 800px) {
+  .page-skeleton {
+    gap: 18px;
+  }
+  .page-skeleton-heading {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .page-skeleton-title-group {
+    width: 100%;
+  }
+  .skeleton-title {
+    width: min(240px, 70%);
+    height: 28px;
+  }
+  .skeleton-description {
+    width: min(360px, 94%);
+  }
+  .skeleton-action {
+    width: 100%;
+    max-width: 220px;
+  }
+  .page-skeleton-tools {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    padding: 12px;
+  }
+  .skeleton-search {
+    grid-column: 1 / -1;
+  }
+  .skeleton-filter {
+    grid-column: 1 / -1;
+  }
+  .skeleton-sort {
+    grid-column: 1;
+  }
+  .skeleton-export {
+    grid-column: 2;
+  }
+  .page-skeleton-table {
+    display: none;
+  }
+  .page-skeleton-cards {
+    display: grid;
+    gap: 12px;
+  }
+  .page-skeleton-card {
+    gap: 14px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app-loading-spinner,
+  .skeleton-block,
+  .page-skeleton {
+    animation: none;
+  }
+}

@@ -249,11 +249,6 @@ export function OrderDetailDialog({
             {order.cancellationReason && <> · Reason: {order.cancellationReason}</>}
             {order.completedAt && <> · Completed {formatDateTime(order.completedAt)}</>}
           </div>
-          <div className="dialog-actions">
-            <button className="button button-outline" onClick={onClose}>
-              Close
-            </button>
-          </div>
         </>
       ) : null}
     </AppDialog>

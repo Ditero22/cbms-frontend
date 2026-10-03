@@ -124,9 +124,6 @@ export function MaintenanceDetailDialog({
                 />
               )}
               <div className="dialog-actions">
-                <button className="button button-outline" type="button" onClick={onClose}>
-                  Close
-                </button>
                 {canManage && canEdit && (
                   <>
                     <button

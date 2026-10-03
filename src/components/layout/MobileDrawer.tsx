@@ -1,5 +1,5 @@
 import * as Dialog from '@radix-ui/react-dialog'
-import { BriefcaseBusiness, LogOut, X } from 'lucide-react'
+import { LogOut, X } from 'lucide-react'
 import type { AuthenticatedUser } from '@/features/auth/types'
 import { userInitials } from '@/utils/userInitials'
 import { NavigationLinks } from './NavigationLinks'
@@ -19,13 +19,10 @@ export function MobileDrawer({
       <Dialog.Content id="mobile-navigation" className="mobile-drawer-content">
         <header className="mobile-drawer-header">
           <div className="mobile-drawer-brand">
-            <span className="brand-mark" aria-hidden="true">
-              <BriefcaseBusiness size={20} strokeWidth={1.8} />
-            </span>
-            <strong>BuildCore</strong>
+            <strong>CBMS</strong>
             <Dialog.Close asChild>
               <button className="icon-button mobile-drawer-close" aria-label="Close navigation">
-                <X size={19} />
+                <X size={19} aria-hidden="true" />
               </button>
             </Dialog.Close>
           </div>
@@ -36,9 +33,11 @@ export function MobileDrawer({
               <span>{user.role}</span>
             </span>
           </div>
-          <div className="mobile-branch-context" role="group" aria-label="Current branch scope">
-            <span>Branch access</span>
-            <strong>{user.isCrossBranch ? 'All branches' : user.branch}</strong>
+          <div className="mobile-branch-context" role="group" aria-label="Branch access">
+            <span>Branch</span>
+            <strong className="mobile-branch-chip">
+              {user.isCrossBranch ? 'All branches' : user.branch}
+            </strong>
           </div>
           <Dialog.Title className="sr-only">Main navigation</Dialog.Title>
           <Dialog.Description className="sr-only">

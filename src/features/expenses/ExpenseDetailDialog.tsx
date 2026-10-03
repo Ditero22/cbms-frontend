@@ -113,9 +113,6 @@ export function ExpenseDetailDialog({
               />
             )}
             <div className="dialog-actions">
-              <button type="button" className="button button-outline" onClick={onClose}>
-                Close
-              </button>
               {canReview && (
                 <>
                   <button

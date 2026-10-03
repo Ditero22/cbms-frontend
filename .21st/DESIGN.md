@@ -12,6 +12,6 @@ Generated locally by 21st CLI 1.17.1, then corrected against actual source. The 
 - Rules: reuse primitives, exact decimal helpers and actual API records; one page primary create action; show practical record information directly; preserve grants and business behavior; test all requested widths and meaningful failure/retry/keyboard states.
 - Avoid: new branding/palette, decorative controls, fake features, invented payroll/transfer policy, unnecessary component libraries and marketing layouts.
 
-Sources: FRONTEND_ARCHITECTURE.md, ../UI_UX_AUDIT.md, src/components/common, src/components/layout, src/features, src/index.css, src/styles/responsive.css.
+Sources: [frontend architecture](../FRONTEND_ARCHITECTURE.md), [current progress](../../md-docs/project/progressreport.md), [approved scope](../../md-docs/project/release-scope.md), and [historical UI audit](../../md-docs/archive/audits/ui-ux-2026-10-01.md). Code paths are relative to the frontend package root: src/components/common, src/components/layout, src/features, src/index.css, src/styles/responsive.css.
 
 21st review runs locally. Catalog search currently requires unavailable login/API credentials; no hosted generation or active MCP connection is claimed.

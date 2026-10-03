@@ -164,11 +164,8 @@ export function DeliveryDetailDialog({
           <div className="order-detail-metadata">
             Last updated {formatDateTime(delivery.updatedAt)}
           </div>
-          <div className="dialog-actions">
-            <button type="button" className="button button-outline" onClick={onClose}>
-              Close
-            </button>
-            {canUpdate && statusCanAdvance && (
+          {canUpdate && statusCanAdvance && (
+            <div className="dialog-actions">
               <button
                 type="button"
                 className="button button-primary"
@@ -176,8 +173,8 @@ export function DeliveryDetailDialog({
               >
                 Update status
               </button>
-            )}
-          </div>
+            </div>
+          )}
         </>
       ) : null}
     </AppDialog>
