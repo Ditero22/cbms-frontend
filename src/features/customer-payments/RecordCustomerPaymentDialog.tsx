@@ -65,6 +65,7 @@ export function RecordCustomerPaymentDialog({
       }}
       title="Record customer payment"
       description="Each receipt is kept separately. Choose an order and record the actual payment received."
+      size="md"
     >
       <form className="dialog-form" onSubmit={submit}>
         <label className="field-label">

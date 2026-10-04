@@ -48,6 +48,7 @@ export function ReorderPointDialog({
       onOpenChange={(next) => !next && !busy && onClose()}
       title="Edit reorder point"
       description={`${inventory.productName} · ${inventory.branchName}`}
+      size="md"
     >
       <form className="dialog-form" onSubmit={(event) => void submit(event)}>
         <label className="field-label inventory-quantity-field" htmlFor={id}>

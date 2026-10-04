@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { keepPreviousData, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Plus } from 'lucide-react'
 import { toast } from 'sonner'
@@ -7,8 +7,10 @@ import { DataTable } from '@/components/common/DataTable'
 import { PageHeading } from '@/components/common/PageHeading'
 import { modules } from '@/features/modules/modules'
 import { getModuleRecords } from '@/features/modules/modules.api'
+import { OrderDetailDialog } from '@/features/modules/OrderDetailDialog'
 import type { ModuleListQuery } from '@/features/modules/types'
 import { useModuleRuntime } from '@/features/modules/useModuleRuntime'
+import { invalidateOrderPaymentQueries } from '@/features/orders/order-payment-cache'
 import { getCustomerPaymentOptions, recordCustomerPayment } from './customer-payments.api'
 import { CustomerPaymentDetailDialog } from './CustomerPaymentDetailDialog'
 import { RecordCustomerPaymentDialog } from './RecordCustomerPaymentDialog'
@@ -29,11 +31,18 @@ export function PaymentsPage() {
     order: 'asc',
   })
   const [selectedId, setSelectedId] = useState<string | null>(null)
+  const [refundOrderId, setRefundOrderId] = useState<string | null>(null)
+  const [pendingRefundOrderId, setPendingRefundOrderId] = useState<string | null>(null)
   const [recording, setRecording] = useState(false)
   const [recordOrderId, setRecordOrderId] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
   const canRead = runtime.permissions.includes('payments.read')
   const canCreate = runtime.permissions.includes('payments.create')
+  const canOpenRefundWorkflow =
+    runtime.permissions.includes('sales.read') &&
+    ['payments.refund.request', 'payments.refund.approve', 'payments.refund.process'].some(
+      (permission) => runtime.permissions.includes(permission),
+    )
   const list = useQuery({
     queryKey: ['module', 'payments', query],
     queryFn: () => getModuleRecords('payments', query),
@@ -45,6 +54,12 @@ export function PaymentsPage() {
     queryFn: getCustomerPaymentOptions,
     enabled: canCreate && recording,
   })
+  useEffect(() => {
+    if (selectedId === null && pendingRefundOrderId !== null && refundOrderId === null) {
+      setRefundOrderId(pendingRefundOrderId)
+      setPendingRefundOrderId(null)
+    }
+  }, [pendingRefundOrderId, refundOrderId, selectedId])
   function openRecord(orderId: string | null) {
     setError(null)
     setSelectedId(null)
@@ -57,16 +72,7 @@ export function PaymentsPage() {
     setError(null)
     try {
       await recordCustomerPayment(values, requestKey, proofFile)
-      await Promise.all(
-        [
-          ['module', 'payments'],
-          ['customer-payment-detail'],
-          ['payment-options'],
-          ['order-detail'],
-          ['dashboard-summary'],
-          ['report'],
-        ].map((queryKey) => queryClient.invalidateQueries({ queryKey })),
-      )
+      await invalidateOrderPaymentQueries(queryClient, values.orderId)
       setRecording(false)
       setSelectedId(values.orderId)
       toast.success('Payment and proof recorded.')
@@ -131,8 +137,19 @@ export function PaymentsPage() {
         orderId={selectedId}
         canReadAudit={runtime.permissions.includes('audit.read')}
         canCreate={canCreate}
+        canOpenRefundWorkflow={canOpenRefundWorkflow}
         onClose={() => setSelectedId(null)}
         onRecord={(order) => openRecord(order.id)}
+        onReviewRefunds={(orderId) => {
+          setSelectedId(null)
+          setPendingRefundOrderId(orderId)
+        }}
+      />
+      <OrderDetailDialog
+        orderId={refundOrderId}
+        canReadAudit={runtime.permissions.includes('audit.read')}
+        permissions={runtime.permissions}
+        onClose={() => setRefundOrderId(null)}
       />
       {recording && (
         <RecordCustomerPaymentDialog

@@ -155,6 +155,79 @@ for (const width of [375, 390, 430, 768, 1024, 1280, 1440]) {
   })
 }
 
+test('Payments opens the existing order refund workflow for authorized users', async ({ page }) => {
+  await login(page)
+  const order = await createOrder(page.request, 10)
+  await api(page.request, '/payments', 'POST', {
+    orderId: order.id,
+    amount: '10.00',
+    method: 'Cash',
+  })
+
+  const paymentsDetail = await openOrder(page, order)
+  await paymentsDetail
+    .getByRole('button', { name: 'Review refunds and order activity', exact: true })
+    .click()
+
+  await expect(paymentsDetail).toBeHidden()
+  const orderDetail = page.getByRole('dialog', { name: order.orderNumber, exact: true })
+  await expect(
+    orderDetail.getByRole('button', { name: 'Request refund', exact: true }),
+  ).toBeVisible()
+  await orderDetail.getByRole('button', { name: 'Request refund', exact: true }).click()
+  const refundForm = page.getByRole('dialog', { name: 'Request payment refund', exact: true })
+  await expect(refundForm).toBeVisible()
+  await expect(refundForm.getByLabel(/^Payment/)).toBeVisible()
+  await refundForm.getByRole('button', { name: 'Cancel', exact: true }).click()
+})
+
+test('a refund from Payments refreshes the cached payment detail and balance immediately', async ({
+  page,
+}) => {
+  await login(page)
+  const order = await createOrder(page.request, 10)
+  const payment = await api<{ id: string }>(page.request, '/payments', 'POST', {
+    orderId: order.id,
+    amount: '10.00',
+    method: 'Cash',
+  })
+  const paymentsDetail = await openOrder(page, order)
+  await expect(paymentsDetail.getByText('Refund history', { exact: true })).toHaveCount(0)
+  // The detail is fresh for 30 seconds. Reopening must refresh because of the mutation,
+  // not because a navigation reload or cache timeout happened to recover the display.
+  const cachedAt = Date.now()
+  await paymentsDetail
+    .getByRole('button', { name: 'Review refunds and order activity', exact: true })
+    .click()
+  const orderDetail = page.getByRole('dialog', { name: order.orderNumber, exact: true })
+  await orderDetail.getByRole('button', { name: 'Request refund', exact: true }).click()
+  const form = page.getByRole('dialog', { name: 'Request payment refund', exact: true })
+  await form.getByLabel(/^Payment/).selectOption(payment.id)
+  await form.getByLabel(/^Amount/).fill('5.00')
+  await form.getByLabel(/^Reason/).fill('Synthetic cache consistency check')
+  await form.getByRole('button', { name: 'Submit refund request', exact: true }).click()
+  await expect(form).toBeHidden()
+  const refunds = orderDetail
+    .locator('section')
+    .filter({ has: page.getByRole('heading', { name: 'Refunds', exact: true }) })
+  await refunds.getByRole('button', { name: 'Approve', exact: true }).click()
+  await refunds.getByRole('button', { name: 'Mark processed', exact: true }).click()
+  await expect(refunds.getByText('Processed', { exact: true })).toBeVisible()
+  await orderDetail.getByRole('button', { name: 'Close dialog', exact: true }).click()
+
+  const refreshed = page.waitForResponse((response) =>
+    response.url().endsWith(`/payments/orders/${order.id}`),
+  )
+  await tableRecordControl(page, order.orderNumber).click()
+  expect((await refreshed).ok()).toBeTruthy()
+  await expect(
+    paymentsDetail.getByRole('heading', { name: 'Refund history', exact: true }),
+  ).toBeVisible()
+  await expect(paymentsDetail.getByText('Processed', { exact: true })).toBeVisible()
+  await expect(paymentsDetail.locator('.customer-payment-summary')).toContainText('₱95.00')
+  expect(Date.now() - cachedAt).toBeLessThan(30_000)
+})
+
 for (const width of [390, 1280]) {
   test(`partial and final payments retain receipts and update table balances at ${width}px`, async ({
     page,
@@ -239,6 +312,9 @@ test('payment proofs upload and download privately, reject executable files, and
     requestKey: crypto.randomUUID(),
   })
   const detail = await openOrder(page, order)
+  await expect(
+    detail.getByRole('button', { name: 'Review refunds and order activity', exact: true }),
+  ).toBeVisible()
   const card = detail.getByRole('article', { name: `Payment ${receipt.reference}`, exact: true })
   await card.getByRole('button', { name: 'View or attach receipt/proof', exact: true }).click()
   const file = card.getByLabel('Attach proof', { exact: true })
@@ -301,6 +377,9 @@ test('read-only payment users see balances and history without financial actions
   await login(page, 'viewer@example.invalid')
   const detail = await openOrder(page, order)
   await expect(page.getByRole('button', { name: 'Record payment', exact: true })).toHaveCount(0)
+  await expect(
+    detail.getByRole('button', { name: 'Review refunds and order activity', exact: true }),
+  ).toHaveCount(0)
   await expect(detail.getByText('Partially Paid', { exact: true })).toBeVisible()
   await expect(detail.getByRole('heading', { name: 'Record history', exact: true })).toHaveCount(0)
   await detail.getByRole('button', { name: 'View receipt/proof', exact: true }).click()

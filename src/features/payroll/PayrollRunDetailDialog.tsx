@@ -68,7 +68,7 @@ export function PayrollRunDetailDialog({
             ? `${run.periodStart} to ${run.periodEnd}${run.branchName ? ` · ${run.branchName}` : ''}`
             : undefined
         }
-        size="wide"
+        size="lg"
       >
         <QueryState
           loading={detail.isPending}

@@ -1,4 +1,5 @@
 import type { LucideIcon } from 'lucide-react'
+import type { DataTableDefinition } from '@/components/common/DataTable.types'
 import {
   ArrowLeftRight,
   Boxes,
@@ -17,20 +18,15 @@ import {
   WalletCards,
 } from 'lucide-react'
 
-export type { RecordRow as Row } from './types'
+export type { RecordRow as Row } from '@/contracts/records'
 
-export type ModuleDefinition = {
-  id: string
+export type ModuleDefinition = DataTableDefinition & {
   label: string
-  title: string
   description: string
   icon: LucideIcon
   group: string
   permission: string
   addLabel: string
-  columns: string[]
-  mobileColumns?: string[]
-  sortableColumns?: string[]
 }
 
 export const modules: ModuleDefinition[] = [
@@ -50,7 +46,7 @@ export const modules: ModuleDefinition[] = [
     id: 'branches',
     label: 'Branches',
     title: 'Branches',
-    description: 'View and manage CBMS branch locations.',
+    description: 'View and manage branch locations.',
     icon: Building2,
     group: 'Management',
     permission: 'branches.read',
@@ -246,7 +242,7 @@ export const modules: ModuleDefinition[] = [
     id: 'audit-logs',
     label: 'Audit logs',
     title: 'Audit Logs',
-    description: 'Review important changes across CBMS.',
+    description: 'Review important changes across the workspace.',
     icon: Shield,
     group: 'Insights',
     permission: 'audit.read',

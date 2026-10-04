@@ -69,7 +69,10 @@ export function downloadReport(
   const period = ['inventory-health', 'customer-balances', 'fleet-status'].includes(report)
     ? 'current'
     : `${dateFrom}-to-${dateTo}`
-  return apiDownload(`/reports/export?${params.toString()}`, `cbms-${report}-${period}.csv`)
+  return apiDownload(
+    `/reports/export?${params.toString()}`,
+    `materials-supply-operations-finance-${report}-${period}.csv`,
+  )
 }
 
 export function getEmployeeOptions() {

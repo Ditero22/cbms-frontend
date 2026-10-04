@@ -34,7 +34,7 @@ function getApiOrigin(value) {
 export async function onRequest({ request, env }) {
   const apiOrigin = getApiOrigin(env.CBMS_API_ORIGIN)
   if (!apiOrigin) {
-    return jsonResponse(503, 'The CBMS API is not configured for this site.')
+    return jsonResponse(503, 'The application API is not configured for this site.')
   }
 
   const incomingUrl = new URL(request.url)
@@ -67,6 +67,6 @@ export async function onRequest({ request, env }) {
     const upstreamRequest = new Request(upstreamUrl, requestWithTrustedHeaders)
     return await fetch(upstreamRequest)
   } catch {
-    return jsonResponse(502, 'The CBMS API is temporarily unavailable.')
+    return jsonResponse(502, 'The application API is temporarily unavailable.')
   }
 }

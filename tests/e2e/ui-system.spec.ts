@@ -389,9 +389,18 @@ test('core shell, mobile navigation and record dialog pass automated WCAG checks
 }, testInfo) => {
   test.setTimeout(120_000)
   await login(page)
+  await expect(page).toHaveTitle('Materials Supply Operations & Finance')
+  await expect(page.locator('.workspace-label')).toHaveText('Materials Supply Operations & Finance')
+  await expect(page.locator('.sidebar-brand')).toContainText('Materials Supply')
   for (const path of ['dashboard', ...routes.map(({ id }) => id), 'design-system', 'settings']) {
     await page.goto(`/${path}`)
     await expect(page.locator('#main-content h1').first()).toBeVisible()
+    if (path === 'settings') {
+      const applicationRow = page
+        .locator('.settings-row')
+        .filter({ has: page.getByText('Application', { exact: true }) })
+      await expect(applicationRow).toContainText('Materials Supply Operations & Finance')
+    }
     await expectNoAccessibilityViolations(page)
   }
 
@@ -399,7 +408,7 @@ test('core shell, mobile navigation and record dialog pass automated WCAG checks
   await page.getByRole('button', { name: 'Open navigation', exact: true }).click()
   const drawer = page.getByRole('dialog', { name: 'Main navigation', exact: true })
   await expect(drawer).toBeVisible()
-  await expect(drawer.getByText('CBMS', { exact: true })).toBeVisible()
+  await expect(drawer.getByText('Materials Supply', { exact: true })).toBeVisible()
   await expect(drawer.locator('.mobile-account-summary')).toBeVisible()
   await expect(drawer.locator('.mobile-branch-chip')).toBeVisible()
   await expectNoAccessibilityViolations(page)
@@ -667,7 +676,7 @@ test('session restore and delivery loading show distinct accessible progress sta
   const appLoader = page.locator('.app-loading-screen')
   await expect(appLoader).toBeVisible()
   await expect(
-    appLoader.getByRole('heading', { name: 'Connecting to CBMS workspace' }),
+    appLoader.getByRole('heading', { name: 'Opening Materials Supply Operations & Finance' }),
   ).toBeVisible()
   await expect(appLoader.getByText('Please wait while we prepare your session.')).toBeVisible()
   await expect(appLoader.locator('.app-loading-spinner')).toBeVisible()
@@ -805,6 +814,7 @@ test('data-entry dialog scrolls internally and keeps its actions above the mobil
     await expect(dialog.getByRole('heading', { name: 'Add branch', exact: true })).toBeVisible()
     await expect(dialog.locator('.dialog-heading')).toHaveCSS('border-bottom-width', '1px')
     await expect(dialog.locator('.dialog-actions')).toHaveCSS('border-top-width', '1px')
+    await expect(dialog.locator('.dialog-actions')).toHaveCSS('position', 'static')
     const sharedFormControls = dialog.locator('.form-input')
     for (let index = 0; index < (await sharedFormControls.count()); index += 1) {
       const control = sharedFormControls.nth(index)
@@ -830,7 +840,11 @@ test('data-entry dialog scrolls internally and keeps its actions above the mobil
       await field.scrollIntoViewIfNeeded()
       await expectVisibleAboveKeyboard(field, keyboardHeight)
       await expect(dialog.getByRole('heading', { name: 'Add branch', exact: true })).toBeVisible()
+      await submit.scrollIntoViewIfNeeded()
       await expectVisibleAboveKeyboard(submit, keyboardHeight)
+      await field.focus()
+      await field.scrollIntoViewIfNeeded()
+      await expectVisibleAboveKeyboard(field, keyboardHeight)
       if (width === 390 && label === 'Address') {
         await page.screenshot({
           path: testInfo.outputPath('branch-dialog-keyboard-390.png'),
@@ -842,10 +856,82 @@ test('data-entry dialog scrolls internally and keeps its actions above the mobil
     expect(await page.evaluate(() => window.scrollY)).toBe(pageScrollBeforeFields)
     await simulateKeyboardViewport(page, 844)
     await expect(dialog).toHaveCSS('bottom', '0px')
+    await submit.scrollIntoViewIfNeeded()
     await expectVisibleAboveKeyboard(dialog.getByRole('button', { name: 'Create record' }), 844)
     await page.keyboard.press('Escape')
     await expect(dialog).toBeHidden()
     expect(await page.evaluate(() => getComputedStyle(document.body).overflow)).not.toBe('hidden')
+  }
+})
+
+test('product dialog width follows its form and mobile actions remain in normal flow', async ({
+  page,
+}, testInfo) => {
+  test.setTimeout(180_000)
+  await page.setViewportSize({ width: 1440, height: 960 })
+  await login(page)
+
+  for (const level of [3, 5] as const) {
+    await page.goto('/settings?section=appearance')
+    await page
+      .getByRole('radio', {
+        name: level === 3 ? 'Level 3 — Standard' : 'Level 5 — Extra large',
+      })
+      .check()
+    await expect
+      .poll(() => page.evaluate(() => document.documentElement.dataset.textSize))
+      .toBe(String(level))
+
+    for (const width of [1280, 1440, 1024, 768, 430, 390, 375]) {
+      const height = width <= 430 ? 620 : 900
+      await page.setViewportSize({ width, height })
+      await page.goto('/products')
+      await page.getByRole('button', { name: 'Add product', exact: true }).click()
+
+      const dialog = page.getByRole('dialog', { name: 'Add product', exact: true })
+      const fields = dialog.locator('.create-record-fields')
+      const actions = dialog.locator('.dialog-actions')
+      await expect(dialog).toHaveClass(/dialog-size-md/)
+      await expect(dialog).toHaveCSS('border-top-width', '2px')
+      await dialogBounds(page, dialog)
+
+      if (width > 700) {
+        const bounds = await dialog.boundingBox()
+        expect(bounds!.width).toBeLessThanOrEqual(720)
+        expect(bounds!.width).toBeGreaterThanOrEqual(640)
+        expect(
+          await fields.evaluate(
+            (element) => getComputedStyle(element).gridTemplateColumns.split(' ').length,
+          ),
+        ).toBe(2)
+        await expect(actions).toHaveCSS('position', 'sticky')
+      } else {
+        expect(
+          await fields.evaluate(
+            (element) => getComputedStyle(element).gridTemplateColumns.split(' ').length,
+          ),
+        ).toBe(1)
+        await expect(actions).toHaveCSS('position', 'static')
+        const body = dialog.locator('.dialog-body')
+        const metrics = await body.evaluate((element) => ({
+          clientHeight: element.clientHeight,
+          scrollHeight: element.scrollHeight,
+        }))
+        expect(metrics.scrollHeight).toBeGreaterThan(metrics.clientHeight)
+        const submit = dialog.getByRole('button', { name: 'Create record', exact: true })
+        await submit.scrollIntoViewIfNeeded()
+        await expectVisibleAboveKeyboard(submit, height)
+        if (level === 5 && width === 390) {
+          await page.screenshot({ path: testInfo.outputPath('product-dialog-mobile-xl-390.png') })
+        }
+      }
+
+      if (level === 3 && width === 1440) {
+        await page.screenshot({ path: testInfo.outputPath('product-dialog-desktop-1440.png') })
+      }
+      await dialog.getByRole('button', { name: 'Close dialog', exact: true }).click()
+      await expect(dialog).toBeHidden()
+    }
   }
 })
 
@@ -1188,7 +1274,9 @@ test('mobile drawer shows actual branch scope, permission-filtered navigation, i
 }, testInfo) => {
   await page.setViewportSize({ width: 390, height: 740 })
   await login(page, 'viewer@example.invalid')
-  await page.getByText('Signed in to CBMS.', { exact: true }).waitFor({ state: 'detached' })
+  await page
+    .getByText('Signed in to Materials Supply Operations & Finance.', { exact: true })
+    .waitFor({ state: 'detached' })
   const trigger = page.getByRole('button', { name: 'Open navigation', exact: true })
   await trigger.click()
   const drawer = page.getByRole('dialog', { name: 'Main navigation', exact: true })

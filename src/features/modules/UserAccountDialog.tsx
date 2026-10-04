@@ -125,7 +125,7 @@ export function UserAccountDialog({
           ? 'Update the account name, role, and branch access.'
           : 'Create an account with a secure initial password and least-privilege role.'
       }
-      size="wide"
+      size="md"
     >
       <form className="dialog-form" onSubmit={submit}>
         <div className="dialog-field-grid">

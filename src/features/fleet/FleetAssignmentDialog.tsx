@@ -73,7 +73,7 @@ export function FleetAssignmentDialog({
       onOpenChange={(next) => !next && !isSubmitting && onClose()}
       title="Assign driver and vehicle"
       description="Reserve eligible resources for a delivery, trip, or service."
-      size="wide"
+      size="md"
       hasUnsavedChanges={isDirty}
     >
       <form className="dialog-form" onSubmit={submit}>

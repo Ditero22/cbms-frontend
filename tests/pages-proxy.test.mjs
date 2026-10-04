@@ -71,7 +71,7 @@ test('returns a safe configuration error without calling the upstream when origi
     assert.equal(response.status, 503)
     assert.equal(response.headers.get('cache-control'), 'no-store')
     assert.deepEqual(await response.json(), {
-      message: 'The CBMS API is not configured for this site.',
+      message: 'The application API is not configured for this site.',
     })
   }
 
@@ -90,6 +90,6 @@ test('returns a safe upstream error when the Render API cannot be reached', asyn
 
   assert.equal(response.status, 502)
   assert.deepEqual(await response.json(), {
-    message: 'The CBMS API is temporarily unavailable.',
+    message: 'The application API is temporarily unavailable.',
   })
 })

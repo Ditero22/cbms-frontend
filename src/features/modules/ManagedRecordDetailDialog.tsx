@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { AppDialog } from '@/components/common/AppDialog'
-import { StatusBadge } from '@/components/common/DataTable'
+import { StatusBadge } from '@/components/common/StatusBadge'
 import { createFieldsByModule } from './create-fields'
 import { getManagedRecord } from './modules.api'
 import type { ManagedModuleId, ManagedRecord } from './types'
@@ -42,7 +42,7 @@ export function ManagedRecordDetailDialog({
       onOpenChange={(open) => !open && onClose()}
       title={name}
       description={subtitle}
-      size="wide"
+      size="md"
     >
       {recordQuery.isPending ? (
         <div className="employee-detail-state" role="status">

@@ -10,6 +10,7 @@ import { DataTable } from '@/components/common/DataTable'
 import { PageSkeleton } from '@/components/common/PageSkeleton'
 import { QueryState } from '@/components/common/QueryState'
 import { PageHeading } from '@/components/common/PageHeading'
+import { UnknownRoutePage } from '@/components/common/UnknownRoutePage'
 import { CreateRecordDialog } from './CreateRecordDialog'
 import { CreateOrderDialog } from './CreateOrderDialog'
 import { CreateDeliveryDialog } from './CreateDeliveryDialog'
@@ -556,16 +557,7 @@ function singularModuleName(moduleId: ManagedModuleId) {
 }
 
 function ModuleNotFound() {
-  return (
-    <div className="not-found">
-      <div className="not-found-mark">404</div>
-      <h1>Page not found</h1>
-      <p>The page may have moved or no longer exists.</p>
-      <Link className="button button-primary" to="/dashboard">
-        Back to overview
-      </Link>
-    </div>
-  )
+  return <UnknownRoutePage />
 }
 
 function ModuleAccessDenied() {

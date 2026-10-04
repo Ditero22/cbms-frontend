@@ -37,7 +37,7 @@ export function PayrollEntryDetailDialog({
       description={
         entry ? `${entry.periodStart} to ${entry.periodEnd} · ${entry.branchName}` : undefined
       }
-      size="wide"
+      size="lg"
     >
       <QueryState
         loading={detail.isPending}

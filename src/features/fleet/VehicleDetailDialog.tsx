@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { AppDialog } from '@/components/common/AppDialog'
-import { StatusBadge } from '@/components/common/DataTable'
+import { StatusBadge } from '@/components/common/StatusBadge'
 import { RecordHistoryPanel } from '@/components/common/RecordHistoryPanel'
 import { RecordPagination } from '@/components/common/RecordPagination'
 import { formatPeso, formatQuantity } from '@/features/modules/order-decimals'
@@ -83,7 +83,7 @@ export function VehicleDetailDialog({
       description={
         vehicle?.plateNumber ? `Plate ${vehicle.plateNumber}` : 'Fleet specifications and activity'
       }
-      size="wide"
+      size="lg"
     >
       <QueryState
         className="fleet-state"

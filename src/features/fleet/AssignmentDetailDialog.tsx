@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query'
 import { Link } from 'react-router-dom'
 import { AppDialog } from '@/components/common/AppDialog'
 import { RecordHistoryPanel } from '@/components/common/RecordHistoryPanel'
-import { StatusBadge } from '@/components/common/DataTable'
+import { StatusBadge } from '@/components/common/StatusBadge'
 import { QueryState } from '@/components/common/QueryState'
 import { formatFleetDate } from './fleet.utils'
 import { FleetConfirmDialog } from './FleetConfirmDialog'
@@ -38,7 +38,7 @@ export function AssignmentDetailDialog({
         onOpenChange={(next) => !next && !mutation.busy && onClose()}
         title={record?.reference ?? 'Assignment details'}
         description="Driver, vehicle, and trip activity."
-        size="wide"
+        size="lg"
       >
         <QueryState
           className="fleet-state"

@@ -85,7 +85,7 @@ export function MaintenanceRecordDialog({
       onOpenChange={(next) => !next && !isSubmitting && onClose()}
       title={record ? 'Edit maintenance record' : 'Schedule maintenance'}
       description="Record the repair problem, provider, and itemized expenses."
-      size="wide"
+      size="lg"
       hasUnsavedChanges={isDirty}
     >
       <form className="dialog-form" onSubmit={submit}>

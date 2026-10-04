@@ -38,7 +38,7 @@ function notifyExpiredSession(path: string, status: number) {
 function reportFailure(error: ApiError, method: string) {
   if (import.meta.env.DEV) {
     // Log transport metadata only: no bodies, credentials, query strings or customer data.
-    console.warn('CBMS API request failed', {
+    console.warn('Materials Supply Operations & Finance API request failed', {
       method,
       status: error.status,
       code: error.code,

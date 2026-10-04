@@ -254,13 +254,13 @@ export function SettingsPage({
           {section === 'general' && (
             <SettingsPanel
               title="General"
-              description="Application information and regional defaults used by CBMS."
+              description="Application information and regional defaults."
             >
               <SettingsRow
                 label="Application"
                 description="The business workspace currently in use."
               >
-                <span className="settings-value">CBMS</span>
+                <span className="settings-value">Materials Supply Operations &amp; Finance</span>
               </SettingsRow>
               <SettingsRow
                 label="Currency"
@@ -290,7 +290,7 @@ export function SettingsPage({
             >
               <SettingsRow
                 label="Text size"
-                description="Adjust text throughout CBMS, including tables, forms, navigation, and dialogs."
+                description="Adjust text throughout the app, including tables, forms, navigation, and dialogs."
               >
                 <fieldset className="settings-text-size-control">
                   <legend className="visually-hidden">Choose text size</legend>
@@ -333,7 +333,7 @@ export function SettingsPage({
                 <div className="settings-preview-card">
                   <span>Customer balance</span>
                   <strong>₱12,450.00</strong>
-                  <p>This sample shows how regular CBMS text will appear.</p>
+                  <p>This sample shows how regular app text will appear.</p>
                   <div className="settings-preview-controls">
                     <span className="settings-preview-input">Outstanding balance</span>
                     <span className="settings-status is-available">Up to date</span>
@@ -378,7 +378,7 @@ export function SettingsPage({
           {section === 'notifications' && (
             <SettingsPanel
               title="Notifications"
-              description="CBMS currently provides in-app feedback for actions and errors."
+              description="The app currently provides in-app feedback for actions and errors."
             >
               <SettingsRow
                 label="In-app feedback"
@@ -455,7 +455,7 @@ export function SettingsPage({
             >
               <p className="settings-note">
                 Branch defaults and per-branch settings are not available here. Use the branch
-                module to manage the branch records already supported by CBMS.
+                module to manage the branch records already supported by the app.
               </p>
               <SettingsLink
                 to="/branches"
@@ -487,7 +487,7 @@ export function SettingsPage({
                 <span className="settings-value">System administrator</span>
               </SettingsRow>
               <p className="settings-note">
-                These are approved targets, not proven service levels. CBMS does not report the
+                These are approved targets, not proven service levels. The app does not report the
                 latest backup run here, and this temporary policy does not describe production.
               </p>
               <a

@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { AppDialog } from '@/components/common/AppDialog'
 import { AttachmentList } from '@/components/common/AttachmentList'
-import { StatusBadge } from '@/components/common/DataTable'
+import { StatusBadge } from '@/components/common/StatusBadge'
 import { RecordHistoryPanel } from '@/components/common/RecordHistoryPanel'
 import { formatPeso } from '@/features/modules/order-decimals'
 import { QueryState } from '@/components/common/QueryState'
@@ -47,7 +47,7 @@ export function DriverAllowanceDetailDialog({
         onOpenChange={(next) => !next && !mutation.busy && onClose()}
         title={record?.reference ?? 'Driver allowance details'}
         description="Payment authorization, release, receipt confirmation, and proof."
-        size="wide"
+        size="lg"
       >
         <QueryState
           className="fleet-state"

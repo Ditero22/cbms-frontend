@@ -1,4 +1,4 @@
-import type { RecordHistoryEntry } from '@/features/modules/types'
+import type { RecordHistoryEntry } from '@/contracts/records'
 import './record-history.css'
 
 export function RecordHistoryPanel({

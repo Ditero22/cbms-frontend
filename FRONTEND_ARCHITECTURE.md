@@ -1,5 +1,7 @@
 # CBMS Frontend Architecture
 
+Current cross-cutting boundaries are documented in [frontend architecture](../md-docs/architecture/FRONTEND_ARCHITECTURE.md), [design system](../md-docs/architecture/DESIGN_SYSTEM.md), and [module boundaries](../md-docs/architecture/MODULE_BOUNDARIES.md). This package reference preserves feature detail and dated context.
+
 > Shared documentation: [task index](../md-docs/README.md) and [approved release scope](../md-docs/project/release-scope.md). The [current progress report](../md-docs/project/progressreport.md) owns status. Read only the sections relevant to the affected feature; dated test counts and follow-up notes are historical, and a documented feature is not proof of completion.
 
 This document records current frontend structure and important implementation seams. It complements [`CBMS_FRONTEND.md`](CBMS_FRONTEND.md), which contains compact product and interaction constraints. Follow current code and tests if an implementation detail has changed.

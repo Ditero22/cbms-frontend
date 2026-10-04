@@ -62,10 +62,34 @@ test('payroll edits draft pay with multiple adjustments, then records payment an
   await login(page)
   await page.goto('/payroll')
   await expect(page.getByRole('heading', { name: 'Payroll', exact: true })).toBeVisible()
+  let payrollOptionsRequests = 0
+  await page.route('**/api/v1/payroll/options**', async (route) => {
+    if (route.request().method() === 'GET' && payrollOptionsRequests++ < 2) {
+      await route.fulfill({
+        status: 503,
+        contentType: 'application/json',
+        body: JSON.stringify({ error: { code: 'SERVICE_UNAVAILABLE' } }),
+      })
+      return
+    }
+    await route.continue()
+  })
   await page.getByRole('button', { name: 'Create pay run', exact: true }).click()
   const createDialog = page.getByRole('dialog', { name: 'Create pay run' })
   await expect(createDialog).toBeVisible()
   await expect(createDialog).toHaveCSS('max-height', /.+/)
+  const optionsError = createDialog.getByRole('alert').filter({
+    hasText: 'Could not load branches and employees',
+  })
+  await expect(optionsError).toBeVisible()
+  expect(payrollOptionsRequests).toBe(2)
+  await expect(createDialog.getByRole('button', { name: 'Save draft pay run' })).toBeDisabled()
+  await optionsError.getByRole('button', { name: 'Try again' }).click()
+  await expect(optionsError).toHaveCount(0)
+  await expect(
+    createDialog.getByLabel(/Branch/).locator('option', { hasText: 'Acceptance branch' }),
+  ).toHaveCount(1)
+  await page.unroute('**/api/v1/payroll/options**')
   await createDialog.getByRole('button', { name: 'Close dialog' }).click()
   await expect(createDialog).toBeHidden()
   await page.getByRole('button', { name: 'Create pay run', exact: true }).click()
@@ -156,9 +180,29 @@ test('payroll edits draft pay with multiple adjustments, then records payment an
 
   const detailDialog = page.getByRole('dialog').filter({ hasText: created.reference })
   await expect(detailDialog.getByText('₱1,045.00')).toBeVisible()
+  let editLoadAttempts = 0
+  await page.route(`**/api/v1/payroll/${created.id}*`, async (route) => {
+    if (route.request().method() === 'GET' && editLoadAttempts++ < 2) {
+      await route.fulfill({
+        status: 503,
+        contentType: 'application/json',
+        body: JSON.stringify({ error: { code: 'SERVICE_UNAVAILABLE' } }),
+      })
+      return
+    }
+    await route.continue()
+  })
   await detailDialog.getByRole('button', { name: 'Edit draft' }).click()
   const editDialog = page.getByRole('dialog', { name: 'Edit draft pay run' })
   await expect(editDialog).toBeVisible()
+  const draftLoadError = editDialog
+    .getByRole('alert')
+    .filter({ hasText: 'Could not load this draft' })
+  await expect(draftLoadError).toBeVisible()
+  await draftLoadError.getByRole('button', { name: 'Try again' }).click()
+  await expect(draftLoadError).toHaveCount(0)
+  await expect(editDialog.getByLabel('Adjustment 1 notes')).toHaveValue('Performance bonus')
+  await page.unroute(`**/api/v1/payroll/${created.id}*`)
   await expect(editDialog.getByLabel('Adjustment 1 notes')).toHaveValue('Performance bonus')
   await editDialog.getByLabel('Adjustment 3 amount (PHP)').fill('30')
   const updateResponse = page.waitForResponse(
@@ -191,6 +235,7 @@ test('payroll edits draft pay with multiple adjustments, then records payment an
   }))
   expect(paymentBodyMetrics.scrollHeight).toBeGreaterThan(paymentBodyMetrics.clientHeight)
   const pageScrollBeforePaymentFields = await page.evaluate(() => window.scrollY)
+  const recordPaymentButton = paymentDialog.getByRole('button', { name: 'Record payment' })
   for (const field of [
     paymentDialog.getByLabel('Payment date'),
     paymentDialog.getByLabel('Reference number'),
@@ -199,10 +244,10 @@ test('payroll edits draft pay with multiple adjustments, then records payment an
     await field.focus()
     await field.scrollIntoViewIfNeeded()
     await expectAboveKeyboard(field, keyboardHeight)
-    await expectAboveKeyboard(
-      paymentDialog.getByRole('button', { name: 'Record payment' }),
-      keyboardHeight,
-    )
+    await recordPaymentButton.scrollIntoViewIfNeeded()
+    await expectAboveKeyboard(recordPaymentButton, keyboardHeight)
+    await field.scrollIntoViewIfNeeded()
+    await expectAboveKeyboard(field, keyboardHeight)
   }
   expect(await page.evaluate(() => window.scrollY)).toBe(pageScrollBeforePaymentFields)
   await simulateKeyboardViewport(page, 844)
@@ -264,7 +309,47 @@ test('payroll edits draft pay with multiple adjustments, then records payment an
   await expect(employeeCard).toBeVisible()
   await page.getByLabel('Filter payroll by branch').selectOption('')
   await expect(employeeCard).toBeVisible()
+  const receivedFilterResponse = page.waitForResponse((response) => {
+    const url = new URL(response.url())
+    return (
+      response.request().method() === 'GET' &&
+      url.pathname === '/api/v1/payroll/entries' &&
+      url.searchParams.get('paymentStatus') === 'Received'
+    )
+  })
   await page.getByLabel('Filter payroll by payment status').selectOption('Received')
+  expect((await receivedFilterResponse).ok()).toBeTruthy()
+  await expect(employeeCard).toBeVisible()
+  await expect(page.locator('.payroll-ledger')).toHaveAttribute('aria-busy', 'false')
+  const refreshProbe = `${employeeName} refresh recovery probe`
+  let failFilteredRefresh = true
+  let filteredRefreshAttempts = 0
+  await page.route('**/api/v1/payroll/entries?*', async (route) => {
+    const url = new URL(route.request().url())
+    if (url.searchParams.get('search') === refreshProbe && failFilteredRefresh) {
+      filteredRefreshAttempts += 1
+      await route.fulfill({
+        status: 503,
+        contentType: 'application/json',
+        body: JSON.stringify({ error: { code: 'SERVICE_UNAVAILABLE' } }),
+      })
+      return
+    }
+    await route.continue()
+  })
+  const filterRefreshError = page
+    .getByRole('alert')
+    .filter({ hasText: 'Could not refresh payroll. Showing the last loaded results.' })
+  await page.getByRole('searchbox', { name: 'Search employees' }).fill(refreshProbe)
+  await expect.poll(() => filteredRefreshAttempts).toBe(2)
+  await expect(filterRefreshError).toBeVisible()
+  await expect(employeeCard).toBeVisible()
+  failFilteredRefresh = false
+  await filterRefreshError.getByRole('button', { name: 'Try again' }).click()
+  await expect(filterRefreshError).toHaveCount(0)
+  await expect(employeeCard).toHaveCount(0)
+  await page.unroute('**/api/v1/payroll/entries?*')
+  await page.getByRole('searchbox', { name: 'Search employees' }).fill(employeeName)
   await expect(employeeCard).toBeVisible()
   await page.getByLabel('Filter payroll by payment status').selectOption('Paid')
   await expect(employeeCard).toHaveCount(0)

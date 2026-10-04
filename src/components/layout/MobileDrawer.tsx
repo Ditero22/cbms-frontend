@@ -19,7 +19,10 @@ export function MobileDrawer({
       <Dialog.Content id="mobile-navigation" className="mobile-drawer-content">
         <header className="mobile-drawer-header">
           <div className="mobile-drawer-brand">
-            <strong>CBMS</strong>
+            <div className="mobile-drawer-brand-copy">
+              <strong>Materials Supply</strong>
+              <span>Operations &amp; Finance</span>
+            </div>
             <Dialog.Close asChild>
               <button className="icon-button mobile-drawer-close" aria-label="Close navigation">
                 <X size={19} aria-hidden="true" />
@@ -41,7 +44,7 @@ export function MobileDrawer({
           </div>
           <Dialog.Title className="sr-only">Main navigation</Dialog.Title>
           <Dialog.Description className="sr-only">
-            Navigate to a CBMS workspace area.
+            Navigate the Materials Supply app.
           </Dialog.Description>
         </header>
         <NavigationLinks user={user} onNavigate={onNavigate} />

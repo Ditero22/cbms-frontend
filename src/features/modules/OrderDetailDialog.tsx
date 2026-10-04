@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import type { ReactNode } from 'react'
 import { AppDialog } from '@/components/common/AppDialog'
-import { StatusBadge } from '@/components/common/DataTable'
+import { StatusBadge } from '@/components/common/StatusBadge'
 import { formatPaymentDate } from '@/features/customer-payments/customer-payments.utils'
 import { getOrderDetail } from './modules.api'
 import { OrderWorkflowActions } from './OrderWorkflowActions'
@@ -53,7 +53,7 @@ export function OrderDetailDialog({
       description={
         order ? `${order.customerName} · ${order.branchName}` : 'Order and related activity'
       }
-      size="wide"
+      size="lg"
     >
       {orderQuery.isPending ? (
         <div className="employee-detail-state" role="status">

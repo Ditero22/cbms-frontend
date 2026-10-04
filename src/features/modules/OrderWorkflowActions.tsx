@@ -1,7 +1,8 @@
 import { useMemo, useRef, useState } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
-import { StatusBadge } from '@/components/common/DataTable'
+import { StatusBadge } from '@/components/common/StatusBadge'
+import { invalidateOrderPaymentQueries } from '@/features/orders/order-payment-cache'
 import {
   approveRefund,
   approveReturn,
@@ -108,18 +109,13 @@ export function OrderWorkflowActions({
 
   async function refresh() {
     await Promise.all([
-      queryClient.invalidateQueries({ queryKey: ['order-detail', order.id] }),
-      queryClient.invalidateQueries({ queryKey: ['module', 'orders'] }),
-      queryClient.invalidateQueries({ queryKey: ['module', 'payments'] }),
+      invalidateOrderPaymentQueries(queryClient, order.id),
       queryClient.invalidateQueries({ queryKey: ['module', 'deliveries'] }),
       queryClient.invalidateQueries({ queryKey: ['module', 'inventory'] }),
       queryClient.invalidateQueries({ queryKey: ['inventory-detail'] }),
       queryClient.invalidateQueries({ queryKey: ['inventory-options'] }),
       queryClient.invalidateQueries({ queryKey: ['order-options'] }),
-      queryClient.invalidateQueries({ queryKey: ['report'] }),
-      queryClient.invalidateQueries({ queryKey: ['payment-options'] }),
       queryClient.invalidateQueries({ queryKey: ['delivery-options'] }),
-      queryClient.invalidateQueries({ queryKey: ['dashboard-summary'] }),
     ])
   }
 
