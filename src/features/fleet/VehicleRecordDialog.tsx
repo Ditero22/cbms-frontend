@@ -114,7 +114,7 @@ export function VehicleRecordDialog({
       onOpenChange={(next) => !next && !isSubmitting && onClose()}
       title={record ? 'Edit vehicle' : 'Add vehicle'}
       description="Keep fleet specifications and the default driver up to date."
-      size="wide"
+      size="md"
       hasUnsavedChanges={isDirty}
     >
       <form className="dialog-form" onSubmit={submit}>

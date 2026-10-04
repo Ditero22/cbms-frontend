@@ -253,7 +253,7 @@ export function PayrollRunDialog({
           ? 'Update this draft and its employee pay lines. Processed pay runs are locked.'
           : 'Record regular employee pay for a period, with any separate earnings and deductions.'
       }
-      size="wide"
+      size="lg"
     >
       <form className="dialog-form payroll-form" onSubmit={(event) => void submit(event)}>
         <section className="payroll-form-section" aria-labelledby="payroll-period-title">
@@ -316,6 +316,14 @@ export function PayrollRunDialog({
               />
             </label>
           </div>
+          {error && (
+            <div role="alert" className="field-error">
+              Could not load branches and employees: {error}{' '}
+              <button type="button" className="button button-quiet" onClick={onRetry}>
+                Try again
+              </button>
+            </div>
+          )}
         </section>
 
         <section className="payroll-form-section" aria-labelledby="payroll-lines-title">
@@ -342,7 +350,10 @@ export function PayrollRunDialog({
           ) : null}
           {initialRunError ? (
             <div className="field-error" role="alert">
-              Could not load this draft: {initialRunError}
+              Could not load this draft: {initialRunError}{' '}
+              <button type="button" className="button button-quiet" onClick={onRetry}>
+                Try again
+              </button>
             </div>
           ) : null}
           {!loading && !employees.length ? (
@@ -600,14 +611,6 @@ export function PayrollRunDialog({
           <p className="payroll-inline-state" role="status">
             Loading branches and employees…
           </p>
-        )}
-        {error && (
-          <div role="alert" className="field-error">
-            {error}{' '}
-            <button type="button" className="button button-quiet" onClick={onRetry}>
-              Try again
-            </button>
-          </div>
         )}
         {formError && (
           <p className="field-error" role="alert">

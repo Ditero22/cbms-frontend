@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { createModuleRecord } from '../modules.api'
 import type { CreateRecordPayload } from '../types'
 import { invalidateMasterData } from './invalidateMasterData'
+import { invalidateOrderPaymentQueries } from '@/features/orders/order-payment-cache'
 
 export function useCreateModuleRecord() {
   const queryClient = useQueryClient()
@@ -31,12 +32,7 @@ export function useCreateModuleRecord() {
       }
 
       if (moduleId === 'orders' || moduleId === 'payments') {
-        await queryClient.invalidateQueries({ queryKey: ['module', 'payments'] })
-        await queryClient.invalidateQueries({ queryKey: ['payment-options'] })
-      }
-
-      if (moduleId === 'payments') {
-        await queryClient.invalidateQueries({ queryKey: ['module', 'orders'] })
+        await invalidateOrderPaymentQueries(queryClient)
       }
 
       if (moduleId === 'orders' || moduleId === 'deliveries') {

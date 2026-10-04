@@ -1,5 +1,5 @@
 import { AttachmentList } from '@/components/common/AttachmentList'
-import { StatusBadge } from '@/components/common/DataTable'
+import { StatusBadge } from '@/components/common/StatusBadge'
 import type { ExpenseSource } from './types'
 
 export function ExpenseSourcePanel({ source }: { source: ExpenseSource }) {

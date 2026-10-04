@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { AppDialog } from '@/components/common/AppDialog'
-import { StatusBadge } from '@/components/common/DataTable'
+import { StatusBadge } from '@/components/common/StatusBadge'
 import { RecordHistoryPanel } from '@/components/common/RecordHistoryPanel'
 import { formatQuantity } from '@/features/modules/order-decimals'
 import { getInventoryDetail } from './inventory.api'
@@ -52,7 +52,7 @@ export function InventoryDetailDialog({
           ? `${inventory.sku} · ${inventory.branchName} · ${inventory.unit}`
           : 'Branch quantities and recorded stock movements'
       }
-      size="wide"
+      size="lg"
     >
       <QueryState
         loadingMessage="Loading inventory…"

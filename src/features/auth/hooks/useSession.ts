@@ -4,14 +4,18 @@ import { toast } from 'sonner'
 import { sessionExpiredEvent } from '@/services/api/client'
 import type { SessionResponse } from '../types'
 import { getSession, signIn, signOut } from '../auth.api'
-
-export const sessionQueryKey = ['session'] as const
+import {
+  clearProtectedQueries,
+  prepareSession,
+  sessionAccessKey,
+  sessionQueryKey,
+} from '../session-cache'
 
 export function useSession() {
   const queryClient = useQueryClient()
   const sessionQuery = useQuery({
     queryKey: sessionQueryKey,
-    queryFn: getSession,
+    queryFn: async () => prepareSession(queryClient, await getSession()),
     retry: false,
     staleTime: 0,
     refetchOnWindowFocus: true,
@@ -28,7 +32,7 @@ export function useSession() {
         toast.info('Your session has expired. Sign in again.')
       }
       queryClient.setQueryData<SessionResponse | null>(sessionQueryKey, null)
-      queryClient.removeQueries({ predicate: (query) => query.queryKey[0] !== 'session' })
+      void clearProtectedQueries(queryClient)
     }
 
     window.addEventListener(sessionExpiredEvent, clearExpiredSession)
@@ -37,6 +41,7 @@ export function useSession() {
 
   async function login(email: string, password: string) {
     const response = await signIn(email, password)
+    await prepareSession(queryClient, response)
     window.localStorage.setItem('cbms-last-user-id', response.user.id)
     queryClient.setQueryData(sessionQueryKey, response)
   }
@@ -44,8 +49,9 @@ export function useSession() {
   async function logout() {
     await signOut()
     queryClient.setQueryData<SessionResponse | null>(sessionQueryKey, null)
-    queryClient.removeQueries({ predicate: (query) => query.queryKey[0] !== 'session' })
+    await clearProtectedQueries(queryClient)
   }
 
-  return { sessionQuery, user: sessionQuery.data?.user ?? null, login, logout }
+  const user = sessionQuery.data?.user ?? null
+  return { sessionQuery, user, accessKey: sessionAccessKey(user), login, logout }
 }

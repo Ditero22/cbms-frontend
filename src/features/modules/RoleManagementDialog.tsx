@@ -152,7 +152,7 @@ export function RoleManagementDialog({
         onOpenChange={handleOpenChange}
         title="Manage roles"
         description="Manage role access within the permissions and branch scope of your account."
-        size="wide"
+        size="xl"
         hasUnsavedChanges={isDirty}
       >
         <form className="dialog-form role-form" onSubmit={submit} aria-busy={busy}>

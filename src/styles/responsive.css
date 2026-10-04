@@ -401,12 +401,22 @@
   justify-content: space-between;
   min-height: 48px;
 }
-.mobile-drawer-brand > strong {
+.mobile-drawer-brand-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.mobile-drawer-brand-copy > strong {
   color: #fff;
   font-family: Manrope, sans-serif;
-  font-size: var(--font-size-19);
+  font-size: var(--font-size-15);
   font-weight: 750;
-  letter-spacing: 0.04em;
+}
+.mobile-drawer-brand-copy > span {
+  color: #a9bad8;
+  font-size: var(--font-size-8);
+  font-weight: 700;
+  letter-spacing: 0.8px;
 }
 .mobile-drawer-close {
   display: inline-grid;
@@ -629,7 +639,7 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
   .dialog-content {
-    width: min(100% - 40px, 600px);
+    width: min(100% - 40px, var(--dialog-max-width, 600px));
   }
 }
 @media (max-width: 800px) {
@@ -872,6 +882,7 @@
   .record-card {
     min-height: 0;
     padding: 14px;
+    border-top: 2px solid var(--table-edge-accent);
   }
   .dialog-content {
     top: auto;
@@ -916,7 +927,9 @@
     }
   }
   .dialog-actions {
+    position: static;
     flex-wrap: wrap;
+    z-index: auto;
     margin-bottom: -18px;
   }
   .dialog-actions .button {

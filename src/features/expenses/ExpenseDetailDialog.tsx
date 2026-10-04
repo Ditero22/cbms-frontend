@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { AppDialog } from '@/components/common/AppDialog'
-import { StatusBadge } from '@/components/common/DataTable'
+import { StatusBadge } from '@/components/common/StatusBadge'
 import { RecordHistoryPanel } from '@/components/common/RecordHistoryPanel'
 import { formatPeso } from '@/features/modules/order-decimals'
 import { getExpenseDetail } from './expenses.api'
@@ -38,7 +38,7 @@ export function ExpenseDetailDialog({
       onOpenChange={(next) => !next && onClose()}
       title={expense?.description ?? 'Expense details'}
       description="Recorded branch expense and its review decision."
-      size="wide"
+      size="lg"
     >
       <QueryState
         loadingMessage="Loading expenses…"

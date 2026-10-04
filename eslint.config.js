@@ -18,6 +18,22 @@ export default tseslint.config(
     },
   },
   {
+    files: ['src/components/common/**/*.{ts,tsx}', 'src/contracts/**/*.ts'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: ['@/features/**', '**/features/**'],
+              message: 'Shared UI and contracts must not depend on feature internals.',
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
     files: ['functions/**/*.js', 'worker.js'],
     languageOptions: { ecmaVersion: 2022, globals: globals.worker },
   },

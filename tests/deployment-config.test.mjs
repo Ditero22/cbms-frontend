@@ -1,6 +1,17 @@
 import assert from 'node:assert/strict'
+import { readFile } from 'node:fs/promises'
 import { test } from 'node:test'
 import { resolveApiBase } from '../vite.config.ts'
+
+const wranglerConfigText = await readFile(new URL('../wrangler.jsonc', import.meta.url), 'utf8')
+const wranglerConfig = JSON.parse(wranglerConfigText.replace(/,\s*([}\]])/g, '$1'))
+
+test('Cloudflare previews use the staging API origin', () => {
+  const stagingApiOrigin = 'https://cbms-backend-staging.onrender.com'
+
+  assert.equal(wranglerConfig.vars.CBMS_API_ORIGIN, stagingApiOrigin)
+  assert.equal(wranglerConfig.previews.vars.CBMS_API_ORIGIN, stagingApiOrigin)
+})
 
 test('production API traffic uses the same-origin proxy', () => {
   for (const value of [undefined, '', '   ', '/api/v1', ' /api/v1/ ']) {

@@ -127,6 +127,7 @@ export function CreateDeliveryDialog({
       onOpenChange={handleOpenChange}
       title="Schedule delivery"
       description="Choose the order lines and quantities to include in this delivery."
+      size="md"
       hasUnsavedChanges={isDirty}
     >
       <form className="dialog-form" onSubmit={submit}>

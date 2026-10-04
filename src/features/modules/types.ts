@@ -1,22 +1,12 @@
-export type RecordRow = Record<string, string>
+import type { RecordHistoryEntry } from '@/contracts/records'
 
-export type ModuleRecordResponse = {
-  data: RecordRow[]
-  total: number
-  page: number
-  limit: number
-  statusOptions: string[]
-}
-
-export type ModuleListQuery = {
-  page: number
-  limit: number
-  search: string
-  branchId?: string
-  status: string
-  sort: string
-  order: 'asc' | 'desc'
-}
+// Existing feature consumers can migrate independently to the shared contracts.
+export type {
+  RecordRow,
+  ModuleRecordResponse,
+  ModuleListQuery,
+  RecordHistoryEntry,
+} from '@/contracts/records'
 
 export type ReportType =
   | 'sales-by-branch'
@@ -92,15 +82,6 @@ export type EmployeeRecord = {
   emergencyContactName: string | null
   emergencyContactPhone: string | null
   notes: string | null
-}
-
-export type RecordHistoryEntry = {
-  id: string
-  action: string
-  actorName: string | null
-  oldValue: Record<string, unknown> | null
-  newValue: Record<string, unknown> | null
-  createdAt: string
 }
 
 export type EmployeeHistoryEntry = RecordHistoryEntry

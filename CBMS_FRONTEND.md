@@ -1,10 +1,11 @@
-# CBMS frontend product constraints
+# Materials Supply Operations & Finance frontend product constraints
 
 This is a short product and interaction reference, not a framework tutorial or a claim that every listed feature is complete. For current structure, state flow, and reusable components, use [FRONTEND_ARCHITECTURE.md](FRONTEND_ARCHITECTURE.md) and inspect the affected source. The [release scope](../md-docs/project/release-scope.md) and [business decisions](../md-docs/business/decisions.md) own business policy.
 
 ## Product identity and authority
 
-- Preserve the existing BuildCore identity, established color system, and dark-theme direction. Use the tokens and primitives already implemented in `src`; do not copy a new palette or add a second design system from an old mockup.
+- The user-approved product name is **Materials Supply Operations & Finance**. The app supports a local materials supplier and reseller with stock, orders, delivery, workers, expenses, and financial records. Do not describe it as a general construction-project management system or present CBMS/MSMS as the product name.
+- Preserve the existing color system and dark-theme direction while applying the approved product name. Use the tokens and primitives already implemented in `src`; do not add a second design system from an old mockup.
 - The app is an authenticated business-management frontend. The backend owns authentication, validation, business rules, data integrity, permissions, and branch scope. Frontend guards only guide the interface.
 - A route, control, or design reference does not prove a feature is functional. Follow existing API paths and tests; do not add placeholder controls or invent behavior to fill a screen.
 

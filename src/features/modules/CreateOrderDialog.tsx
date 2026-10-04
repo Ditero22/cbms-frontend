@@ -121,7 +121,7 @@ export function CreateOrderDialog({
 
       description="Add one or more products. Stock is reserved for every line in one transaction."
 
-      size="wide"
+      size="lg"
       hasUnsavedChanges={isDirty}
     >
       <form className="dialog-form" onSubmit={submit} aria-busy={isSubmitting}>

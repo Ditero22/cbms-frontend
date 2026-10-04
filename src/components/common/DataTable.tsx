@@ -9,19 +9,10 @@ import {
   SlidersHorizontal,
 } from 'lucide-react'
 import { toast } from 'sonner'
-import type { ModuleDefinition, Row } from '@/features/modules/modules'
-import type { ModuleListQuery } from '@/features/modules/types'
+import type { ModuleListQuery, RecordRow as Row } from '@/contracts/records'
 import { serializeCsv } from '@/utils/csv'
-import { statusTone } from '@/utils/statusTone'
-
-export function StatusBadge({ value }: { value: string }) {
-  return (
-    <span className={`status-badge ${statusTone(value)}`}>
-      <i aria-hidden="true" />
-      {value}
-    </span>
-  )
-}
+import type { DataTableDefinition } from './DataTable.types'
+import { StatusBadge } from './StatusBadge'
 
 export function DataTable({
   module,
@@ -35,7 +26,7 @@ export function DataTable({
   isCrossBranch = false,
   busy = false,
 }: {
-  module: ModuleDefinition
+  module: DataTableDefinition
   rows: Row[]
   total: number
   statusOptions: string[]

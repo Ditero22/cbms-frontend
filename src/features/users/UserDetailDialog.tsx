@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { keepPreviousData, useQuery } from '@tanstack/react-query'
 import { AppDialog } from '@/components/common/AppDialog'
-import { StatusBadge } from '@/components/common/DataTable'
+import { StatusBadge } from '@/components/common/StatusBadge'
 import { RecordHistoryPanel } from '@/components/common/RecordHistoryPanel'
 import { getUserDetail } from '@/features/modules/modules.api'
 import type { UserAccountRecord } from '@/features/modules/types'
@@ -46,7 +46,7 @@ export function UserDetailDialog({
       onOpenChange={(open) => !open && onClose()}
       title={user?.name ?? 'User details'}
       description={user?.email ?? 'Account information and access'}
-      size="wide"
+      size="md"
     >
       {query.isPending ? (
         <p className="employee-detail-state" role="status">

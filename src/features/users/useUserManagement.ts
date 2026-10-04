@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
-import { sessionQueryKey } from '@/features/auth/hooks/useSession'
+import { sessionQueryKey } from '@/features/auth/session-cache'
 import {
   createUser,
   updateUser,

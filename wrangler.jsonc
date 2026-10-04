@@ -6,6 +6,11 @@
   "vars": {
     "CBMS_API_ORIGIN": "https://cbms-backend-staging.onrender.com",
   },
+  "previews": {
+    "vars": {
+      "CBMS_API_ORIGIN": "https://cbms-backend-staging.onrender.com",
+    },
+  },
   "assets": {
     "directory": "./dist",
     "binding": "ASSETS",

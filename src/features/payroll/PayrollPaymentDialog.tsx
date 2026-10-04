@@ -67,6 +67,7 @@ export function PayrollPaymentDialog({
       onOpenChange={(open) => !open && !busy && onClose()}
       title="Record payroll payment"
       description={`${entry.employeeName} · ${period}`}
+      size="md"
     >
       <form className="dialog-form" onSubmit={(event) => void submit(event)}>
         <dl className="payroll-amount-grid">

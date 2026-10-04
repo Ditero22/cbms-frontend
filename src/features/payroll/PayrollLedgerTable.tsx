@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import {
   ArrowDown,
@@ -15,8 +15,9 @@ import { formatPeso } from '@/features/modules/order-decimals'
 import type { ModuleListQuery } from '@/features/modules/types'
 import { useModuleRuntime } from '@/features/modules/useModuleRuntime'
 import { serializeCsv } from '@/utils/csv'
-import { StatusBadge } from '@/components/common/DataTable'
+import { StatusBadge } from '@/components/common/StatusBadge'
 import { getPayrollLedger } from './payroll.api'
+import type { PayrollLedger } from './types'
 
 const sortKeys: Record<string, string> = {
   Employee: 'employee',
@@ -103,7 +104,12 @@ export function PayrollLedgerTable({ onOpen }: { onOpen: (id: string) => void })
     enabled: !invalidPeriod,
     placeholderData: (previous) => previous,
   })
-  const totalPages = Math.max(1, Math.ceil((ledger.data?.total ?? 0) / query.limit))
+  const lastSuccessfulLedger = useRef<PayrollLedger | undefined>(undefined)
+  useEffect(() => {
+    if (ledger.data && !ledger.isPlaceholderData) lastSuccessfulLedger.current = ledger.data
+  }, [ledger.data, ledger.isPlaceholderData])
+  const displayData = invalidPeriod ? undefined : (ledger.data ?? lastSuccessfulLedger.current)
+  const totalPages = Math.max(1, Math.ceil((displayData?.total ?? 0) / query.limit))
   const hasFilters = Boolean(
     query.search || query.branchId || query.status || periodStart || periodEnd,
   )
@@ -167,7 +173,7 @@ export function PayrollLedgerTable({ onOpen }: { onOpen: (id: string) => void })
   }
 
   if (ledger.isPending && !invalidPeriod) return <PayrollLedgerSkeleton />
-  if (ledger.isError && !ledger.data)
+  if (ledger.isError && !displayData)
     return (
       <div className="payroll-ledger-state" role="alert">
         <strong>Could not load employee payroll.</strong>
@@ -182,8 +188,8 @@ export function PayrollLedgerTable({ onOpen }: { onOpen: (id: string) => void })
       </div>
     )
 
-  const items = invalidPeriod ? [] : (ledger.data?.items ?? [])
-  const branches = ledger.data?.branches ?? []
+  const items = displayData?.items ?? []
+  const branches = displayData?.branches ?? []
 
   return (
     <section className="payroll-ledger" aria-label="Employee payroll" aria-busy={ledger.isFetching}>
@@ -289,7 +295,7 @@ export function PayrollLedgerTable({ onOpen }: { onOpen: (id: string) => void })
           The period end must be on or after the period start.
         </p>
       )}
-      {ledger.isError && ledger.data && !invalidPeriod && (
+      {ledger.isError && displayData && !invalidPeriod && (
         <div className="payroll-ledger-refresh-error" role="alert">
           <span>Could not refresh payroll. Showing the last loaded results.</span>
           <button
@@ -474,10 +480,10 @@ export function PayrollLedgerTable({ onOpen }: { onOpen: (id: string) => void })
         <span>
           Showing{' '}
           <strong>
-            {ledger.data?.total ? (query.page - 1) * query.limit + 1 : 0}–
-            {Math.min((query.page - 1) * query.limit + items.length, ledger.data?.total ?? 0)}
+            {displayData?.total ? (query.page - 1) * query.limit + 1 : 0}–
+            {Math.min((query.page - 1) * query.limit + items.length, displayData?.total ?? 0)}
           </strong>{' '}
-          of <strong>{ledger.data?.total ?? 0}</strong> payroll entries
+          of <strong>{displayData?.total ?? 0}</strong> payroll entries
         </span>
         <div className="payroll-ledger-pagination">
           <label>

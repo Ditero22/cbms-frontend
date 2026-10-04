@@ -15,7 +15,7 @@ export function DesignSystemPage() {
           className="button button-outline"
           onClick={async () => {
             await navigator.clipboard?.writeText(
-              'CBMS Primary #253C6D · Accent #F2842F · Neutral #F2F2F2',
+              'Primary #253C6D · Accent #F2842F · Neutral #F2F2F2',
             )
             toast.success('Design tokens copied to clipboard.')
           }}
@@ -27,7 +27,7 @@ export function DesignSystemPage() {
         <div className="section-title">
           <div>
             <h2>Brand palette</h2>
-            <p>Core CBMS colors and semantic status colors.</p>
+            <p>Core app colors and semantic status colors.</p>
           </div>
           <span className="section-note">v1.0 · SEPT 2026</span>
         </div>
@@ -35,7 +35,7 @@ export function DesignSystemPage() {
           {[
             { name: 'Primary blue', code: '#253C6D', className: 'swatch-navy' },
             {
-              name: 'Construction orange',
+              name: 'Supplier orange',
               code: '#F2842F',
               className: 'swatch-orange',
             },

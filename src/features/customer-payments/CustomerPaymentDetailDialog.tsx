@@ -1,7 +1,7 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { Plus } from 'lucide-react'
 import { AppDialog } from '@/components/common/AppDialog'
-import { StatusBadge } from '@/components/common/DataTable'
+import { StatusBadge } from '@/components/common/StatusBadge'
 import { RecordHistoryPanel } from '@/components/common/RecordHistoryPanel'
 import { formatPeso } from '@/features/modules/order-decimals'
 import { getCustomerPaymentDetail } from './customer-payments.api'
@@ -14,16 +14,20 @@ type Props = {
   orderId: string | null
   canReadAudit: boolean
   canCreate: boolean
+  canOpenRefundWorkflow: boolean
   onClose: () => void
   onRecord: (order: CustomerPaymentDetail) => void
+  onReviewRefunds: (orderId: string) => void
 }
 
 export function CustomerPaymentDetailDialog({
   orderId,
   canReadAudit,
   canCreate,
+  canOpenRefundWorkflow,
   onClose,
   onRecord,
+  onReviewRefunds,
 }: Props) {
   const queryClient = useQueryClient()
   const detail = useQuery({
@@ -44,7 +48,7 @@ export function CustomerPaymentDetailDialog({
           ? `${order.customerName} · ${order.branchName}`
           : 'Balances and immutable payment receipts'
       }
-      size="wide"
+      size="lg"
     >
       {detail.isPending ? (
         <div className="employee-detail-state" role="status">
@@ -64,6 +68,15 @@ export function CustomerPaymentDetailDialog({
             <div className="customer-payment-heading">
               <StatusBadge value={order.paymentStatus} />
               <span>Order: {order.orderStatus}</span>
+              {canOpenRefundWorkflow && (
+                <button
+                  type="button"
+                  className="button button-outline"
+                  onClick={() => onReviewRefunds(order.id)}
+                >
+                  Review refunds and order activity
+                </button>
+              )}
             </div>
             <div className="customer-payment-summary">
               <Money label="Payable total" value={order.payableAmount} />

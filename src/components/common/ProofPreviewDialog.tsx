@@ -46,7 +46,7 @@ export function ProofPreviewDialog({
       onOpenChange={(open) => !open && onClose()}
       title="Payment proof"
       description={file.fileName}
-      size="wide"
+      size="xl"
     >
       <QueryState loading={loading} error={error} onRetry={() => setAttempt((value) => value + 1)}>
         {url && (

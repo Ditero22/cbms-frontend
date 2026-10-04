@@ -28,7 +28,7 @@ export function LoginPage({ onLogin }: LoginPageProps) {
   const submit = handleSubmit(async ({ email, password }) => {
     try {
       await onLogin(email, password)
-      toast.success('Signed in to CBMS.')
+      toast.success('Signed in to Materials Supply Operations & Finance.')
     } catch (error) {
       toast.error(error instanceof Error ? error.message : 'Sign-in failed.')
     }
@@ -41,8 +41,8 @@ export function LoginPage({ onLogin }: LoginPageProps) {
           <BriefcaseBusiness size={23} strokeWidth={1.8} />
         </div>
         <div>
-          <strong>BuildCore</strong>
-          <span>CONSTRUCTION MANAGEMENT</span>
+          <strong>Materials Supply</strong>
+          <span>OPERATIONS &amp; FINANCE</span>
         </div>
       </div>
       <section className="login-card">
@@ -53,7 +53,9 @@ export function LoginPage({ onLogin }: LoginPageProps) {
           BUSINESS OPERATIONS PLATFORM
         </div>
         <h1>Welcome back</h1>
-        <p className="login-lead">Sign in to your CBMS workspace to keep your projects moving.</p>
+        <p className="login-lead">
+          Sign in to manage stock, orders, delivery, and business finances.
+        </p>
         <form onSubmit={submit} className="login-form">
           <label className="field-label">
             Work email
@@ -84,7 +86,7 @@ export function LoginPage({ onLogin }: LoginPageProps) {
         </form>
       </section>
       <footer className="login-footer">
-        © 2026 BuildCore Construction Management
+        © 2026 Materials Supply Operations &amp; Finance
         <span>
           Secure workspace <ShieldCheck size={13} />
         </span>

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { AppDialog } from '@/components/common/AppDialog'
-import { StatusBadge } from '@/components/common/DataTable'
+import { StatusBadge } from '@/components/common/StatusBadge'
 import { RecordHistoryPanel } from '@/components/common/RecordHistoryPanel'
 import { getTransferDetail } from './modules.api'
 import './transfer-detail.css'
@@ -31,7 +31,7 @@ export function TransferDetailDialog({
       onOpenChange={(open) => !open && onClose()}
       title={transfer ? transfer.reference : 'Transfer details'}
       description="Completed stock movement between branches"
-      size="wide"
+      size="md"
     >
       {detail.isPending ? (
         <div className="employee-detail-state" role="status">

@@ -76,16 +76,11 @@ export function PayrollPage() {
     queryFn: () => getPayrollRunForEdit(editingRunId!),
     enabled: formOpen && Boolean(editingRunId),
   })
-  const branchOptions = useQuery({
-    queryKey: ['payroll-branch-options'],
-    queryFn: () => getPayrollOptions(),
-    enabled: formOpen,
-  })
   useEffect(() => {
-    if (formOpen && !branchId && branchOptions.data?.selectedBranchId) {
-      setBranchId(branchOptions.data.selectedBranchId)
+    if (formOpen && !branchId && options.data?.selectedBranchId) {
+      setBranchId(options.data.selectedBranchId)
     }
-  }, [branchId, branchOptions.data?.selectedBranchId, formOpen])
+  }, [branchId, formOpen, options.data?.selectedBranchId])
 
   async function saveDraft(values: PayrollRunInput, requestKey?: string) {
     setSaving(true)
@@ -198,12 +193,11 @@ export function PayrollPage() {
         initialRunLoading={Boolean(editingRunId) && editData.isPending}
         initialRunError={editData.error?.message}
         options={options.data}
-        branches={branchOptions.data?.branches ?? []}
-        loading={options.isPending || branchOptions.isPending}
-        error={options.error?.message ?? branchOptions.error?.message}
+        branches={options.data?.branches ?? []}
+        loading={options.isPending}
+        error={options.error?.message}
         saving={saving}
         onRetry={() => {
-          void branchOptions.refetch()
           void options.refetch()
           if (editingRunId) void editData.refetch()
         }}

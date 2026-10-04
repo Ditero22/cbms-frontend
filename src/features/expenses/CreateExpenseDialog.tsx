@@ -91,6 +91,7 @@ export function CreateExpenseDialog({
       onOpenChange={(next) => !next && !busy && onClose()}
       title="New expense"
       description="Record a branch expense for review. Amounts are stored in Philippine pesos."
+      size="md"
     >
       <form className="dialog-form" onSubmit={(event) => void submit(event)}>
         <label className="field-label" htmlFor={`${id}-description`}>

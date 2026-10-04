@@ -39,7 +39,7 @@ export function Topbar({
         ? 'Design system'
         : currentRoute === 'settings'
           ? 'Settings'
-          : (currentModule?.title ?? 'CBMS')
+          : (currentModule?.title ?? 'Materials Supply Operations & Finance')
 
   return (
     <header className="topbar">
@@ -65,7 +65,7 @@ export function Topbar({
         >
           {sidebarCollapsed ? <PanelLeftOpen size={18} /> : <PanelLeftClose size={18} />}
         </button>
-        <span className="workspace-label">CBMS workspace</span>
+        <span className="workspace-label">Materials Supply Operations &amp; Finance</span>
         <strong className="crumb-current">{title}</strong>
       </div>
 

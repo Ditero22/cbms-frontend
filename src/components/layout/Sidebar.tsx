@@ -14,8 +14,8 @@ export function Sidebar({ user, collapsed }: { user: AuthenticatedUser; collapse
           <BriefcaseBusiness size={23} strokeWidth={1.8} />
         </div>
         <div className="brand-text">
-          <strong>BuildCore</strong>
-          <span>CBMS WORKSPACE</span>
+          <strong>Materials Supply</strong>
+          <span>OPERATIONS &amp; FINANCE</span>
         </div>
       </div>
       <NavigationLinks user={user} collapsed={collapsed} />

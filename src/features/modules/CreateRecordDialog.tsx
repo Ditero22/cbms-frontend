@@ -116,9 +116,11 @@ export function CreateRecordDialog({
       onOpenChange={handleOpenChange}
       title={isEditing ? `Edit ${recordName}` : module.addLabel}
       description={
-        isEditing ? 'Update the stored record details.' : `Create a ${recordName} record in CBMS.`
+        isEditing
+          ? 'Update the stored record details.'
+          : `Create a ${recordName} record in the workspace.`
       }
-      size="wide"
+      size="md"
       hasUnsavedChanges={isDirty}
     >
       <form className="dialog-form" onSubmit={submit} aria-busy={isSubmitting}>
@@ -127,81 +129,89 @@ export function CreateRecordDialog({
         ) : (
           <div className="create-record-fields">
             {fields.map((field, index) => (
-              <FormField
+              <div
                 key={field.name}
-                label={field.label}
-                required={field.required}
-                error={errors[field.name] ? String(errors[field.name]?.message) : undefined}
-                hint={field.hint}
+                className={field.name === 'description' ? 'create-record-field--full' : undefined}
               >
-                {(attributes) =>
-                  field.type === 'select' ? (
-                    <select
-                      {...attributes}
-                      className="form-input"
-                      autoFocus={index === 0}
-                      disabled={
-                        isSubmitting ||
-                        (field.name === 'supplierId' &&
-                          (productOptionsQuery.isPending || productOptionsQuery.isError) &&
-                          !record?.supplierId)
-                      }
-                      {...register(field.name, {
-                        required: field.required ? `${field.label} is required.` : false,
-                        setValueAs: (value: string) => value.trim(),
-                        validate: (value) => validateCreateField(field, value),
-                      })}
-                    >
-                      <option value="">
-                        {field.name === 'supplierId'
-                          ? 'No supplier'
-                          : module.id === 'customers' && field.name === 'branchId'
-                            ? 'Unassigned'
-                            : `Select ${field.label.toLowerCase()}`}
-                      </option>
-                      {field.options?.map((option) => (
-                        <option key={option.value} value={option.value}>
-                          {option.label}
+                <FormField
+                  label={field.label}
+                  required={field.required}
+                  error={errors[field.name] ? String(errors[field.name]?.message) : undefined}
+                  hint={field.hint}
+                >
+                  {(attributes) =>
+                    field.type === 'select' ? (
+                      <select
+                        {...attributes}
+                        className="form-input"
+                        autoFocus={index === 0}
+                        disabled={
+                          isSubmitting ||
+                          (field.name === 'supplierId' &&
+                            (productOptionsQuery.isPending || productOptionsQuery.isError) &&
+                            !record?.supplierId)
+                        }
+                        {...register(field.name, {
+                          required: field.required ? `${field.label} is required.` : false,
+                          setValueAs: (value: string) => value.trim(),
+                          validate: (value) => validateCreateField(field, value),
+                        })}
+                      >
+                        <option value="">
+                          {field.name === 'supplierId'
+                            ? 'No supplier'
+                            : module.id === 'customers' && field.name === 'branchId'
+                              ? 'Unassigned'
+                              : `Select ${field.label.toLowerCase()}`}
                         </option>
-                      ))}
-                    </select>
-                  ) : field.type === 'textarea' ? (
-                    <textarea
-                      {...attributes}
-                      className="form-input"
-                      rows={3}
-                      disabled={isSubmitting}
-                      maxLength={field.maxLength}
-                      autoFocus={index === 0}
-                      {...register(field.name, {
-                        required: field.required ? `${field.label} is required.` : false,
-                        setValueAs: (value: string) => value.trim(),
-                        validate: (value) => validateCreateField(field, value),
-                      })}
-                      placeholder={`Enter ${field.label.toLowerCase()}`}
-                    />
-                  ) : (
-                    <input
-                      {...attributes}
-                      className="form-input"
-                      type={field.type ?? 'text'}
-                      disabled={isSubmitting}
-                      step={field.type === 'number' ? getNumberStep(field.name) : undefined}
-                      min={
-                        field.name === 'unitPrice' ? 0 : field.name === 'amount' ? 0.01 : undefined
-                      }
-                      maxLength={field.maxLength}
-                      autoFocus={index === 0}
-                      {...register(field.name, {
-                        required: field.required ? `${field.label} is required.` : false,
-                        setValueAs: (value: string) => value.trim(),
-                        validate: (value) => validateCreateField(field, value),
-                      })}
-                      placeholder={`Enter ${field.label.toLowerCase()}`}
-                    />
-                  )
-                }
-              </FormField>
+                        {field.options?.map((option) => (
+                          <option key={option.value} value={option.value}>
+                            {option.label}
+                          </option>
+                        ))}
+                      </select>
+                    ) : field.type === 'textarea' ? (
+                      <textarea
+                        {...attributes}
+                        className="form-input"
+                        rows={3}
+                        disabled={isSubmitting}
+                        maxLength={field.maxLength}
+                        autoFocus={index === 0}
+                        {...register(field.name, {
+                          required: field.required ? `${field.label} is required.` : false,
+                          setValueAs: (value: string) => value.trim(),
+                          validate: (value) => validateCreateField(field, value),
+                        })}
+                        placeholder={`Enter ${field.label.toLowerCase()}`}
+                      />
+                    ) : (
+                      <input
+                        {...attributes}
+                        className="form-input"
+                        type={field.type ?? 'text'}
+                        disabled={isSubmitting}
+                        step={field.type === 'number' ? getNumberStep(field.name) : undefined}
+                        min={
+                          field.name === 'unitPrice'
+                            ? 0
+                            : field.name === 'amount'
+                              ? 0.01
+                              : undefined
+                        }
+                        maxLength={field.maxLength}
+                        autoFocus={index === 0}
+                        {...register(field.name, {
+                          required: field.required ? `${field.label} is required.` : false,
+                          setValueAs: (value: string) => value.trim(),
+                          validate: (value) => validateCreateField(field, value),
+                        })}
+                        placeholder={`Enter ${field.label.toLowerCase()}`}
+                      />
+                    )
+                  }
+                </FormField>
+              </div>
             ))}
           </div>
         )}

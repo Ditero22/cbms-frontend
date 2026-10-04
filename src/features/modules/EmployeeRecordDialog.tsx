@@ -121,7 +121,7 @@ export function EmployeeRecordDialog({
       }}
       title={employee ? 'Edit employee' : 'Add employee'}
       description="Keep the employee record and branch assignment up to date."
-      size="wide"
+      size="lg"
       hasUnsavedChanges={isDirty}
     >
       <form className="dialog-form" onSubmit={handleSubmit(submit)} aria-busy={isSubmitting}>

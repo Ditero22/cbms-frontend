@@ -3,6 +3,7 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import { toast } from 'sonner'
 import { AppLoadingScreen } from '@/components/common/AppLoadingScreen'
 import { PageSkeleton } from '@/components/common/PageSkeleton'
+import { UnknownRoutePage } from '@/components/common/UnknownRoutePage'
 import { AppShell } from '@/components/layout/AppShell'
 import { QueryState } from '@/components/common/QueryState'
 import { LoginPage } from '@/features/auth/LoginPage'
@@ -41,7 +42,7 @@ export function App() {
 }
 
 function AppRoutes() {
-  const { sessionQuery, user, login, logout } = useSession()
+  const { sessionQuery, user, accessKey, login, logout } = useSession()
 
   function handleLogout() {
     void logout().catch((error: unknown) => {
@@ -75,7 +76,7 @@ function AppRoutes() {
   }
 
   return (
-    <AppearanceProvider key={user?.id ?? 'anonymous-ready'} userId={user?.id ?? null}>
+    <AppearanceProvider key={accessKey} userId={user?.id ?? null}>
       <BrowserRouter>
         <Routes>
           <Route
@@ -128,8 +129,8 @@ function AppRoutes() {
                 </Suspense>
               }
             />
+            <Route path="*" element={<UnknownRoutePage />} />
           </Route>
-          <Route path="*" element={<Navigate to={user ? '/dashboard' : '/login'} replace />} />
         </Routes>
       </BrowserRouter>
     </AppearanceProvider>

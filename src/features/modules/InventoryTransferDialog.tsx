@@ -113,7 +113,7 @@ export function InventoryTransferDialog({
 
       description="Move available stock between branches. The transfer posts immediately when saved."
 
-      size="wide"
+      size="lg"
       hasUnsavedChanges={isDirty}
     >
       <form className="dialog-form" onSubmit={submit} aria-busy={isSubmitting}>

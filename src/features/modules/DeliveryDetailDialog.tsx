@@ -3,7 +3,7 @@ import type { ReactNode } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { AppDialog } from '@/components/common/AppDialog'
 import { AttachmentList } from '@/components/common/AttachmentList'
-import { StatusBadge } from '@/components/common/DataTable'
+import { StatusBadge } from '@/components/common/StatusBadge'
 import { RecordHistoryPanel } from '@/components/common/RecordHistoryPanel'
 import { formatQuantity } from './order-decimals'
 import { getDeliveryDetail } from './modules.api'
@@ -43,7 +43,7 @@ export function DeliveryDetailDialog({
       onOpenChange={(open) => !open && onClose()}
       title={delivery?.reference ?? 'Delivery details'}
       description="Order fulfillment, assigned resources, and recorded activity"
-      size="wide"
+      size="lg"
     >
       {detail.isPending ? (
         <div className="employee-detail-state" role="status">

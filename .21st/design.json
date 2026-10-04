@@ -2,7 +2,7 @@
   "version": 1,
   "project": {
     "name": "cbms-frontend",
-    "productType": "Construction business management / admin system",
+    "productType": "Materials Supply Operations & Finance for a local supplier and reseller",
     "stack": [
       "react",
       "tailwind-v3",
@@ -181,7 +181,7 @@
   },
   "constraints": {
     "must": [
-      "Preserve BuildCore identity, current light/dark tokens and compact business-system density",
+      "Use the approved Materials Supply Operations & Finance name with current light/dark tokens and compact business-system density",
       "Use actual API data and server grants; retain existing business behavior",
       "Reuse shared components and exact decimal utilities",
       "Verify desktop/tablet/mobile, keyboard and error/retry states"

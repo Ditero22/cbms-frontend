@@ -2,13 +2,82 @@ import { expect, test, type Page, type Route } from '@playwright/test'
 
 const dashboardRoute = '**/api/v1/dashboard/summary'
 
-async function login(page: Page) {
+async function login(page: Page, email = 'administrator@example.invalid') {
   await page.goto('/login')
-  await page.getByLabel('Work email').fill('administrator@example.invalid')
+  await page.getByLabel('Work email').fill(email)
   await page.getByLabel('Password', { exact: true }).fill(process.env.CBMS_E2E_PASSWORD ?? '')
   await page.getByRole('button', { name: 'Sign in', exact: true }).click()
   await expect(page).toHaveURL(/\/dashboard$/)
 }
+
+async function returnToVisibleTab(page: Page) {
+  await page.evaluate(() => {
+    // Headless Chromium may keep every tab visible; exercise the native visibility boundary.
+    const descriptor = Object.getOwnPropertyDescriptor(document, 'visibilityState')
+    let visibilityState: DocumentVisibilityState = 'hidden'
+    Object.defineProperty(document, 'visibilityState', {
+      configurable: true,
+      get: () => visibilityState,
+    })
+    try {
+      document.dispatchEvent(new Event('visibilitychange', { bubbles: true }))
+      visibilityState = 'visible'
+      document.dispatchEvent(new Event('visibilitychange', { bubbles: true }))
+    } finally {
+      if (descriptor) Object.defineProperty(document, 'visibilityState', descriptor)
+      else Reflect.deleteProperty(document, 'visibilityState')
+    }
+  })
+}
+
+test('switching accounts in another tab removes the previous branch cache before rendering', async ({
+  page,
+  context,
+}) => {
+  await login(page)
+  const previousRecord = page.getByText('QA-LEGACY-001', { exact: true })
+  await expect(previousRecord.first()).toBeVisible()
+
+  const secondTab = await context.newPage()
+  await secondTab.goto('/dashboard')
+  await secondTab.getByRole('button', { name: /Open user menu for/ }).click()
+  await secondTab.getByRole('button', { name: 'Sign out', exact: true }).click()
+  await expect(secondTab).toHaveURL(/\/login$/)
+  await login(secondTab, 'other-branch@example.invalid')
+
+  let releaseSummary: () => void = () => undefined
+  const summaryHeld = new Promise<void>((resolve) => {
+    releaseSummary = resolve
+  })
+  await page.route(dashboardRoute, async (route) => {
+    await summaryHeld
+    await route.continue()
+  })
+  try {
+    const checked = page.waitForResponse((response) => response.url().endsWith('/auth/me'))
+    await returnToVisibleTab(page)
+    await checked
+    await expect(
+      page.getByRole('button', {
+        name: 'Open user menu for Acceptance other branch account',
+        exact: true,
+      }),
+    ).toBeVisible()
+    // The new request is held: stale rows must disappear before new branch data is available.
+    await expect(previousRecord).toHaveCount(0)
+    await expect(page.getByText('Loading orders…', { exact: true })).toBeVisible()
+    const refreshed = page.waitForResponse((response) =>
+      response.url().endsWith('/dashboard/summary'),
+    )
+    releaseSummary()
+    expect((await refreshed).ok()).toBeTruthy()
+    await expect(previousRecord).toHaveCount(0)
+    await expect(page.getByText('Outstanding customer balances', { exact: true })).toHaveCount(0)
+  } finally {
+    releaseSummary()
+    await secondTab.close()
+  }
+})
 
 const failures: {
   name: string
@@ -152,24 +221,7 @@ test('a temporary session recheck failure preserves authenticated navigation', a
   const checked = page.waitForResponse(
     (response) => response.url().endsWith('/auth/me') && response.status() === 500,
   )
-  await page.evaluate(() => {
-    // Headless Chromium keeps tabs visible. Exercise the browser visibility
-    // state/event boundary, including the bubbling native events use.
-    const descriptor = Object.getOwnPropertyDescriptor(document, 'visibilityState')
-    let visibilityState: DocumentVisibilityState = 'hidden'
-    Object.defineProperty(document, 'visibilityState', {
-      configurable: true,
-      get: () => visibilityState,
-    })
-    try {
-      document.dispatchEvent(new Event('visibilitychange', { bubbles: true }))
-      visibilityState = 'visible'
-      document.dispatchEvent(new Event('visibilitychange', { bubbles: true }))
-    } finally {
-      if (descriptor) Object.defineProperty(document, 'visibilityState', descriptor)
-      else Reflect.deleteProperty(document, 'visibilityState')
-    }
-  })
+  await returnToVisibleTab(page)
   await checked
   await expect(page).toHaveURL(/\/dashboard$/)
   await expect(page.locator('.dashboard-grid')).toBeVisible()

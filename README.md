@@ -1,9 +1,9 @@
-# CBMS Frontend
+# Materials Supply Operations & Finance Frontend
 
 > Shared documentation: [index](../md-docs/README.md), [current production progress](../md-docs/project/progressreport.md), and [approved release scope](../md-docs/project/release-scope.md). This package guide retains product/architecture details and dated checkpoints. Older “current” counts, follow-up tasks and scope assertions yield to those canonical sources; a documented feature is not proof of completion.
 
 
-React, TypeScript, and Vite application for the Construction Business Management System.
+React, TypeScript, and Vite application for **Materials Supply Operations & Finance**, a local supplier and reseller business app.
 
 ## Run locally
 

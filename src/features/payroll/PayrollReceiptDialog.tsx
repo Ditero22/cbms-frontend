@@ -64,6 +64,7 @@ export function PayrollReceiptDialog({
       onOpenChange={(open) => !open && !busy && onClose()}
       title="Confirm employee receipt"
       description={entry.employeeName}
+      size="md"
     >
       <form className="dialog-form" onSubmit={(event) => void submit(event)}>
         <label className="field-label">

@@ -40,7 +40,7 @@ export function AppDialog({
   onOpenChange,
   title,
   description,
-  size = 'standard',
+  size = 'sm',
   hasUnsavedChanges = false,
   children,
 }: {
@@ -48,7 +48,7 @@ export function AppDialog({
   onOpenChange: (open: boolean) => void
   title: string
   description?: string
-  size?: 'standard' | 'wide'
+  size?: 'sm' | 'md' | 'lg' | 'xl'
   hasUnsavedChanges?: boolean
   children: ReactNode
 }) {
@@ -118,7 +118,7 @@ export function AppDialog({
         <Dialog.Portal>
           <Dialog.Overlay className="dialog-overlay" />
           <Dialog.Content
-            className={`dialog-content${size === 'wide' ? ' dialog-wide' : ''}`}
+            className={`dialog-content dialog-size-${size}`}
             onOpenAutoFocus={(event) => {
               const focused = document.activeElement
               if (

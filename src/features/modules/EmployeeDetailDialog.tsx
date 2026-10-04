@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { AppDialog } from '@/components/common/AppDialog'
-import { StatusBadge } from '@/components/common/DataTable'
+import { StatusBadge } from '@/components/common/StatusBadge'
 import { getEmployeeDetail } from './modules.api'
 import type { EmployeeHistoryEntry, EmployeeRecord } from './types'
 
@@ -38,7 +38,7 @@ export function EmployeeDetailDialog({
       description={
         employee ? `Employee ID ${employee.employeeNumber}` : 'Employee record and history'
       }
-      size="wide"
+      size="lg"
     >
       {detailQuery.isPending ? (
         <div className="employee-detail-state" role="status">
