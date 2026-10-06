@@ -67,6 +67,7 @@ async function request(path: string, init?: RequestInit, refreshed = false): Pro
       method,
     )
   }
+  init?.signal?.throwIfAborted()
   if (!response.ok) {
     if (
       response.status === 401 &&
@@ -77,6 +78,7 @@ async function request(path: string, init?: RequestInit, refreshed = false): Pro
       try {
         refreshedSuccessfully = await refreshSession()
       } catch (error) {
+        init?.signal?.throwIfAborted()
         if (error instanceof ApiError) throw reportFailure(error, method)
         throw reportFailure(
           new ApiError(
@@ -87,6 +89,7 @@ async function request(path: string, init?: RequestInit, refreshed = false): Pro
           method,
         )
       }
+      init?.signal?.throwIfAborted()
       if (refreshedSuccessfully) return request(path, init, true)
     }
     notifyExpiredSession(path, response.status)
@@ -109,6 +112,7 @@ export async function apiRequest<T>(path: string, init?: RequestInit): Promise<T
   try {
     return (await response.json()) as T
   } catch {
+    init?.signal?.throwIfAborted()
     throw reportFailure(invalidApiResponse(response.status), init?.method ?? 'GET')
   }
 }

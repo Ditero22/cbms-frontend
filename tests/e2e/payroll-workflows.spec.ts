@@ -216,6 +216,20 @@ test('payroll edits draft pay with multiple adjustments, then records payment an
   await tableRecordControl(page, created.reference).click()
   const updatedDetail = page.getByRole('dialog').filter({ hasText: created.reference })
   await expect(updatedDetail.getByText('₱1,055.00')).toBeVisible()
+  // Reopen inside the query freshness window: saving must replace the editable projection too.
+  await updatedDetail.getByRole('button', { name: 'Edit draft' }).click()
+  await expect(editDialog.getByLabel('Adjustment 3 amount (PHP)')).toHaveValue('30.00')
+  await editDialog.getByLabel('Adjustment 1 notes').fill('Verified saved draft')
+  const secondUpdate = page.waitForResponse(
+    (result) =>
+      result.request().method() === 'PATCH' &&
+      new URL(result.url()).pathname === `/api/v1/payroll/${created.id}`,
+  )
+  await editDialog.getByRole('button', { name: 'Save draft changes' }).click()
+  expect((await secondUpdate).status()).toBe(200)
+  await expect(editDialog).toBeHidden()
+  await tableRecordControl(page, created.reference).click()
+  await expect(updatedDetail.getByText('₱1,055.00')).toBeVisible()
   await updatedDetail.getByRole('button', { name: 'Process pay run' }).click()
   await page
     .getByRole('dialog', { name: 'Process and lock this pay run?' })
@@ -447,9 +461,10 @@ test('payroll edits draft pay with multiple adjustments, then records payment an
     ]
     const minimumHeight = width <= 620 ? 48 : width <= 1100 ? 44 : 40
     for (const control of tapControls) {
-      expect(Math.round((await control.boundingBox())?.height ?? 0)).toBeGreaterThanOrEqual(
-        minimumHeight,
-      )
+      // Controls can still be transitioning from the preceding responsive breakpoint.
+      await expect
+        .poll(async () => Math.round((await control.boundingBox())?.height ?? 0))
+        .toBeGreaterThanOrEqual(minimumHeight)
     }
     if (width === 390 || width === 768) {
       await page.screenshot({ path: testInfo.outputPath(`payroll-filters-${width}.png`) })

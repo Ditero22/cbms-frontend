@@ -4,18 +4,19 @@ import { toast } from 'sonner'
 import { sessionExpiredEvent } from '@/services/api/client'
 import type { SessionResponse } from '../types'
 import { getSession, signIn, signOut } from '../auth.api'
-import {
-  clearProtectedQueries,
-  prepareSession,
-  sessionAccessKey,
-  sessionQueryKey,
-} from '../session-cache'
+import { prepareSession, replaceSession, sessionAccessKey, sessionQueryKey } from '../session-cache'
 
 export function useSession() {
   const queryClient = useQueryClient()
   const sessionQuery = useQuery({
     queryKey: sessionQueryKey,
-    queryFn: async () => prepareSession(queryClient, await getSession()),
+    queryFn: async ({ signal }) => {
+      const response = await getSession(signal)
+      signal.throwIfAborted()
+      const prepared = await prepareSession(queryClient, response)
+      signal.throwIfAborted()
+      return prepared
+    },
     retry: false,
     staleTime: 0,
     refetchOnWindowFocus: true,
@@ -31,8 +32,7 @@ export function useSession() {
       if (queryClient.getQueryData<SessionResponse | null>(sessionQueryKey)?.user) {
         toast.info('Your session has expired. Sign in again.')
       }
-      queryClient.setQueryData<SessionResponse | null>(sessionQueryKey, null)
-      void clearProtectedQueries(queryClient)
+      void replaceSession(queryClient, null)
     }
 
     window.addEventListener(sessionExpiredEvent, clearExpiredSession)
@@ -41,15 +41,13 @@ export function useSession() {
 
   async function login(email: string, password: string) {
     const response = await signIn(email, password)
-    await prepareSession(queryClient, response)
+    await replaceSession(queryClient, response)
     window.localStorage.setItem('cbms-last-user-id', response.user.id)
-    queryClient.setQueryData(sessionQueryKey, response)
   }
 
   async function logout() {
     await signOut()
-    queryClient.setQueryData<SessionResponse | null>(sessionQueryKey, null)
-    await clearProtectedQueries(queryClient)
+    await replaceSession(queryClient, null)
   }
 
   const user = sessionQuery.data?.user ?? null

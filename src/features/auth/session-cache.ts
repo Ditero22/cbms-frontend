@@ -33,3 +33,10 @@ export async function prepareSession(client: QueryClient, next: SessionResponse 
   }
   return next
 }
+
+/** Explicit identity changes supersede any observation started before the change. */
+export async function replaceSession(client: QueryClient, next: SessionResponse | null) {
+  await client.cancelQueries({ queryKey: sessionQueryKey, exact: true })
+  await prepareSession(client, next)
+  client.setQueryData(sessionQueryKey, next)
+}
