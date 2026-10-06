@@ -15,3 +15,5 @@ Generated locally by 21st CLI 1.17.1, then corrected against actual source. The 
 Sources: [frontend architecture](../FRONTEND_ARCHITECTURE.md), [current progress](../../md-docs/project/progressreport.md), [approved scope](../../md-docs/project/release-scope.md), and [historical UI audit](../../md-docs/archive/audits/ui-ux-2026-10-01.md). Code paths are relative to the frontend package root: src/components/common, src/components/layout, src/features, src/index.css, src/styles/responsive.css.
 
 21st review runs locally. Catalog search currently requires unavailable login/API credentials; no hosted generation or active MCP connection is claimed.
+
+Dialog system (2026-10-07): one visible workflow surface; suspended parent drafts retain state. Use 440/620/820/900px dialog variants and 9/14/22rem/full field widths. Keep 16px mobile controls, 44px targets and normal-flow mobile actions. The 21st executable is unavailable in the current environment; this change uses repository browser/accessibility checks and source review.

@@ -1,3 +1,4 @@
+import { validationFields } from '@/services/api/errors'
 import { useRef, useState } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
@@ -6,12 +7,14 @@ export function useFleetMutation() {
   const queryClient = useQueryClient()
   const pending = useRef(false)
   const [busy, setBusy] = useState(false)
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({})
   const [error, setError] = useState<string | null>(null)
   async function run(action: () => Promise<unknown>, message: string) {
     if (pending.current) return false
     pending.current = true
     setBusy(true)
     setError(null)
+    setFieldErrors({})
     try {
       await action()
       await Promise.all(
@@ -39,6 +42,7 @@ export function useFleetMutation() {
     } catch (reason) {
       const message = reason instanceof Error ? reason.message : 'The record could not be saved.'
       setError(message)
+      setFieldErrors(validationFields(reason))
       toast.error(message)
       return false
     } finally {
@@ -46,5 +50,14 @@ export function useFleetMutation() {
       setBusy(false)
     }
   }
-  return { busy, error, run, clearError: () => setError(null) }
+  return {
+    busy,
+    error,
+    fieldErrors,
+    run,
+    clearError: () => {
+      setError(null)
+      setFieldErrors({})
+    },
+  }
 }

@@ -17,6 +17,7 @@ export function LegacyDeliveryReconciliationPanel({
   const [deliveryId, setDeliveryId] = useState('')
   const [quantities, setQuantities] = useState<Record<string, string>>({})
   const [note, setNote] = useState('')
+  const [saveError, setSaveError] = useState('')
   const [saving, setSaving] = useState(false)
   const reconciliation = useQuery({
     queryKey: ['legacy-delivery-reconciliation', orderId],
@@ -43,6 +44,7 @@ export function LegacyDeliveryReconciliationPanel({
     event.preventDefault()
     if (!selected || saving) return
     setSaving(true)
+    setSaveError('')
     try {
       await reconcileLegacyDelivery(orderId, selected.id, {
         note: note.trim(),
@@ -62,7 +64,9 @@ export function LegacyDeliveryReconciliationPanel({
       setNote('')
       toast.success('Historical delivery quantities verified. Stock was not changed.')
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Could not verify this delivery.')
+      const message = error instanceof Error ? error.message : 'Could not verify this delivery.'
+      setSaveError(message)
+      toast.error(message)
     } finally {
       setSaving(false)
     }
@@ -104,7 +108,7 @@ export function LegacyDeliveryReconciliationPanel({
             </button>
           </div>
         ) : candidates.length ? (
-          <form className="dialog-form" onSubmit={(event) => void submit(event)}>
+          <form aria-busy={saving} className="dialog-form" onSubmit={(event) => void submit(event)}>
             <label className="field-label">
               <FieldHeading required>Historical delivery</FieldHeading>
               <select
@@ -168,6 +172,11 @@ export function LegacyDeliveryReconciliationPanel({
                 onChange={(event) => setNote(event.target.value)}
               />
             </label>
+            {saveError && (
+              <p className="field-error" role="alert">
+                {saveError}
+              </p>
+            )}
             <div className="dialog-actions">
               <DialogCancelButton disabled={saving} />
               <button

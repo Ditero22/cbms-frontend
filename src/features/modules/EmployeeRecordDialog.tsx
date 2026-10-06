@@ -1,3 +1,4 @@
+import { useServerValidation } from '@/components/common/useServerValidation'
 import { FormField } from '@/components/common/FormField'
 import { useEffect } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
@@ -15,6 +16,7 @@ type EmployeeRecordDialogProps = {
   options?: EmployeeOptions
   isLoadingOptions: boolean
   optionsError?: string
+  serverFieldErrors?: Record<string, string>
   saveError?: string
   onRetryOptions: () => void
   onSave: (employeeId: string | null, values: EmployeeValues) => Promise<boolean>
@@ -28,10 +30,12 @@ export function EmployeeRecordDialog({
   isLoadingOptions,
   optionsError,
   saveError,
+  serverFieldErrors,
   onRetryOptions,
   onSave,
 }: EmployeeRecordDialogProps) {
   const {
+    setError,
     register,
     handleSubmit,
     reset,
@@ -110,6 +114,8 @@ export function EmployeeRecordDialog({
       reset()
     }
   }
+
+  useServerValidation(setError, serverFieldErrors)
 
   return (
     <AppDialog
@@ -319,7 +325,12 @@ function EmployeeField({
   const maxLength = { employeeNumber: 40, name: 180, position: 120, email: 254, phone: 40 }[name]
 
   return (
-    <FormField label={label} required={isRequired} error={error}>
+    <FormField
+      label={label}
+      required={isRequired}
+      error={error}
+      width={name === 'employeeNumber' || name === 'phone' ? 'sm' : 'full'}
+    >
       {(attributes) => (
         <input
           {...attributes}

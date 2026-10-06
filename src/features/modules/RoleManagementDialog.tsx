@@ -1,3 +1,4 @@
+import { useServerValidation } from '@/components/common/useServerValidation'
 import { useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { Plus } from 'lucide-react'
@@ -9,6 +10,7 @@ import type { RoleRecord, RoleValues } from './types'
 import './roles.css'
 
 type RoleManagementDialogProps = {
+  serverFieldErrors?: Record<string, string>
   open: boolean
   onOpenChange: (open: boolean) => void
   roles: RoleRecord[]
@@ -28,6 +30,7 @@ const emptyRole: RoleValues = { name: '', description: '', permissions: [] }
 
 export function RoleManagementDialog({
   open,
+  serverFieldErrors,
   onOpenChange,
   roles,
   permissions,
@@ -49,6 +52,7 @@ export function RoleManagementDialog({
   const [saveError, setSaveError] = useState('')
   const initializedRole = useRef<string | null>(null)
   const {
+    setError,
     register,
     handleSubmit,
     reset,
@@ -144,6 +148,8 @@ export function RoleManagementDialog({
       setIsDeleting(false)
     }
   }
+
+  useServerValidation(setError, serverFieldErrors)
 
   return (
     <>

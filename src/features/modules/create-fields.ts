@@ -5,6 +5,7 @@ export type CreateField = {
   type?: string
   maxLength?: number
   minLength?: number
+  width?: 'xs' | 'sm' | 'md' | 'full'
   hint?: string
   options?: { value: string; label: string }[]
 }
@@ -14,6 +15,7 @@ export const createFieldsByModule: Record<string, CreateField[]> = {
     { name: 'name', label: 'Branch name', required: true, minLength: 2, maxLength: 120 },
     {
       name: 'code',
+      width: 'sm',
       label: 'Branch code',
       required: true,
       minLength: 2,
@@ -21,7 +23,7 @@ export const createFieldsByModule: Record<string, CreateField[]> = {
       hint: 'Use letters, numbers, or hyphens.',
     },
     { name: 'managerName', label: 'Manager', maxLength: 180 },
-    { name: 'phone', label: 'Phone', type: 'tel', maxLength: 40 },
+    { name: 'phone', width: 'sm', label: 'Phone', type: 'tel', maxLength: 40 },
     { name: 'email', label: 'Email', type: 'email', maxLength: 254 },
     { name: 'address', label: 'Address', type: 'textarea', maxLength: 400 },
   ],
@@ -30,36 +32,37 @@ export const createFieldsByModule: Record<string, CreateField[]> = {
     { name: 'name', label: 'Full name', required: true },
     { name: 'position', label: 'Position', required: true },
     { name: 'email', label: 'Email', type: 'email' },
-    { name: 'phone', label: 'Phone' },
+    { name: 'phone', width: 'sm', label: 'Phone' },
   ],
   customers: [
     { name: 'name', label: 'Customer name', required: true, minLength: 2, maxLength: 180 },
     { name: 'contactName', label: 'Contact', maxLength: 180 },
     { name: 'email', label: 'Email', type: 'email', maxLength: 254 },
-    { name: 'phone', label: 'Phone', type: 'tel', maxLength: 40 },
+    { name: 'phone', width: 'sm', label: 'Phone', type: 'tel', maxLength: 40 },
     { name: 'location', label: 'Location', maxLength: 240 },
   ],
   suppliers: [
     { name: 'name', label: 'Supplier name', required: true, minLength: 2, maxLength: 180 },
     { name: 'contactName', label: 'Contact', maxLength: 180 },
     { name: 'email', label: 'Email', type: 'email', maxLength: 254 },
-    { name: 'phone', label: 'Phone', type: 'tel', maxLength: 40 },
+    { name: 'phone', width: 'sm', label: 'Phone', type: 'tel', maxLength: 40 },
     { name: 'category', label: 'Category', maxLength: 120 },
     { name: 'paymentTerms', label: 'Payment terms', maxLength: 120 },
   ],
   products: [
     { name: 'name', label: 'Product name', required: true, minLength: 2, maxLength: 180 },
-    { name: 'sku', label: 'SKU', required: true, minLength: 2, maxLength: 80 },
+    { name: 'sku', width: 'sm', label: 'SKU', required: true, minLength: 2, maxLength: 80 },
     { name: 'category', label: 'Category', required: true, minLength: 2, maxLength: 120 },
     {
       name: 'unit',
+      width: 'xs',
       label: 'Unit',
       required: true,
       minLength: 1,
       maxLength: 40,
       hint: 'For example: bag, piece, kg, or m³. Stock uses this unit.',
     },
-    { name: 'unitPrice', label: 'Unit price', required: true, type: 'number' },
+    { name: 'unitPrice', width: 'sm', label: 'Unit price', required: true, type: 'number' },
     { name: 'supplierId', label: 'Supplier', type: 'select' },
     {
       name: 'description',

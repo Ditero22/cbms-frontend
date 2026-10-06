@@ -1,3 +1,4 @@
+import { useServerValidation } from '@/components/common/useServerValidation'
 import { useRef, useState } from 'react'
 import { Controller, useForm, useWatch } from 'react-hook-form'
 import { Plus } from 'lucide-react'
@@ -11,6 +12,7 @@ import type { CustomerPaymentOptions, CustomerPaymentValues } from './types'
 import { customerPaymentMethods } from './payment-methods'
 
 type Props = {
+  serverFieldErrors?: Record<string, string>
   orderId?: string | null
   options?: CustomerPaymentOptions
   loading: boolean
@@ -23,6 +25,7 @@ type Props = {
 
 export function RecordCustomerPaymentDialog({
   orderId,
+  serverFieldErrors,
   options,
   loading,
   optionsError,
@@ -35,6 +38,7 @@ export function RecordCustomerPaymentDialog({
   const [proofFile, setProofFile] = useState<File | null>(null)
   const [proofError, setProofError] = useState('')
   const {
+    setError,
     register,
     handleSubmit,
     control,
@@ -57,6 +61,8 @@ export function RecordCustomerPaymentDialog({
     if (error || !proofFile) return
     await onSave(values, requestKey.current, proofFile)
   })
+  useServerValidation(setError, serverFieldErrors)
+
   return (
     <AppDialog
       open
@@ -67,7 +73,7 @@ export function RecordCustomerPaymentDialog({
       description="Each receipt is kept separately. Choose an order and record the actual payment received."
       size="md"
     >
-      <form className="dialog-form" onSubmit={submit}>
+      <form aria-busy={isSubmitting} className="dialog-form" onSubmit={submit}>
         <label className="field-label">
           <FieldHeading required>Order</FieldHeading>
           <Controller
@@ -99,6 +105,9 @@ export function RecordCustomerPaymentDialog({
         </label>
         {order && (
           <div className="payment-balance-card">
+            <span className="payment-order-context">
+              {order.orderNumber} · {order.customerName}
+            </span>
             <span>Total {formatPeso(order.totalAmount)}</span>
             <span>Net paid {formatPeso(order.paidAmount)}</span>
             <strong>Remaining {formatPeso(order.balance)}</strong>
@@ -145,6 +154,11 @@ export function RecordCustomerPaymentDialog({
                 <option key={method}>{method}</option>
               ))}
             </select>
+            {errors.method && (
+              <span className="field-error" role="alert">
+                {errors.method.message}
+              </span>
+            )}
           </label>
           <label className="field-label">
             <FieldHeading required>Payment date</FieldHeading>
@@ -174,6 +188,11 @@ export function RecordCustomerPaymentDialog({
               {...register('externalReference')}
               placeholder="GCash, bank, cheque, or receipt reference"
             />
+            {errors.externalReference && (
+              <span className="field-error" role="alert">
+                {errors.externalReference.message}
+              </span>
+            )}
           </label>
         </div>
         <label className="field-label">
@@ -186,6 +205,11 @@ export function RecordCustomerPaymentDialog({
             {...register('notes')}
             placeholder="Optional payment notes"
           />
+          {errors.notes && (
+            <span className="field-error" role="alert">
+              {errors.notes.message}
+            </span>
+          )}
         </label>
         <ProofFileField
           file={proofFile}

@@ -1,3 +1,4 @@
+import { useServerValidation } from '@/components/common/useServerValidation'
 import { FieldHeading } from '@/components/common/FieldHeading'
 import { useId } from 'react'
 import { useForm } from 'react-hook-form'
@@ -8,6 +9,7 @@ import { isStrongPassword } from '@/features/users/password-policy'
 type ResetPasswordValues = { password: string; confirmPassword: string }
 
 type ResetUserPasswordDialogProps = {
+  serverFieldErrors?: Record<string, string>
   open: boolean
   onOpenChange: (open: boolean) => void
   userName: string
@@ -17,6 +19,7 @@ type ResetUserPasswordDialogProps = {
 
 export function ResetUserPasswordDialog({
   open,
+  serverFieldErrors,
   onOpenChange,
   userName,
   onSave,
@@ -24,6 +27,7 @@ export function ResetUserPasswordDialog({
 }: ResetUserPasswordDialogProps) {
   const formId = useId()
   const {
+    setError,
     register,
     handleSubmit,
     reset,
@@ -43,6 +47,8 @@ export function ResetUserPasswordDialog({
     if (!nextOpen) reset()
   }
 
+  useServerValidation(setError, serverFieldErrors)
+
   return (
     <AppDialog
       open={open}
@@ -50,7 +56,7 @@ export function ResetUserPasswordDialog({
       title="Reset user password"
       description={`Set a new password for ${userName}. All of their active sessions will end.`}
     >
-      <form className="dialog-form" onSubmit={submit}>
+      <form aria-busy={isSubmitting} className="dialog-form" onSubmit={submit}>
         <label className="field-label">
           <FieldHeading required>New password</FieldHeading>
           <input

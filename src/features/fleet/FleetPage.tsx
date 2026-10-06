@@ -155,6 +155,8 @@ export function FleetPage() {
         />
       )}
       <VehicleRecordDialog
+        serverFieldErrors={mutation.fieldErrors}
+        submitError={mutation.error}
         open={mode === 'vehicle'}
         onClose={closeForm}
         record={vehicleEditor}
@@ -168,6 +170,8 @@ export function FleetPage() {
       />
       {selectedId && (
         <MaintenanceRecordDialog
+          serverFieldErrors={mutation.fieldErrors}
+          submitError={mutation.error}
           open={mode === 'maintenance'}
           onClose={closeForm}
           record={maintenanceEditor}
@@ -196,6 +200,8 @@ export function FleetPage() {
       )}
       {selectedId && (
         <FleetAssignmentDialog
+          serverFieldErrors={mutation.fieldErrors}
+          submitError={mutation.error}
           open={mode === 'assignment'}
           vehicleId={selectedId}
           options={options.data}

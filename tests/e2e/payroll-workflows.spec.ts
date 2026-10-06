@@ -98,6 +98,8 @@ test('payroll edits draft pay with multiple adjustments, then records payment an
   await reopenedCreateDialog.getByRole('button', { name: 'Close dialog' }).click()
   const discardDialog = page.getByRole('alertdialog', { name: 'Discard changes?' })
   await expect(discardDialog).toBeVisible()
+  await expect(page.locator('[role="dialog"]:visible, [role="alertdialog"]:visible')).toHaveCount(1)
+  await expect(page.locator('.dialog-overlay')).toHaveCount(1)
   await page.keyboard.press('Escape')
   await expect(discardDialog).toBeHidden()
   await expect(reopenedCreateDialog).toBeVisible()
@@ -239,6 +241,44 @@ test('payroll edits draft pay with multiple adjustments, then records payment an
   await expect(updatedDetail.getByRole('button', { name: 'Edit draft' })).toHaveCount(0)
   await updatedDetail.getByRole('button', { name: 'Record payment' }).click()
   const paymentDialog = page.getByRole('dialog', { name: 'Record payroll payment' })
+  await expect(updatedDetail).toBeHidden()
+  await expect(page.locator('.dialog-overlay')).toHaveCount(1)
+  await page.keyboard.press('Escape')
+  await expect(updatedDetail).toBeVisible()
+  await expect(updatedDetail.getByRole('button', { name: 'Record payment' })).toBeFocused()
+  await updatedDetail.getByRole('button', { name: 'Record payment' }).click()
+  await paymentDialog.getByLabel('Reference number').fill('Preserved draft')
+  await paymentDialog.getByLabel(/^Receipt \/ payment proof/).setInputFiles(paymentProof)
+  await page.keyboard.press('Escape')
+  await expect(discardDialog).toBeVisible()
+  await expect(paymentDialog).toBeHidden()
+  await expect(page.locator('.dialog-overlay')).toHaveCount(1)
+  await discardDialog.getByRole('button', { name: 'Keep editing' }).click()
+  await expect(paymentDialog.getByLabel('Reference number')).toHaveValue('Preserved draft')
+  await expect(
+    paymentDialog.getByRole('img', { name: `Selected payment proof: ${paymentProof.name}` }),
+  ).toBeVisible()
+  expect(
+    await paymentDialog
+      .locator('input[type="file"]')
+      .evaluate((el: HTMLInputElement) => el.files?.length),
+  ).toBe(1)
+  await paymentDialog.getByRole('button', { name: 'Remove image' }).click()
+  await expect(
+    paymentDialog.getByRole('img', { name: `Selected payment proof: ${paymentProof.name}` }),
+  ).toHaveCount(0)
+  expect(
+    await paymentDialog
+      .locator('input[type="file"]')
+      .evaluate((el: HTMLInputElement) => el.files?.length),
+  ).toBe(0)
+  await paymentDialog.getByLabel(/^Receipt \/ payment proof/).setInputFiles(paymentProof)
+  const filePicker = page.waitForEvent('filechooser')
+  await paymentDialog.getByRole('button', { name: 'Replace image' }).click()
+  await (await filePicker).setFiles({ ...paymentProof, name: 'replacement-proof.png' })
+  await expect(
+    paymentDialog.getByRole('img', { name: 'Selected payment proof: replacement-proof.png' }),
+  ).toBeVisible()
   const keyboardHeight = 320
   const paymentDialogBody = paymentDialog.locator('.dialog-body')
   await simulateKeyboardViewport(page, keyboardHeight)

@@ -9,6 +9,7 @@ const allowedNextStatuses: Record<string, DeliveryStatus[]> = {
 }
 
 type UpdateDeliveryStatusDialogProps = {
+  error?: string
   open: boolean
   onOpenChange: (open: boolean) => void
   deliveryId: string
@@ -25,6 +26,7 @@ export function UpdateDeliveryStatusDialog({
   onOpenChange,
   deliveryId,
   currentStatus,
+  error,
   onSave,
 }: UpdateDeliveryStatusDialogProps) {
   const options = allowedNextStatuses[currentStatus] ?? []
@@ -41,7 +43,7 @@ export function UpdateDeliveryStatusDialog({
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
-    if (!status) return
+    if (!status || isSaving) return
     setIsSaving(true)
     try {
       if (
@@ -61,9 +63,10 @@ export function UpdateDeliveryStatusDialog({
       open={open}
       onOpenChange={(next) => !isSaving && onOpenChange(next)}
       title="Update delivery status"
+      error={error}
       description={`Current status: ${currentStatus}. Only forward status changes are allowed.`}
     >
-      <form className="dialog-form" onSubmit={submit}>
+      <form aria-busy={isSaving} className="dialog-form" onSubmit={submit}>
         {options.length > 0 ? (
           <label className="field-label">
             New status

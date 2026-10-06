@@ -1155,3 +1155,5 @@
     font-size: var(--font-size-12);
   }
 }
+
+.payment-order-context { overflow-wrap: anywhere; }

@@ -1,4 +1,4 @@
-import { useId, useRef, useState } from 'react'
+import { useEffect, useId, useRef, useState } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import { Upload } from 'lucide-react'
 import { proofQueryKey, uploadProofFile, type ProofProps } from './proofs.api'
@@ -15,6 +15,16 @@ export function ProofUploader({
   const [file, setFile] = useState<File | null>(null)
   const [error, setError] = useState('')
   const [saving, setSaving] = useState(false)
+  const [preview, setPreview] = useState('')
+  useEffect(() => {
+    if (!file || !file.type.startsWith('image/')) {
+      setPreview('')
+      return
+    }
+    const url = URL.createObjectURL(file)
+    setPreview(url)
+    return () => URL.revokeObjectURL(url)
+  }, [file])
   const client = useQueryClient()
   async function upload() {
     if (!file || saving) return
@@ -43,7 +53,7 @@ export function ProofUploader({
     }
   }
   return (
-    <div className="proof-uploader">
+    <div className="proof-uploader" aria-busy={saving}>
       <label className="field-label" htmlFor={inputId}>
         Attach proof
       </label>
@@ -75,6 +85,36 @@ export function ProofUploader({
           {saving ? 'Uploading…' : 'Upload proof'}
         </button>
       </div>
+      {file && (
+        <figure className="proof-image-preview">
+          {preview && <img src={preview} alt={`Selected proof: ${file.name}`} />}
+          <figcaption>
+            {file.name} · {(file.size / 1024).toFixed(0)} KB
+          </figcaption>
+          <div className="proof-selection-actions">
+            <button
+              className="button button-outline"
+              type="button"
+              disabled={disabled || saving}
+              onClick={() => inputRef.current?.click()}
+            >
+              Replace file
+            </button>
+            <button
+              className="button button-quiet"
+              type="button"
+              disabled={disabled || saving}
+              onClick={() => {
+                setFile(null)
+                setError('')
+                if (inputRef.current) inputRef.current.value = ''
+              }}
+            >
+              Remove file
+            </button>
+          </div>
+        </figure>
+      )}
       {error && (
         <p className="field-error" id={`${inputId}-error`} role="alert">
           {error}

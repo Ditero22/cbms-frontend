@@ -178,6 +178,7 @@ export function UsersPage() {
         }}
       />
       <UserAccountDialog
+        serverFieldErrors={actions.fieldErrors}
         open={accountOpen}
         onOpenChange={(open) => {
           if (!actions.busy) {
@@ -195,6 +196,7 @@ export function UsersPage() {
       />
       {resetUser && (
         <ResetUserPasswordDialog
+          serverFieldErrors={actions.fieldErrors}
           open
           onOpenChange={(open) => {
             if (!open && !actions.busy) setResetUser(null)
@@ -209,6 +211,7 @@ export function UsersPage() {
         />
       )}
       <RoleManagementDialog
+        serverFieldErrors={actions.fieldErrors}
         open={rolesOpen}
         onOpenChange={setRolesOpen}
         roles={roles.data ?? []}

@@ -1,5 +1,5 @@
 import { invalidatePayrollRun } from './payroll-cache'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { Plus } from 'lucide-react'
 import { toast } from 'sonner'
@@ -46,6 +46,8 @@ export function PayrollPage() {
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [selectedEntryId, setSelectedEntryId] = useState<string | null>(null)
   const [saving, setSaving] = useState(false)
+  const pendingSave = useRef(false)
+  const [submitError, setSubmitError] = useState('')
   const [branchId, setBranchId] = useState('')
   const records = useQuery({
     queryKey: ['module', 'payroll', query],
@@ -84,7 +86,10 @@ export function PayrollPage() {
   }, [branchId, formOpen, options.data?.selectedBranchId])
 
   async function saveDraft(values: PayrollRunInput, requestKey?: string) {
+    if (pendingSave.current) return false
+    pendingSave.current = true
     setSaving(true)
+    setSubmitError('')
     try {
       await savePayrollRun(editingRunId, values, requestKey)
       await invalidatePayrollRun(client, editingRunId)
@@ -92,9 +97,12 @@ export function PayrollPage() {
       setView('runs')
       return true
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'The pay run could not be saved.')
+      const message = error instanceof Error ? error.message : 'The pay run could not be saved.'
+      setSubmitError(message)
+      toast.error(message)
       return false
     } finally {
+      pendingSave.current = false
       setSaving(false)
     }
   }
@@ -192,12 +200,14 @@ export function PayrollPage() {
         loading={options.isPending}
         error={options.error?.message}
         saving={saving}
+        submitError={submitError}
         onRetry={() => {
           void options.refetch()
           if (editingRunId) void editData.refetch()
         }}
         onBranchChange={setBranchId}
         onClose={() => {
+          setSubmitError('')
           setFormOpen(false)
           setEditingRunId(null)
           setBranchId('')

@@ -2,14 +2,16 @@ import {
   createContext,
   useContext,
   useEffect,
+  useId,
+  useLayoutEffect,
   useRef,
   useState,
   type ButtonHTMLAttributes,
   type ReactNode,
   type SyntheticEvent,
 } from 'react'
-import * as Dialog from '@radix-ui/react-dialog'
-import { X } from 'lucide-react'
+import { createPortal } from 'react-dom'
+import { useDialogWorkflow } from './dialog-workflow-store'
 
 const RequestCloseContext = createContext<() => void>(() => undefined)
 
@@ -42,6 +44,7 @@ export function AppDialog({
   description,
   size = 'sm',
   hasUnsavedChanges = false,
+  error,
   children,
 }: {
   open: boolean
@@ -50,6 +53,7 @@ export function AppDialog({
   description?: string
   size?: 'sm' | 'md' | 'lg' | 'xl'
   hasUnsavedChanges?: boolean
+  error?: string
   children: ReactNode
 }) {
   const [discardPromptOpen, setDiscardPromptOpen] = useState(false)
@@ -57,9 +61,32 @@ export function AppDialog({
   const contentRef = useRef<HTMLDivElement>(null)
   const initialFormSnapshot = useRef<string | null>(null)
   const formHasChangesRef = useRef(false)
-  const returnFocus = useRef<HTMLElement | null>(
-    document.activeElement instanceof HTMLElement ? document.activeElement : null,
-  )
+  const id = useId()
+  const workflow = useDialogWorkflow()
+  const [body] = useState(() => document.createElement('div'))
+  const step = {
+    id,
+    body,
+    title,
+    description,
+    size,
+    discarding: discardPromptOpen,
+    close: () => (discardPromptOpen ? setDiscardPromptOpen(false) : requestClose()),
+    discard: () => {
+      setDiscardPromptOpen(false)
+      onOpenChange(false)
+    },
+  }
+  const stepRef = useRef(step)
+  useLayoutEffect(() => {
+    stepRef.current = step
+    if (open) workflow.update(step)
+  })
+  useLayoutEffect(() => {
+    if (!open) return
+    workflow.open(stepRef.current)
+    return () => workflow.close(id)
+  }, [open, workflow, id])
 
   useEffect(() => {
     if (open) {
@@ -76,11 +103,6 @@ export function AppDialog({
     setDiscardPromptOpen(false)
     setFormHasChanges(false)
     formHasChangesRef.current = false
-    const rememberFocus = (event: FocusEvent) => {
-      if (event.target instanceof HTMLElement) returnFocus.current = event.target
-    }
-    document.addEventListener('focusin', rememberFocus)
-    return () => document.removeEventListener('focusin', rememberFocus)
   }, [open])
 
   function updateFormDirtyState(event: SyntheticEvent) {
@@ -104,103 +126,27 @@ export function AppDialog({
     onOpenChange(false)
   }
 
-  return (
-    <>
-      <Dialog.Root
-        open={open}
-        onOpenChange={(nextOpen) => {
-          if (nextOpen) onOpenChange(true)
-          else if (contentRef.current?.querySelector('[aria-busy="true"]')) return
-          else if (discardPromptOpen) setDiscardPromptOpen(false)
-          else requestClose()
-        }}
-      >
-        <Dialog.Portal>
-          <Dialog.Overlay className="dialog-overlay" />
-          <Dialog.Content
-            className={`dialog-content dialog-size-${size}`}
-            onOpenAutoFocus={(event) => {
-              const focused = document.activeElement
-              if (
-                focused instanceof HTMLElement &&
-                event.currentTarget instanceof HTMLElement &&
-                !event.currentTarget.contains(focused)
-              ) {
-                returnFocus.current = focused
-              }
-            }}
-            onCloseAutoFocus={(event) => {
-              if (returnFocus.current?.isConnected) {
-                event.preventDefault()
-                returnFocus.current.focus()
-              }
-            }}
+  return open
+    ? createPortal(
+        <RequestCloseContext.Provider value={requestClose}>
+          <div
+            className="dialog-body"
+            ref={contentRef}
+            onInputCapture={updateFormDirtyState}
+            onChangeCapture={updateFormDirtyState}
+            onClickCapture={updateFormDirtyState}
           >
-            <div className="dialog-heading">
-              <div>
-                <Dialog.Title className="dialog-title">{title}</Dialog.Title>
-                {description && (
-                  <Dialog.Description className="dialog-description">
-                    {description}
-                  </Dialog.Description>
-                )}
-              </div>
-              <Dialog.Close className="icon-button" aria-label="Close dialog">
-                <X size={18} />
-              </Dialog.Close>
-            </div>
-            <RequestCloseContext.Provider value={requestClose}>
-              <div
-                className="dialog-body"
-                ref={contentRef}
-                onInputCapture={updateFormDirtyState}
-                onChangeCapture={updateFormDirtyState}
-                onClickCapture={updateFormDirtyState}
-              >
-                {children}
-              </div>
-            </RequestCloseContext.Provider>
-          </Dialog.Content>
-        </Dialog.Portal>
-      </Dialog.Root>
-      <Dialog.Root open={discardPromptOpen} onOpenChange={setDiscardPromptOpen}>
-        <Dialog.Portal>
-          <Dialog.Overlay className="dialog-overlay" />
-          <Dialog.Content
-            role="alertdialog"
-            aria-describedby="dialog-discard-description"
-            className="dialog-content dialog-discard-confirmation"
-            onEscapeKeyDown={(event) => {
-              event.preventDefault()
-              setDiscardPromptOpen(false)
-            }}
-          >
-            <Dialog.Title className="dialog-title">Discard changes?</Dialog.Title>
-            <Dialog.Description id="dialog-discard-description" className="dialog-description">
-              Your unsaved changes will be lost.
-            </Dialog.Description>
-            <div className="dialog-actions">
-              <Dialog.Close asChild>
-                <button type="button" className="button button-outline">
-                  Keep editing
-                </button>
-              </Dialog.Close>
-              <button
-                type="button"
-                className="button button-danger"
-                onClick={() => {
-                  setDiscardPromptOpen(false)
-                  onOpenChange(false)
-                }}
-              >
-                Discard
-              </button>
-            </div>
-          </Dialog.Content>
-        </Dialog.Portal>
-      </Dialog.Root>
-    </>
-  )
+            {error && (
+              <p className="field-error" role="alert">
+                {error}
+              </p>
+            )}
+            {children}
+          </div>
+        </RequestCloseContext.Provider>,
+        body,
+      )
+    : null
 }
 
 function getFormSnapshot(root: HTMLElement | null) {

@@ -1,3 +1,4 @@
+import { validationFields } from '@/services/api/errors'
 import { useEffect, useRef, useState } from 'react'
 import { keepPreviousData, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Plus } from 'lucide-react'
@@ -35,6 +36,7 @@ export function PaymentsPage() {
   const [pendingRefundOrderId, setPendingRefundOrderId] = useState<string | null>(null)
   const [recording, setRecording] = useState(false)
   const [recordOrderId, setRecordOrderId] = useState<string | null>(null)
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({})
   const [error, setError] = useState<string | null>(null)
   const canRead = runtime.permissions.includes('payments.read')
   const canCreate = runtime.permissions.includes('payments.create')
@@ -62,6 +64,7 @@ export function PaymentsPage() {
   }, [pendingRefundOrderId, refundOrderId, selectedId])
   function openRecord(orderId: string | null) {
     setError(null)
+    setFieldErrors({})
     setSelectedId(null)
     setRecordOrderId(orderId)
     setRecording(true)
@@ -70,6 +73,7 @@ export function PaymentsPage() {
     if (pending.current) return false
     pending.current = true
     setError(null)
+    setFieldErrors({})
     try {
       await recordCustomerPayment(values, requestKey, proofFile)
       await invalidateOrderPaymentQueries(queryClient, values.orderId)
@@ -81,6 +85,7 @@ export function PaymentsPage() {
       const message =
         failure instanceof Error ? failure.message : 'The payment could not be recorded.'
       setError(message)
+      setFieldErrors(validationFields(failure))
       toast.error(message)
       void queryClient.invalidateQueries({ queryKey: ['payment-options'] })
       return false
@@ -153,6 +158,7 @@ export function PaymentsPage() {
       />
       {recording && (
         <RecordCustomerPaymentDialog
+          serverFieldErrors={fieldErrors}
           orderId={recordOrderId}
           options={options.data}
           loading={options.isPending}

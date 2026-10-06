@@ -1,3 +1,4 @@
+import { useServerValidation } from '@/components/common/useServerValidation'
 import { useEffect } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
 import { Link } from 'react-router-dom'
@@ -8,6 +9,8 @@ import type { AssignmentValues, FleetOptions } from './types'
 
 export function FleetAssignmentDialog({
   open,
+  serverFieldErrors,
+  submitError,
   vehicleId,
   options,
   loading,
@@ -16,6 +19,8 @@ export function FleetAssignmentDialog({
   onClose,
   onSave,
 }: {
+  serverFieldErrors?: Record<string, string>
+  submitError?: string | null
   open: boolean
   vehicleId: string
   options?: FleetOptions
@@ -26,6 +31,7 @@ export function FleetAssignmentDialog({
   onSave: (values: AssignmentValues) => Promise<boolean>
 }) {
   const {
+    setError,
     register,
     handleSubmit,
     reset,
@@ -67,6 +73,8 @@ export function FleetAssignmentDialog({
     }
     if (await onSave(payload)) onClose()
   })
+  useServerValidation(setError, serverFieldErrors)
+
   return (
     <AppDialog
       open={open}
@@ -76,7 +84,7 @@ export function FleetAssignmentDialog({
       size="md"
       hasUnsavedChanges={isDirty}
     >
-      <form className="dialog-form" onSubmit={submit}>
+      <form aria-busy={isSubmitting} className="dialog-form" onSubmit={submit}>
         <fieldset className="fleet-form-section" disabled={isSubmitting}>
           <div className="dialog-field-grid">
             <FleetField
@@ -157,6 +165,11 @@ export function FleetAssignmentDialog({
               Try again
             </button>
           </div>
+        )}
+        {submitError && (
+          <p className="field-error" role="alert">
+            {submitError}
+          </p>
         )}
         <div className="dialog-actions">
           <DialogCancelButton disabled={isSubmitting} />

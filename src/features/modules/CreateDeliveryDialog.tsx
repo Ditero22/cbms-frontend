@@ -1,3 +1,4 @@
+import { useServerValidation } from '@/components/common/useServerValidation'
 import { FieldHeading } from '@/components/common/FieldHeading'
 import { useEffect, useRef } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
@@ -16,6 +17,8 @@ type DeliveryFormValues = {
 }
 
 type CreateDeliveryDialogProps = {
+  saveError?: string
+  serverFieldErrors?: Record<string, string>
   open: boolean
   onOpenChange: (open: boolean) => void
   onCreate: (values: CreateDeliveryValues) => Promise<boolean>
@@ -30,6 +33,8 @@ type CreateDeliveryDialogProps = {
 
 export function CreateDeliveryDialog({
   open,
+  saveError,
+  serverFieldErrors,
   onOpenChange,
   onCreate,
   options,
@@ -121,6 +126,8 @@ export function CreateDeliveryDialog({
     }
   }
 
+  useServerValidation(setError, serverFieldErrors)
+
   return (
     <AppDialog
       open={open}
@@ -130,7 +137,7 @@ export function CreateDeliveryDialog({
       size="md"
       hasUnsavedChanges={isDirty}
     >
-      <form className="dialog-form" onSubmit={submit}>
+      <form aria-busy={isSubmitting} className="dialog-form" onSubmit={submit}>
         <label className="field-label">
           <FieldHeading required>Order</FieldHeading>
           <select
@@ -312,6 +319,11 @@ export function CreateDeliveryDialog({
           <p className="form-helper">Select at least one line and enter its delivery quantity.</p>
         ) : null}
 
+        {saveError && (
+          <p className="field-error" role="alert">
+            {saveError}
+          </p>
+        )}
         <div className="dialog-actions">
           <DialogCancelButton disabled={isSubmitting} />
           <button

@@ -61,9 +61,9 @@ export function StockCorrectionDialog({
       onOpenChange={(open) => !open && !busy && onClose()}
       title="Correct latest stock addition"
       description={`${inventory.productName} · ${inventory.branchName}`}
-      size="md"
+      size="sm"
     >
-      <form className="dialog-form" onSubmit={(event) => void submit(event)}>
+      <form aria-busy={busy} className="dialog-form" onSubmit={(event) => void submit(event)}>
         <p className="form-helper">
           Original addition:{' '}
           <strong>

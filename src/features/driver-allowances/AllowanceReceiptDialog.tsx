@@ -61,7 +61,7 @@ export function AllowanceReceiptDialog({
       title={`Confirm that ${record.workerName} received ${formatPeso(record.amount)}?`}
       description="Save receipt confirmation with an acknowledgement or a proof attached to this transaction."
     >
-      <form className="dialog-form" onSubmit={(event) => void submit(event)}>
+      <form aria-busy={busy} className="dialog-form" onSubmit={(event) => void submit(event)}>
         <label className="field-label">
           Received date and time
           <input

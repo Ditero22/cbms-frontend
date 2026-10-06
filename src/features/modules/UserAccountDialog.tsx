@@ -1,3 +1,4 @@
+import { useServerValidation } from '@/components/common/useServerValidation'
 import { FieldHeading } from '@/components/common/FieldHeading'
 import { useEffect, useId } from 'react'
 import { Controller, useForm } from 'react-hook-form'
@@ -7,6 +8,7 @@ import { PasswordRequirements } from '@/features/users/PasswordRequirements'
 import { isStrongPassword } from '@/features/users/password-policy'
 
 type UserAccountDialogProps = {
+  serverFieldErrors?: Record<string, string>
   open: boolean
   onOpenChange: (open: boolean) => void
   onSave: (userId: string | null, values: UserAccountValues) => Promise<boolean>
@@ -30,6 +32,7 @@ type UserFormValues = {
 
 export function UserAccountDialog({
   open,
+  serverFieldErrors,
   onOpenChange,
   onSave,
   user,
@@ -41,6 +44,7 @@ export function UserAccountDialog({
 }: UserAccountDialogProps) {
   const formId = useId()
   const {
+    setError,
     register,
     control,
     handleSubmit,
@@ -115,6 +119,8 @@ export function UserAccountDialog({
     if (!nextOpen) reset()
   }
 
+  useServerValidation(setError, serverFieldErrors)
+
   return (
     <AppDialog
       open={open}
@@ -127,7 +133,7 @@ export function UserAccountDialog({
       }
       size="md"
     >
-      <form className="dialog-form" onSubmit={submit}>
+      <form aria-busy={isSubmitting} className="dialog-form" onSubmit={submit}>
         <div className="dialog-field-grid">
           <label className="field-label">
             <FieldHeading required>Name</FieldHeading>

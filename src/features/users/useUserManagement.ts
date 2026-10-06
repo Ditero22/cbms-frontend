@@ -1,3 +1,4 @@
+import { validationFields } from '@/services/api/errors'
 import { useRef, useState } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
@@ -16,6 +17,7 @@ export function useUserManagement() {
   const queryClient = useQueryClient()
   const pendingRef = useRef(false)
   const [busy, setBusy] = useState(false)
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({})
   const [error, setError] = useState<string | null>(null)
 
   async function run(action: () => Promise<unknown>, success: string, changesRoles = false) {
@@ -23,6 +25,7 @@ export function useUserManagement() {
     pendingRef.current = true
     setBusy(true)
     setError(null)
+    setFieldErrors({})
     try {
       await action()
       await Promise.all(
@@ -42,6 +45,7 @@ export function useUserManagement() {
       const message =
         failure instanceof Error ? failure.message : 'The account action could not be completed.'
       setError(message)
+      setFieldErrors(validationFields(failure))
       toast.error(message)
       return false
     } finally {
@@ -68,7 +72,11 @@ export function useUserManagement() {
   return {
     busy,
     error,
-    clearError: () => setError(null),
+    fieldErrors,
+    clearError: () => {
+      setError(null)
+      setFieldErrors({})
+    },
     saveUser,
     changeStatus: (userId: string, status: 'Active' | 'Inactive') =>
       run(

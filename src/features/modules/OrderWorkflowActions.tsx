@@ -50,6 +50,7 @@ export function OrderWorkflowActions({
   const [decisionId, setDecisionId] = useState('')
   const [decisionReason, setDecisionReason] = useState('')
   const [receiveItems, setReceiveItems] = useState<Record<string, ReturnReceiptClassification>>({})
+  const [actionError, setActionError] = useState('')
   const [busy, setBusy] = useState(false)
   const busyRef = useRef(false)
   const refundIntentRef = useRef<RequestIntent | null>(null)
@@ -107,6 +108,11 @@ export function OrderWorkflowActions({
     })
     .filter((item) => toMinorUnits(item.remaining, 3) > 0n)
 
+  function showError(message: string) {
+    setActionError(message)
+    toast.error(message)
+  }
+
   async function refresh() {
     await Promise.all([
       invalidateOrderPaymentQueries(queryClient, order.id),
@@ -127,6 +133,7 @@ export function OrderWorkflowActions({
     if (busyRef.current) return
     busyRef.current = true
     setBusy(true)
+    setActionError('')
     try {
       await action()
       await refresh()
@@ -135,9 +142,7 @@ export function OrderWorkflowActions({
       setDialog(null)
       setDecisionId('')
     } catch (error) {
-      toast.error(
-        error instanceof Error ? error.message : 'The order workflow could not be updated.',
-      )
+      showError(error instanceof Error ? error.message : 'The order workflow could not be updated.')
     } finally {
       busyRef.current = false
       setBusy(false)
@@ -147,6 +152,7 @@ export function OrderWorkflowActions({
   function closeDialog() {
     if (busy) return
     setDialog(null)
+    setActionError('')
     setDecisionId('')
     setDecisionReason('')
   }
@@ -157,11 +163,11 @@ export function OrderWorkflowActions({
       .map((item) => ({ orderItemId: item.id, quantity: cancelQuantities[item.id] ?? '' }))
       .filter((item) => isPositiveDecimal(item.quantity, 3))
     if (!items.length) {
-      toast.error('Enter a quantity for at least one order item.')
+      showError('Enter a quantity for at least one order item.')
       return
     }
     if (cancelReason === 'other' && !cancelNotes.trim()) {
-      toast.error('Add a note when the reason is Other.')
+      showError('Add a note when the reason is Other.')
       return
     }
     void runAction(
@@ -178,15 +184,15 @@ export function OrderWorkflowActions({
   function submitRefund(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
     if (busyRef.current) return
-    if (!paymentId) return toast.error('Choose a payment to refund.')
+    if (!paymentId) return showError('Choose a payment to refund.')
     if (!isPositiveDecimal(refundAmount, 2)) {
-      return toast.error('Enter a positive amount with up to two decimal places.')
+      return showError('Enter a positive amount with up to two decimal places.')
     }
     if (
       selectedPayment &&
       toMinorUnits(refundAmount, 2) > toMinorUnits(selectedPayment.remainingAmount, 2)
     ) {
-      return toast.error('Refund amount exceeds the selected payment’s refundable balance.')
+      return showError('Refund amount exceeds the selected payment’s refundable balance.')
     }
     const payload = {
       paymentId,
@@ -217,14 +223,14 @@ export function OrderWorkflowActions({
   function submitReturn(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
     if (busyRef.current) return
-    if (!deliveryId) return toast.error('Choose a completed delivery.')
+    if (!deliveryId) return showError('Choose a completed delivery.')
     const items = returnableItems
       .map((item) => ({
         orderItemId: item.orderItemId,
         quantity: returnQuantities[item.orderItemId] ?? '',
       }))
       .filter((item) => isPositiveDecimal(item.quantity, 3))
-    if (!items.length) return toast.error('Enter a quantity for at least one delivered item.')
+    if (!items.length) return showError('Enter a quantity for at least one delivered item.')
     const payload = {
       deliveryId,
       reason: returnReason,
@@ -509,6 +515,7 @@ export function OrderWorkflowActions({
         </section>
       )}
       <OrderWorkflowDialogViews
+        actionError={actionError}
         order={order}
         dialog={dialog}
         busy={busy}

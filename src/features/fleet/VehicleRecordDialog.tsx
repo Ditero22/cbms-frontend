@@ -1,3 +1,4 @@
+import { useServerValidation } from '@/components/common/useServerValidation'
 import { useEffect } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
 import { AppDialog, DialogCancelButton } from '@/components/common/AppDialog'
@@ -7,6 +8,8 @@ import type { FleetOptions, VehicleRecord, VehicleValues } from './types'
 
 export function VehicleRecordDialog({
   open,
+  serverFieldErrors,
+  submitError,
   onClose,
   record,
   options,
@@ -15,6 +18,8 @@ export function VehicleRecordDialog({
   onRetry,
   onSave,
 }: {
+  serverFieldErrors?: Record<string, string>
+  submitError?: string | null
   open: boolean
   onClose: () => void
   record: VehicleRecord | null
@@ -108,6 +113,8 @@ export function VehicleRecordDialog({
       value: record.defaultDriverId,
       label: `${record.defaultDriverName ?? 'Current driver'} (current)`,
     })
+  useServerValidation(setError, serverFieldErrors)
+
   return (
     <AppDialog
       open={open}
@@ -117,7 +124,7 @@ export function VehicleRecordDialog({
       size="md"
       hasUnsavedChanges={isDirty}
     >
-      <form className="dialog-form" onSubmit={submit}>
+      <form aria-busy={isSubmitting} className="dialog-form" onSubmit={submit}>
         <fieldset className="fleet-form-section" disabled={isSubmitting}>
           <FleetSection title="Vehicle identification">
             {!record && (options?.branches.length ?? 0) > 1 && (
@@ -169,6 +176,8 @@ export function VehicleRecordDialog({
               label="Year"
               type="number"
               min="1900"
+              max="2200"
+              width="xs"
               step="1"
               {...fieldProps}
             />
@@ -200,7 +209,8 @@ export function VehicleRecordDialog({
               name="capacityUnit"
               label="Capacity unit"
               suggestions={options?.capacityUnits}
-              maxLength={30}
+              maxLength={40}
+              width="sm"
               {...fieldProps}
             />
           </FleetSection>
@@ -245,6 +255,11 @@ export function VehicleRecordDialog({
           <p className="form-helper">
             Previous driver label: {record.assignedDriver}. Choose an employee to establish the
             driver relationship.
+          </p>
+        )}
+        {submitError && (
+          <p className="field-error" role="alert">
+            {submitError}
           </p>
         )}
         <div className="dialog-actions">

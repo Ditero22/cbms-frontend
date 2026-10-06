@@ -35,6 +35,7 @@ type ReceiveItems = Record<string, ReturnReceiptClassification>
 type RunAction = (action: () => Promise<unknown>, successMessage: string) => void
 
 type Props = {
+  actionError?: string
   order: OrderDetailResponse
   dialog: WorkflowDialog
   busy: boolean
@@ -96,6 +97,7 @@ const cancellationReasons = [
 const returnConditions = ['Resalable', 'Damaged', 'Defective', 'Used', 'Lost', 'Non-returnable']
 
 export function OrderWorkflowDialogViews({
+  actionError,
   order,
   dialog,
   busy,
@@ -149,12 +151,13 @@ export function OrderWorkflowDialogViews({
     <>
       {' '}
       <AppDialog
+        error={actionError}
         open={dialog === 'complete'}
         onOpenChange={(open) => !open && closeDialog()}
         title="Complete order"
         description="Completion records that every line is delivered or cancelled and the cash balance is settled."
       >
-        <div className="dialog-form">
+        <div aria-busy={busy} className="dialog-form">
           <dl className="order-workflow-summary">
             <div>
               <dt>Order</dt>
@@ -202,12 +205,14 @@ export function OrderWorkflowDialogViews({
         </div>
       </AppDialog>
       <AppDialog
+        error={actionError}
         open={dialog === 'cancel'}
         onOpenChange={(open) => !open && closeDialog()}
         title="Cancel order quantities"
+        size="md"
         description="Select the remaining quantity to cancel on each line. Delivered quantities must be returned first."
       >
-        <form className="dialog-form" onSubmit={submitCancellation}>
+        <form aria-busy={busy} className="dialog-form" onSubmit={submitCancellation}>
           <div className="workflow-line-list">
             {cancellableItems.map((item) => (
               <label className="workflow-line" key={item.id}>
@@ -275,12 +280,14 @@ export function OrderWorkflowDialogViews({
         </form>
       </AppDialog>
       <AppDialog
+        error={actionError}
         open={dialog === 'refund'}
         onOpenChange={(open) => !open && closeDialog()}
         title="Request payment refund"
+        size="md"
         description="Refund requests reserve part of a recorded payment until they are approved, rejected, or processed."
       >
-        <form className="dialog-form" onSubmit={submitRefund}>
+        <form aria-busy={busy} className="dialog-form" onSubmit={submitRefund}>
           <label className="field-label">
             <FieldHeading required>Payment</FieldHeading>
             <select
@@ -376,12 +383,14 @@ export function OrderWorkflowDialogViews({
         </form>
       </AppDialog>
       <AppDialog
+        error={actionError}
         open={dialog === 'return'}
         onOpenChange={(open) => !open && closeDialog()}
         title="Request item return"
+        size="md"
         description="Select delivered items and quantities to submit for review. Inventory changes only when the return is received."
       >
-        <form className="dialog-form" onSubmit={submitReturn}>
+        <form aria-busy={busy} className="dialog-form" onSubmit={submitReturn}>
           <label className="field-label">
             <FieldHeading required>Delivery</FieldHeading>
             <select
@@ -476,12 +485,14 @@ export function OrderWorkflowDialogViews({
         </form>
       </AppDialog>
       <AppDialog
+        error={actionError}
         open={dialog === 'refund-reject' || dialog === 'return-reject'}
         onOpenChange={(open) => !open && closeDialog()}
         title="Reject request"
         description="Record why this request is being rejected. The request will remain in the order history."
       >
         <form
+          aria-busy={busy}
           className="dialog-form"
           onSubmit={(event) => {
             event.preventDefault()
@@ -514,12 +525,14 @@ export function OrderWorkflowDialogViews({
         </form>
       </AppDialog>
       <AppDialog
+        error={actionError}
         open={dialog === 'receive-return'}
         onOpenChange={(open) => !open && closeDialog()}
         title="Receive returned items"
+        size="md"
         description="Classify each item. Only quantities accepted as resalable return to inventory."
       >
-        <form className="dialog-form" onSubmit={submitReceiveReturn}>
+        <form aria-busy={busy} className="dialog-form" onSubmit={submitReceiveReturn}>
           {order.returns
             .find((record) => record.id === decisionId)
             ?.items.map((item) => {

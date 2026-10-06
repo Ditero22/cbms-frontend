@@ -69,7 +69,7 @@ export function PayrollPaymentDialog({
       description={`${entry.employeeName} · ${period}`}
       size="md"
     >
-      <form className="dialog-form" onSubmit={(event) => void submit(event)}>
+      <form aria-busy={busy} className="dialog-form" onSubmit={(event) => void submit(event)}>
         <dl className="payroll-amount-grid">
           <div>
             <dt>Gross pay</dt>

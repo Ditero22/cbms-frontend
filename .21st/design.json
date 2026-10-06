@@ -193,7 +193,13 @@
       "New component libraries where current primitives suffice"
     ]
   },
-  "decisions": [],
+  "decisions": [
+    {
+      "date": "2026-10-07",
+      "decision": "Use a single Radix dialog host with preserved portal bodies for secondary workflows and discard confirmation. Content sizing: 440/620/820/900px; compact field widths: 9/14/22rem/full. Preserve 16px mobile inputs, normal-flow mobile actions and accessible focus rings.",
+      "source": "src/components/common/DialogWorkflow.tsx, src/components/common/AppDialog.tsx, src/index.css"
+    }
+  ],
   "evidence": [
     {
       "fact": "design.colorMode:light-and-dark",

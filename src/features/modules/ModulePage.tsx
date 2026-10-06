@@ -1,3 +1,4 @@
+import { validationFields } from '@/services/api/errors'
 import { useEffect, useState } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { Plus } from 'lucide-react'
@@ -110,6 +111,7 @@ export function ModulePage() {
   })
 
   const [createDialogOpen, setCreateDialogOpen] = useState(false)
+  const [saveFieldErrors, setSaveFieldErrors] = useState<Record<string, string>>({})
   const [saveError, setSaveError] = useState<string>()
   const [selectedRecord, setSelectedRecord] = useState<RecordRow | null>(null)
   const [employeeDialogOpen, setEmployeeDialogOpen] = useState(false)
@@ -162,6 +164,7 @@ export function ModulePage() {
 
   function openCreateDialog() {
     setSaveError(undefined)
+    setSaveFieldErrors({})
     if (activeModule.id === 'employees') {
       setEmployeeBeingEdited(null)
       setEmployeeDialogOpen(true)
@@ -176,6 +179,7 @@ export function ModulePage() {
     values: EmployeeValues,
   ): Promise<boolean> {
     setSaveError(undefined)
+    setSaveFieldErrors({})
     try {
       if (employeeId) {
         await updateEmployee(employeeId, { ...values, hiredAt: values.hiredAt || null })
@@ -192,6 +196,7 @@ export function ModulePage() {
     } catch (error) {
       const message = error instanceof Error ? error.message : 'The employee could not be saved.'
       setSaveError(message)
+      setSaveFieldErrors(validationFields(error))
       toast.error(message)
       return false
     }
@@ -213,6 +218,7 @@ export function ModulePage() {
 
   async function handleCreateRecord(values: CreateRecordPayload): Promise<boolean> {
     setSaveError(undefined)
+    setSaveFieldErrors({})
     try {
       await runtime.createRecord(activeModule.id, values)
       setCreateDialogOpen(false)
@@ -221,6 +227,7 @@ export function ModulePage() {
     } catch (error) {
       const message = error instanceof Error ? error.message : 'The record could not be saved.'
       setSaveError(message)
+      setSaveFieldErrors(validationFields(error))
       toast.error(message)
       return false
     }
@@ -229,6 +236,7 @@ export function ModulePage() {
   async function handleSaveManagedRecord(recordId: string, values: Record<string, string>) {
     if (!isManagedModule(activeModule.id)) return false
     setSaveError(undefined)
+    setSaveFieldErrors({})
     try {
       await updateManagedRecord(activeModule.id, recordId, values)
       await invalidateMasterData(queryClient, activeModule.id)
@@ -239,6 +247,7 @@ export function ModulePage() {
     } catch (error) {
       const message = error instanceof Error ? error.message : 'The record could not be saved.'
       setSaveError(message)
+      setSaveFieldErrors(validationFields(error))
       toast.error(message)
       return false
     }
@@ -263,6 +272,7 @@ export function ModulePage() {
     status: DeliveryStatus,
     input: { endOdometer?: string; notes?: string } = {},
   ): Promise<boolean> {
+    setSaveError(undefined)
     try {
       await updateDeliveryStatus(deliveryId, status, input)
       await Promise.all([
@@ -285,9 +295,10 @@ export function ModulePage() {
       toast.success('Delivery status updated.')
       return true
     } catch (error) {
-      toast.error(
-        error instanceof Error ? error.message : 'The delivery status could not be updated.',
-      )
+      const message =
+        error instanceof Error ? error.message : 'The delivery status could not be updated.'
+      setSaveError(message)
+      toast.error(message)
       return false
     }
   }
@@ -365,6 +376,7 @@ export function ModulePage() {
           isLoadingOptions={employeeOptionsQuery.isPending}
           optionsError={employeeOptionsQuery.error?.message}
           saveError={saveError}
+          serverFieldErrors={saveFieldErrors}
           onRetryOptions={() => void employeeOptionsQuery.refetch()}
           onSave={handleSaveEmployee}
         />
@@ -378,6 +390,7 @@ export function ModulePage() {
           optionsError={transferOptionsQuery.error?.message}
           onRetryOptions={() => void transferOptionsQuery.refetch()}
           saveError={saveError}
+          serverFieldErrors={saveFieldErrors}
         />
       ) : activeModule.id === 'orders' ? (
         <CreateOrderDialog
@@ -389,9 +402,12 @@ export function ModulePage() {
           optionsError={orderOptionsQuery.error?.message}
           onRetryOptions={() => void orderOptionsQuery.refetch()}
           saveError={saveError}
+          serverFieldErrors={saveFieldErrors}
         />
       ) : activeModule.id === 'deliveries' ? (
         <CreateDeliveryDialog
+          saveError={saveError}
+          serverFieldErrors={saveFieldErrors}
           open={createDialogOpen}
           onOpenChange={setCreateDialogOpen}
           onCreate={(values: CreateDeliveryValues) => handleCreateRecord(values)}
@@ -416,6 +432,7 @@ export function ModulePage() {
           record={managedRecordBeingEdited}
           onSave={handleSaveManagedRecord}
           saveError={saveError}
+          serverFieldErrors={saveFieldErrors}
         />
       )}
       {activeModule.id === 'employees' && (
@@ -427,6 +444,7 @@ export function ModulePage() {
           canReadAudit={runtime.permissions.includes('audit.read')}
           onEdit={(employee) => {
             setSaveError(undefined)
+            setSaveFieldErrors({})
             setEmployeeBeingEdited(employee)
             setSelectedRecord(null)
             setEmployeeDialogOpen(true)
@@ -447,6 +465,7 @@ export function ModulePage() {
           onClose={() => setSelectedRecord(null)}
           onEdit={(record) => {
             setSaveError(undefined)
+            setSaveFieldErrors({})
             setManagedRecordBeingEdited(record)
             setSelectedRecord(null)
             setCreateDialogOpen(true)
@@ -483,6 +502,7 @@ export function ModulePage() {
           canReadAudit={runtime.permissions.includes('audit.read')}
           onClose={() => setSelectedRecord(null)}
           onUpdateStatus={(delivery) => {
+            setSaveError(undefined)
             setDeliveryBeingUpdated({ id: delivery.id, status: delivery.status })
             setSelectedRecord(null)
           }}
@@ -518,6 +538,7 @@ export function ModulePage() {
           deliveryId={deliveryBeingUpdated.id}
           currentStatus={deliveryBeingUpdated.status}
           onSave={handleDeliveryStatusSave}
+          error={saveError}
         />
       )}
       <ArchiveRecordDialog

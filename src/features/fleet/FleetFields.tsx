@@ -15,6 +15,8 @@ export function FleetField({
   errors,
   maxLength = 180,
   min,
+  max,
+  width,
   step,
 }: {
   name: string
@@ -26,6 +28,8 @@ export function FleetField({
   control: Control<FleetForm>
   errors: FieldErrors<FleetForm>
   maxLength?: number
+  max?: string
+  width?: 'xs' | 'sm' | 'md' | 'full'
   min?: string
   step?: string
   suggestions?: string[]
@@ -37,7 +41,7 @@ export function FleetField({
     validate: (value) => !required || Boolean(value?.trim()) || `${label} is required.`,
   })
   return (
-    <div className="field-label">
+    <div className={`field-label field-${width ?? (type === 'number' ? 'sm' : 'full')}`}>
       <label htmlFor={fieldId}>
         <FieldHeading required={required}>{label}</FieldHeading>
       </label>
@@ -86,6 +90,7 @@ export function FleetField({
           className="form-input"
           type={type}
           min={min}
+          max={max}
           step={step}
           maxLength={maxLength}
           list={suggestions ? `${fieldId}-choices` : undefined}

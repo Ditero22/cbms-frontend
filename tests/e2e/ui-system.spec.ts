@@ -882,7 +882,7 @@ test('product dialog width follows its form and mobile actions remain in normal 
       .poll(() => page.evaluate(() => document.documentElement.dataset.textSize))
       .toBe(String(level))
 
-    for (const width of [1280, 1440, 1024, 768, 430, 390, 375]) {
+    for (const width of [1280, 1440, 1024, 768, 430, 390, 375, 320]) {
       const height = width <= 430 ? 620 : 900
       await page.setViewportSize({ width, height })
       await page.goto('/products')
@@ -897,8 +897,8 @@ test('product dialog width follows its form and mobile actions remain in normal 
 
       if (width > 700) {
         const bounds = await dialog.boundingBox()
-        expect(bounds!.width).toBeLessThanOrEqual(720)
-        expect(bounds!.width).toBeGreaterThanOrEqual(640)
+        expect(bounds!.width).toBeLessThanOrEqual(680)
+        expect(bounds!.width).toBeGreaterThanOrEqual(520)
         expect(
           await fields.evaluate(
             (element) => getComputedStyle(element).gridTemplateColumns.split(' ').length,
@@ -932,6 +932,19 @@ test('product dialog width follows its form and mobile actions remain in normal 
       await dialog.getByRole('button', { name: 'Close dialog', exact: true }).click()
       await expect(dialog).toBeHidden()
     }
+  }
+  await page.evaluate(() => {
+    document.documentElement.dataset.theme = 'light'
+  })
+  for (const width of [1440, 768, 320]) {
+    await page.setViewportSize({ width, height: 900 })
+    await page.getByRole('button', { name: 'Add product', exact: true }).click()
+    const dialog = page.getByRole('dialog', { name: 'Add product', exact: true })
+    await dialogBounds(page, dialog)
+    await page.screenshot({ path: testInfo.outputPath('product-light-' + width + '.png') })
+    await dialog.getByRole('button', { name: 'Close dialog', exact: true }).click()
+    await expect(page.locator('.dialog-overlay')).toHaveCount(0)
+    expect(await page.evaluate(() => getComputedStyle(document.body).overflow)).not.toBe('hidden')
   }
 })
 
@@ -1380,6 +1393,29 @@ test('shared record form associates inline errors, preserves failed drafts, and 
   )
   await page.screenshot({ path: testInfo.outputPath('customer-failed-draft-390.png') })
   await page.unroute(`${apiUrl}/customers`)
+
+  await page.route(`${apiUrl}/customers`, async (route) => {
+    if (route.request().method() !== 'POST') return route.continue()
+    await route.fulfill({
+      status: 400,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        error: {
+          code: 'VALIDATION_ERROR',
+          message: 'Check the entered values.',
+          details: { fieldErrors: { phone: ['Use at most 40 characters.'] } },
+        },
+      }),
+    })
+  })
+  await dialog.getByRole('button', { name: 'Create record', exact: true }).click()
+  const phone = dialog.getByLabel('Phone', { exact: true })
+  await expect(phone).toHaveAttribute('aria-invalid', 'true')
+  const serverErrorId = await phone.getAttribute('aria-describedby')
+  await expect(dialog.locator(`[id="${serverErrorId}"]`)).toHaveText('Use at most 40 characters.')
+  await expect(name).toHaveValue(draftName)
+  await page.unroute(`${apiUrl}/customers`)
+  await phone.fill('+63 917 123 4567')
 
   let releaseSave!: () => void
   const pending = new Promise<void>((resolve) => {

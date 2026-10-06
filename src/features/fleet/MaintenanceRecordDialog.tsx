@@ -1,3 +1,4 @@
+import { useServerValidation } from '@/components/common/useServerValidation'
 import { useEffect } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
 import { AppDialog, DialogCancelButton } from '@/components/common/AppDialog'
@@ -8,6 +9,8 @@ import type { FleetOptions, MaintenanceRecord, MaintenanceValues } from './types
 
 export function MaintenanceRecordDialog({
   open,
+  serverFieldErrors,
+  submitError,
   onClose,
   record,
   options,
@@ -16,6 +19,8 @@ export function MaintenanceRecordDialog({
   onRetry,
   onSave,
 }: {
+  serverFieldErrors?: Record<string, string>
+  submitError?: string | null
   open: boolean
   onClose: () => void
   record: MaintenanceRecord | null
@@ -26,6 +31,7 @@ export function MaintenanceRecordDialog({
   onSave: (id: string | null, values: MaintenanceValues) => Promise<boolean>
 }) {
   const {
+    setError,
     register,
     reset,
     handleSubmit,
@@ -79,6 +85,8 @@ export function MaintenanceRecordDialog({
     }
     if (await onSave(record?.id ?? null, payload)) onClose()
   })
+  useServerValidation(setError, serverFieldErrors)
+
   return (
     <AppDialog
       open={open}
@@ -88,7 +96,7 @@ export function MaintenanceRecordDialog({
       size="lg"
       hasUnsavedChanges={isDirty}
     >
-      <form className="dialog-form" onSubmit={submit}>
+      <form aria-busy={isSubmitting} className="dialog-form" onSubmit={submit}>
         <fieldset className="fleet-form-section" disabled={isSubmitting}>
           <FleetSection title="Maintenance information">
             {!record && (
@@ -179,6 +187,11 @@ export function MaintenanceRecordDialog({
               Try again
             </button>
           </div>
+        )}
+        {submitError && (
+          <p className="field-error" role="alert">
+            {submitError}
+          </p>
         )}
         <div className="dialog-actions">
           <DialogCancelButton disabled={isSubmitting} />

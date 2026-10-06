@@ -1,3 +1,4 @@
+import { useServerValidation } from '@/components/common/useServerValidation'
 import { FormField } from '@/components/common/FormField'
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
@@ -16,6 +17,7 @@ type CreateRecordDialogProps = {
   onCreate: (values: CreateRecordValues) => Promise<boolean>
   record?: Record<string, unknown> | null
   onSave?: (id: string, values: CreateRecordValues) => Promise<boolean>
+  serverFieldErrors?: Record<string, string>
   saveError?: string
   isCrossBranch?: boolean
 }
@@ -28,6 +30,7 @@ export function CreateRecordDialog({
   record,
   onSave,
   saveError,
+  serverFieldErrors,
   isCrossBranch = false,
 }: CreateRecordDialogProps) {
   const recordId = typeof record?.id === 'string' ? record.id : null
@@ -54,6 +57,7 @@ export function CreateRecordDialog({
     isCrossBranch,
   )
   const {
+    setError,
     register,
     handleSubmit,
     reset,
@@ -110,6 +114,8 @@ export function CreateRecordDialog({
     if (!nextOpen) reset()
   }
 
+  useServerValidation(setError, serverFieldErrors)
+
   return (
     <AppDialog
       open={open}
@@ -131,10 +137,15 @@ export function CreateRecordDialog({
             {fields.map((field, index) => (
               <div
                 key={field.name}
-                className={field.name === 'description' ? 'create-record-field--full' : undefined}
+                className={
+                  ['name', 'address', 'location', 'description'].includes(field.name)
+                    ? 'create-record-field--full'
+                    : undefined
+                }
               >
                 <FormField
                   label={field.label}
+                  width={field.width}
                   required={field.required}
                   error={errors[field.name] ? String(errors[field.name]?.message) : undefined}
                   hint={field.hint}

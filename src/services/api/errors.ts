@@ -13,6 +13,7 @@ export class ApiError extends Error {
     public readonly status: number,
     public readonly code?: string,
     public readonly kind: ApiFailureKind = failureKind(status),
+    public readonly fieldErrors: Record<string, string> = {},
   ) {
     super(message)
     this.name = 'ApiError'
@@ -89,5 +90,31 @@ export function requestFailure(status: number, path: string, payload: unknown) {
     )
   if (status === 404)
     return new ApiError(message ?? 'The requested information could not be found.', status, code)
-  return new ApiError(message ?? 'The request could not be completed.', status, code)
+  const fieldErrors: Record<string, string> = {}
+  if (code === 'VALIDATION_ERROR' && error && typeof error === 'object' && 'details' in error) {
+    const details = error.details
+    if (
+      details &&
+      typeof details === 'object' &&
+      'fieldErrors' in details &&
+      details.fieldErrors &&
+      typeof details.fieldErrors === 'object'
+    ) {
+      for (const [field, messages] of Object.entries(details.fieldErrors)) {
+        if (Array.isArray(messages) && typeof messages[0] === 'string')
+          fieldErrors[field] = messages[0]
+      }
+    }
+  }
+  return new ApiError(
+    message ?? 'The request could not be completed.',
+    status,
+    code,
+    failureKind(status),
+    fieldErrors,
+  )
+}
+
+export function validationFields(error: unknown): Record<string, string> {
+  return error instanceof ApiError ? error.fieldErrors : {}
 }

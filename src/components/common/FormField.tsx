@@ -14,17 +14,19 @@ export function FormField({
   required = false,
   error,
   hint,
+  width = 'full',
   children,
 }: {
   label: string
   required?: boolean
   error?: string
   hint?: string
+  width?: 'xs' | 'sm' | 'md' | 'full'
   children: (attributes: FieldAttributes) => ReactNode
 }) {
   const id = useId()
   return (
-    <div className="field-label">
+    <div className={`field-label field-${width}`}>
       <label htmlFor={id}>
         <FieldHeading required={required}>{label}</FieldHeading>
       </label>

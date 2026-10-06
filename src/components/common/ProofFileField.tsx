@@ -1,4 +1,4 @@
-import { useEffect, useId, useState } from 'react'
+import { useEffect, useId, useRef, useState } from 'react'
 import { FieldHeading } from './FieldHeading'
 import { paymentProofTypes, validatePaymentProof } from './payment-proof'
 import './proofs.css'
@@ -15,6 +15,7 @@ export function ProofFileField({
   error?: string
 }) {
   const id = useId()
+  const inputRef = useRef<HTMLInputElement>(null)
   const [preview, setPreview] = useState('')
   const [selectionError, setSelectionError] = useState('')
   useEffect(() => {
@@ -32,6 +33,7 @@ export function ProofFileField({
       <label className="field-label" htmlFor={id}>
         <FieldHeading required>Receipt / payment proof</FieldHeading>
         <input
+          ref={inputRef}
           id={id}
           className="form-input"
           type="file"
@@ -70,6 +72,28 @@ export function ProofFileField({
           <figcaption>
             {file.name} · {(file.size / 1024).toFixed(0)} KB
           </figcaption>
+          <div className="proof-selection-actions">
+            <button
+              type="button"
+              className="button button-outline"
+              disabled={disabled}
+              onClick={() => inputRef.current?.click()}
+            >
+              Replace image
+            </button>
+            <button
+              type="button"
+              className="button button-quiet"
+              disabled={disabled}
+              onClick={() => {
+                onChange(null)
+                setSelectionError('')
+                if (inputRef.current) inputRef.current.value = ''
+              }}
+            >
+              Remove image
+            </button>
+          </div>
         </figure>
       )}
     </div>

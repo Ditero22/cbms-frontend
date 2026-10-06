@@ -83,6 +83,7 @@ export function PayrollRunDialog({
   loading,
   error,
   saving,
+  submitError,
   onRetry,
   onBranchChange,
   onClose,
@@ -97,6 +98,7 @@ export function PayrollRunDialog({
   branches: { id: string; name: string }[]
   loading: boolean
   error?: string
+  submitError?: string
   saving: boolean
   onRetry: () => void
   onBranchChange: (branchId: string) => void
@@ -182,6 +184,7 @@ export function PayrollRunDialog({
 
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
+    if (saving) return
     setFormError('')
     if (!branchId || !periodStart || !periodEnd || periodStart > periodEnd) {
       setFormError('Choose a branch and a valid payroll period.')
@@ -254,8 +257,13 @@ export function PayrollRunDialog({
           : 'Record regular employee pay for a period, with any separate earnings and deductions.'
       }
       size="lg"
+      error={submitError}
     >
-      <form className="dialog-form payroll-form" onSubmit={(event) => void submit(event)}>
+      <form
+        aria-busy={saving}
+        className="dialog-form payroll-form"
+        onSubmit={(event) => void submit(event)}
+      >
         <section className="payroll-form-section" aria-labelledby="payroll-period-title">
           <h3 id="payroll-period-title">Pay period</h3>
           <div className="dialog-field-grid">

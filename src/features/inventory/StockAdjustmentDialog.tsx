@@ -95,7 +95,7 @@ export function StockAdjustmentDialog({
       description="Record a stock correction for a product at one branch."
       size="md"
     >
-      <form className="dialog-form" onSubmit={(event) => void submit(event)}>
+      <form aria-busy={busy} className="dialog-form" onSubmit={(event) => void submit(event)}>
         <div className="dialog-field-grid">
           <label className="field-label" htmlFor={`${id}-product`}>
             <FieldHeading required>Product</FieldHeading>

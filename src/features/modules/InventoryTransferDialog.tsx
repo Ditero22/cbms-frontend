@@ -1,3 +1,4 @@
+import { useServerValidation } from '@/components/common/useServerValidation'
 import { FormField } from '@/components/common/FormField'
 import { useRef } from 'react'
 import { fromMinorUnits, toMinorUnits } from './order-decimals'
@@ -27,6 +28,7 @@ type InventoryTransferDialogProps = {
 
   onRetryOptions: () => void
 
+  serverFieldErrors?: Record<string, string>
   saveError?: string
 }
 
@@ -46,11 +48,13 @@ export function InventoryTransferDialog({
   onRetryOptions,
 
   saveError,
+  serverFieldErrors,
 }: InventoryTransferDialogProps) {
   const submittedIntent = useRef<{ payload: string; requestKey: string } | null>(null)
   const {
     control,
 
+    setError,
     register,
 
     handleSubmit,
@@ -102,6 +106,8 @@ export function InventoryTransferDialog({
       reset()
     }
   }
+
+  useServerValidation(setError, serverFieldErrors)
 
   return (
     <AppDialog

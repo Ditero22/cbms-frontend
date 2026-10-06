@@ -93,7 +93,7 @@ export function CreateExpenseDialog({
       description="Record a branch expense for review. Amounts are stored in Philippine pesos."
       size="md"
     >
-      <form className="dialog-form" onSubmit={(event) => void submit(event)}>
+      <form aria-busy={busy} className="dialog-form" onSubmit={(event) => void submit(event)}>
         <label className="field-label" htmlFor={`${id}-description`}>
           <FieldHeading required>Description</FieldHeading>
           <textarea

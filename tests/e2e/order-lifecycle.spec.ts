@@ -416,7 +416,7 @@ for (const workflow of ['refund', 'return'] as const) {
     const submit = workflow === 'refund' ? 'Submit refund request' : 'Submit return request'
     await form.getByRole('button', { name: submit, exact: true }).click()
     await expect(
-      page.getByText('The backend could not be reached. Check your connection and try again.', {
+      form.getByText('The backend could not be reached. Check your connection and try again.', {
         exact: true,
       }),
     ).toBeVisible()

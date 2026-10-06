@@ -44,7 +44,7 @@ export function ExpenseReviewDialog({
       title={rejecting ? 'Reject expense?' : 'Approve expense?'}
       description={`${expense.description} · ${formatPeso(expense.amount)} · ${expense.branchName}`}
     >
-      <form className="dialog-form" onSubmit={(event) => void submit(event)}>
+      <form aria-busy={busy} className="dialog-form" onSubmit={(event) => void submit(event)}>
         <p className="form-helper">
           {rejecting
             ? 'Record the reason this expense should be rejected.'

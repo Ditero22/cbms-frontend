@@ -1,3 +1,4 @@
+import { useServerValidation } from '@/components/common/useServerValidation'
 import { FormField } from '@/components/common/FormField'
 import { useRef } from 'react'
 
@@ -28,6 +29,7 @@ type CreateOrderDialogProps = {
 
   onRetryOptions: () => void
 
+  serverFieldErrors?: Record<string, string>
   saveError?: string
 }
 
@@ -47,11 +49,13 @@ export function CreateOrderDialog({
   onRetryOptions,
 
   saveError,
+  serverFieldErrors,
 }: CreateOrderDialogProps) {
   const submittedIntent = useRef<{ payload: string; requestKey: string } | null>(null)
   const {
     control,
 
+    setError,
     register,
 
     handleSubmit,
@@ -110,6 +114,8 @@ export function CreateOrderDialog({
       reset()
     }
   }
+
+  useServerValidation(setError, serverFieldErrors)
 
   return (
     <AppDialog
