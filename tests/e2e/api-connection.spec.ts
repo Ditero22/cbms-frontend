@@ -79,6 +79,60 @@ test('switching accounts in another tab removes the previous branch cache before
   }
 })
 
+test('a session response started before sign-out cannot restore the signed-out workspace', async ({
+  page,
+}) => {
+  await login(page)
+  let releaseResponse: () => void = () => undefined
+  let responseReady: () => void = () => undefined
+  let responseDelivered: () => void = () => undefined
+  const held = new Promise<void>((resolve) => {
+    releaseResponse = resolve
+  })
+  const ready = new Promise<void>((resolve) => {
+    responseReady = resolve
+  })
+  const delivered = new Promise<void>((resolve) => {
+    responseDelivered = resolve
+  })
+  await page.route('**/api/v1/auth/me', async (route) => {
+    const response = await route.fetch()
+    expect(response.status()).toBe(200)
+    responseReady()
+    await held
+    try {
+      await route.fulfill({ response })
+    } finally {
+      responseDelivered()
+    }
+  })
+  try {
+    await returnToVisibleTab(page)
+    await ready
+    await page.getByRole('button', { name: /Open user menu for/ }).click()
+    await page.getByRole('button', { name: 'Sign out', exact: true }).click()
+    await expect(page).toHaveURL(/\/login$/)
+    // A second request failing with 401 must not hide a momentarily resurrected identity.
+    await page.route(dashboardRoute, (route) =>
+      route.fulfill({
+        status: 503,
+        contentType: 'application/json',
+        body: '{}',
+      }),
+    )
+    releaseResponse()
+    await delivered
+    // Allow the delivered response and React updates to settle before checking identity.
+    await page.waitForTimeout(300)
+    await expect(page).toHaveURL(/\/login$/)
+    await expect(page.getByRole('button', { name: 'Sign in', exact: true })).toBeVisible()
+    await expect(page.getByRole('button', { name: /Open user menu for/ })).toHaveCount(0)
+  } finally {
+    releaseResponse()
+    await page.unroute('**/api/v1/auth/me')
+  }
+})
+
 const failures: {
   name: string
   respond: (route: Route) => Promise<void>

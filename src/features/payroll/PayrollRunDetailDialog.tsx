@@ -8,6 +8,7 @@ import { StatusInline } from '@/components/common/StatusInline'
 import { formatPeso } from '@/features/modules/order-decimals'
 import { getPayrollRunDetail, processPayrollRun } from './payroll.api'
 import { PayrollEntryCard } from './PayrollEntryCard'
+import { invalidatePayrollRun } from './payroll-cache'
 
 export function PayrollRunDetailDialog({
   runId,
@@ -34,10 +35,7 @@ export function PayrollRunDetailDialog({
   const run = detail.data?.run
   async function refresh() {
     await Promise.all([
-      client.invalidateQueries({ queryKey: ['payroll-run', runId] }),
-      client.invalidateQueries({ queryKey: ['module', 'payroll'] }),
-      client.invalidateQueries({ queryKey: ['payroll-ledger'] }),
-      client.invalidateQueries({ queryKey: ['payroll-entry'] }),
+      invalidatePayrollRun(client, runId),
       client.invalidateQueries({ queryKey: ['proofs', 'payroll-entry'] }),
     ])
     onChanged()

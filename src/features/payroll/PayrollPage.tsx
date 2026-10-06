@@ -1,3 +1,4 @@
+import { invalidatePayrollRun } from './payroll-cache'
 import { useEffect, useState } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { Plus } from 'lucide-react'
@@ -86,13 +87,7 @@ export function PayrollPage() {
     setSaving(true)
     try {
       await savePayrollRun(editingRunId, values, requestKey)
-      await Promise.all([
-        client.invalidateQueries({ queryKey: ['module', 'payroll'] }),
-        client.invalidateQueries({ queryKey: ['payroll-ledger'] }),
-        ...(editingRunId
-          ? [client.invalidateQueries({ queryKey: ['payroll-run', editingRunId] })]
-          : []),
-      ])
+      await invalidatePayrollRun(client, editingRunId)
       toast.success(editingRunId ? 'Draft pay run updated.' : 'Draft pay run saved.')
       setView('runs')
       return true
